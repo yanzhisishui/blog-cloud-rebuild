@@ -1,0 +1,73 @@
+package com.syc.blog.utils;
+
+import com.alibaba.fastjson.JSON;
+import com.syc.blog.model.ZimgResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * 上传文件到Zimg
+ * */
+public class ZimgUploadHelper {
+    public static String uploadImageToZimg(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
+        StringBuilder respXML = new StringBuilder();
+        try {
+            URL url = new URL("http://192.168.23.175:4869/upload");
+            URLConnection connection = url.openConnection();
+            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(2500);
+            HttpURLConnection uc = (HttpURLConnection) connection;
+            // 设置HTTP协议的消息头
+            uc.setRequestMethod("POST");
+            uc.setRequestProperty("Connection", "Keep-Alive");
+            uc.setRequestProperty("Cache-Control", "no-cache");
+            uc.setRequestProperty("Content-Type", suffix);// "jpeg");//
+            uc.setRequestProperty("COOKIE", "william");
+            uc.setDoOutput(true);
+            uc.setDoInput(true);
+
+            uc.connect();
+            // 设置传输模式为二进制
+            OutputStream om = uc.getOutputStream();
+            // 循环读取图片，发送到zimg服务器
+            InputStream in = file.getInputStream();
+            byte[] buf = new byte[8192];
+            while (true) {
+                int len = in.read(buf);
+                if (len <= 0)
+                    break;
+                om.write(buf, 0, len);
+            }
+            // 打开输入（返回信息）流
+            InputStreamReader im = new InputStreamReader(uc.getInputStream(), StandardCharsets.UTF_8);
+            // 循环读取，结束，获取返回信息
+            char[] bb = new char[8192];
+            while (true) {
+                int length = im.read(bb);
+                if (length == -1)
+                    break;
+                char[] bc = new char[length];
+                System.arraycopy(bb, 0, bc, 0, length);
+                respXML.append(new String(bc));
+            }
+            // 关闭上下行
+            im.close();
+            uc.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ZimgResponse zimgResponse = JSON.parseObject(respXML.toString(), ZimgResponse.class);
+        String md5 = zimgResponse.getInfo().getMd5();
+        return "http://192.168.23.175:4869/"+md5;
+    }
+}
