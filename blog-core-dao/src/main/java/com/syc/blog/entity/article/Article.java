@@ -1,9 +1,13 @@
 package com.syc.blog.entity.article;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,11 +18,15 @@ import java.util.Date;
 //@Document(indexName = "blog",type = "article")
 @Data
 @TableName("article")
+@Document(indexName = "blog",type = "article",shards = 1, replicas = 0)
 public class Article implements Serializable {
+    @Id
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private Date dateInsert;
+    @Transient
     private Date dateUpdate;
+    @Transient
     private Byte archive;//删除标志 0:未删除  1：逻辑删除
     private String description;//文章描述 用于首页展示，长度（250-270）
     private Integer classifyId;//类别ID
@@ -26,7 +34,12 @@ public class Article implements Serializable {
     private String content;//内容(样式、图片、小标题、HTML标签都包含在内)
     private String title;//文章标题
     private String bread;
+    @Transient
     private String keyword;
+    @Transient
     private Integer userId;//发布者id
     private String imageUrl;//图片地址
+
+    @TableField(exist = false)
+    private ArticleClassify articleClassify;
 }
