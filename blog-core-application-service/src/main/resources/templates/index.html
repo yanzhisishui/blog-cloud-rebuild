@@ -59,7 +59,6 @@
         #select{position: absolute;top: 0;right: 0;padding: 5px;font-size: 15px;}
         #selectCondition{width: 99.6%;height: 50px;line-height: 50px;background-color: white;margin-bottom: 10px;position: relative;display: none;}
         .content .content-left .pick li{margin: 0 10px;float: left;}
-        .content .content-left .classify-div{position: absolute;right: 25%;width: 150px;}
         .content .content-left > h2{padding: 5px;border-left: 3px solid blueviolet;margin-bottom: 10px;color:#89919a;font-weight: 600;font-size: 20px;}
         .content .content-right{float: right;width: 27%;}
         .content-right .square{padding: 5px;margin:0 auto;margin-bottom: 10px;position: relative;border-bottom: 1px solid #e7e7e7;
@@ -289,7 +288,7 @@
     <div class="top">
         <div class="top-center">
             <div class="top-center-l">
-                <img th:src="@{http://www.sunyuchao.com/files/img/__${logoName}__}">
+                <img th:src="${logoUrl}">
             </div>
             <div class="top-center-c">
                 <ul class="nav">
@@ -324,9 +323,9 @@
     <div class="syc">
 
         <div class="syc-left">
-            <a th:each="banner : ${bannerLeftList}" th:href="@{/article/__${banner.articleId}__}">
+            <a  th:if="${banner.flag == 'LEFT'}" th:each="banner : ${bannerList}" th:href="@{/article/__${banner.articleId}__}">
                 <div>
-                    <img th:src="@{http://www.sunyuchao.com/files/img/__${banner.imageUrl}__}" >
+                    <img th:src="${banner.imageUrl}" >
                     <span th:text="${banner.title}"></span>
                 </div>
             </a>
@@ -336,10 +335,10 @@
             <div id="gal">
                 <nav class="galnav">
                     <ul>
-                        <li th:each="banner : ${bannerCenterList}"><input type="radio" name="btn" th:value="${banner.value}" checked="checked" />
+                        <li  th:if="${banner.flag == 'CENTER'}" th:each="banner : ${bannerList}"><input type="radio" name="btn" th:value="${banner.value}" checked="checked" />
                             <label for="btn"></label>
                             <figure>
-                                <img th:src="@{http://www.sunyuchao.com/files/img/__${banner.imageUrl}__}" />
+                                <img th:src="${banner.imageUrl}" />
                                 <a th:href="@{/article/__${banner.articleId}__}">
                                     <figcaption>
                                     <h4 th:text="${banner.title}"></h4>
@@ -358,7 +357,7 @@
 
 
         <div class="syc-right">
-            <img class="enlargeImg" th:src="@{http://www.sunyuchao.com/files/img/__${card.avatar}__}" width="60" height="60">
+            <img class="enlargeImg" th:src="${card.avatar}" width="60" height="60">
             <h2 style="font-weight: 600;font-size: 20px;">我的名片</h2>
             <p>网名 ： [[${card.nickname}]]</p>
             <p>职业 ： [[${card.profession}]]</p>
@@ -380,31 +379,19 @@
         <div class="content-left">
             <h2>文章<span style="color: red;">推荐</span></h2> <a href="javascript:;" id="select">筛选<i class="layui-icon layui-icon-add-1"></i></a>
             <div id="selectCondition">
-                <div class="classify-div">
-                    <div class="layui-main" >
-                        <div class=""><input type="hidden" id="bread" th:value="${bread}"/></div>
-                    </div>
-                </div>
-                <input type="hidden" name="field" id="field" th:value="${field}">
-                <ul class="pick">
-                    <li><a id="default" onclick="queryData(this,'default')" href="javascript:;">默认</a></li>
-                    <li><a id="dateInsert" onclick="queryData(this,'dateInsert')" href="javascript:;"><i class="fa fa-arrow-down"></i>发布时间</a></li>
-                    <li><a id="browser" onclick="queryData(this,'browser')" href="javascript:;"><i class="fa fa-arrow-down"></i>浏览人数</a></li>
-                    <li><a id="collectionCount" onclick="queryData(this,'collectionCount')" href="javascript:;"><i class="fa fa-arrow-down"></i>收藏人数</a></li>
-                    <li><a id="commentCount" onclick="queryData(this,'commentCount')" href="javascript:;"><i class="fa fa-arrow-down"></i>评论人数</a></li>
-                </ul>
+
             </div>
             <div th:if="${not #lists.isEmpty(articleList)}" th:each="article : ${articleList}" class="article">
                 <header>
-                    <span th:text="${article.classifyName}"></span><i class="layui-icon layui-icon-triangle-r"></i>
+                    <span th:text="${article.classify.name}"></span><i class="layui-icon layui-icon-triangle-r"></i>
                     <h3><a th:text="${article.title}" th:href="@{/article/__${article.id}__}"></a></h3>
                 </header>
                 <div class="focus">
-                    <a th:href="@{/article/__${article.id}__}" class="focus-a"><img class="picture" th:src="@{http://www.sunyuchao.com/files/img/__${article.imageUrl}__}" height="123" width="200"></a>
+                    <a th:href="@{/article/__${article.id}__}" class="focus-a"><img class="picture" th:src="${article.imageUrl}" height="123" width="200"></a>
                 </div>
                 <div class="note" th:text="${article.description}"></div>
                 <p class="auth-span">
-                    <span class="muted"><i class="fa fa-user"></i> <a href="javascript:;" th:text="${article.username}"></a></span>
+                    <span class="muted"><i class="fa fa-user"></i> <a href="javascript:;">孙玉超</a></span>
                     <span class="muted"><i class="fa fa-clock-o"></i> <a href="javascript:;" th:text="${#dates.format(article.dateInsert, 'yyyy-MM-dd')}"></a></span>
                     <span class="muted"><i class="fa fa-eye"></i> <a th:text="${article.browser}" href="javascript:;"></a>浏览</span>
                     <span class="muted"><i class="fa fa-comment-o"></i> <span th:text="${article.commentCount}"></span>评论</span>
@@ -460,7 +447,7 @@
                 <h3 class="square">个人简介</h3>
                 <div>
                     <p style="padding:0 10px;color: #999;">
-                        <img th:src="@{http://www.sunyuchao.com/files/img/__${avatarName}__}" width="80" height="80" align="left"   style="border-radius: 50%;float: left;margin-right:20px;">
+                        <img th:src="${card.avatar}" width="80" height="80" align="left"   style="border-radius: 50%;float: left;margin-right:20px;">
                         [[${card.introduction}]]
                     </p>
                 </div>
@@ -526,27 +513,7 @@
     function jumpByClassify(obj) {
         window.location.href="/?bread="+$(obj).html();
     }
-    /**
-     * 条件筛选文章
-     * */
-    function queryData(obj,field) {
-        var bread = $("#bread").val();
-        if(field == "default"){
-            field=field+",default";
-            bread="";
-        }else{
 
-            if(($(obj).find(".fa-arrow-down").length > 0 && $(obj).attr("active") != "active")
-                || ($(obj).find(".fa-arrow-up").length > 0 && $(obj).attr("active") == "active")
-            ){
-                field=field+",desc";
-            }else{
-                field=field+",asc";
-            }
-        }
-        $("#field").val(field);
-        window.location.href="/?field="+field+"&bread="+bread;
-    }
     layui.config({base:'/layui/extends/'});
     layui.use(['layer','element','selectY'],function () {
         var layer=layui.layer,
@@ -568,19 +535,7 @@
         $("#wechat").mouseout(function () {
             layer.close(tips);
         });
-        
-        
-        selectY({
-            elem:'#bread',
-            url:"/article/classify/queryClassifyTree",
-            placeholder:'请选择文章分类',
-            disabledTips:'当前分类暂时维护',
-            success:function(e){    //e--> data(层级name)   ids[id1,id2,idn...](层级Id)
-                var bread = e.data;//分类
-                var field = $("#field").val();
-                window.location.href="/?field="+field+"&bread="+bread;
-            },dataType:"json"
-        });
+
 
 
         /*点击筛选*/

@@ -41,5 +41,9 @@ public class Article implements Serializable {
     private String imageUrl;//图片地址
 
     @TableField(exist = false)
-    private ArticleClassify articleClassify;
+    private ArticleClassify classify;
+    @TableField(exist = false)
+    private Integer commentCount;
+    @TableField(exist = false)
+    private Integer collectionCount;
 }
