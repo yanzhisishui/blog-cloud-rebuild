@@ -156,7 +156,7 @@
                     <input type="hidden" th:value="${article.id}" name="id">
                     <h2 class="article-title" th:text="${article.title}"></h2>
                     <p class="head">
-                        <img th:src="@{http://www.sunyuchao.com/files/img/__${avatarName}__}" width="30" height="30" style="border-radius: 50%;">
+                        <img th:src="${card.avatar}" width="30" height="30" style="border-radius: 50%;">
                         <span style="margin-left: 0;"><a href="">孙玉超</a></span>
                         <span><i class="layui-icon layui-icon-date"></i> [[${#dates.format(article.dateInsert, 'yyyy-MM-dd HH:mm:ss')}]]</span>
                         <span><i class="layui-icon layui-icon-reply-fill"></i> [[${article.commentCount}]] 评论</span>
@@ -195,7 +195,7 @@
         </div>
         <div class="content-right">
             <div class="right-card" style="position: relative;">
-                <img class="enlargeImg" th:src="@{http://www.sunyuchao.com/files/img/__${avatarName}__}" width="80" height="80">
+                <img class="enlargeImg" th:src="${card.avatar}" width="80" height="80">
                 <div style="height: 80px;background-color: #00FFFF;"></div>
                 <div style="height: 140px;padding-top: 50px;">
                     <h2 style="text-align: center;font-size: 18px;font-weight: 600;" th:text="${card.nickname}"></h2>
@@ -215,12 +215,7 @@
                 <h3 class="square">话题分类</h3>
                 <div>
                     <ul id="classify-card" class="flex">
-                        <li><a onclick="jumpByClassify(this)" href="javascript:;">技术</a></li>
-                        <li><a onclick="jumpByClassify(this)" href="javascript:;">感悟</a></li>
-                        <li><a onclick="jumpByClassify(this)" href="javascript:;">生活</a></li>
-                        <li><a onclick="jumpByClassify(this)" href="javascript:;">三观</a></li>
-                        <li><a onclick="jumpByClassify(this)" href="javascript:;">爱好</a></li>
-                        <li><a onclick="jumpByClassify(this)" href="javascript:;">休闲</a></li>
+                        <li th:each="ac : ${articleClassifyList}"><a th:text="${ac.name}" href="javascript:;">技术</a></li>
                     </ul>
                 </div>
             </div>
@@ -378,11 +373,6 @@
             layui.timeago.render($('.timeago'));
         }
 
-
-        /*跳转*/
-        function jumpByClassify(obj) {
-            window.location.href="/?bread="+$(obj).html();
-        }
 
         /**
          * 保存评论

@@ -18,6 +18,22 @@ public class Constant {
     public static final String DICT_LOGO_URL = DICT+"logo_url";
     public static final String DICT_ICONFONT_URL = DICT+"iconfont_url";
     public static final String HOW_BUILD_BLOG_DESC = DICT+"how_build_blog_desc";
+    public static final Integer PAGE_SIZE_COMMENT = 10;
+
+
+
+    public static final Byte USER_COMMENT_TYPE_ARTICLE = 1;
+    public static final Byte USER_COMMENT_TYPE_NOTICE = 2;
+    public static final Byte USER_COMMENT_TYPE_UTIL_HTTPCODE = 3;
+    public static final Byte USER_COMMENT_TYPE_UTIL_IMAGE_PRESS= 4;
+    public static final Byte USER_COMMENT_TYPE_UTIL_JSON_FORMAT= 5;
+    public static final Byte USER_COMMENT_TYPE_UTIL_LINUX= 6;
+    public static final Byte USER_COMMENT_TYPE_UTIL_MONEY_CONVERT= 7;
+    public static final Byte USER_COMMENT_TYPE_UTIL_QRCODE= 8;
+    public static final Byte USER_COMMENT_TYPE_UTIL_QUARTZ= 9;
+    public static final Byte USER_COMMENT_TYPE_UTIL_REGEXP= 10;
+    public static final Byte USER_COMMENT_TYPE_UTIL_IDCARD= 11;
+
 
     public static void main(String[] args) {
         CardInfo cardInfo = new CardInfo();
