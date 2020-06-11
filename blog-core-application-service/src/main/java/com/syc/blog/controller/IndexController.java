@@ -17,6 +17,8 @@ import com.syc.blog.service.comment.UserCommentService;
 import com.syc.blog.service.info.*;
 import com.syc.blog.utils.DateHelper;
 import com.syc.blog.utils.StringHelper;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Controller
 public class IndexController extends BaseController{
@@ -70,10 +73,6 @@ public class IndexController extends BaseController{
 
         List<ArticleClassify> articleClassifyList = articleClassifyService.selectListByLevel(1);
         map.put("articleClassifyList",articleClassifyList);
-
-        String cardStr = stringRedisTemplate.opsForValue().get(Constant.DICT+"cardInfo");
-        CardInfo card = JSON.parseObject(cardStr, CardInfo.class);
-        map.put("card",card);
 
         String ua= request.getHeader("User-Agent");
         if(StringHelper.checkAgentIsMobile(ua)){ //验证手机端登录
@@ -171,5 +170,33 @@ public class IndexController extends BaseController{
         buildPagePlugin(1,10,map);
         putPageCommon(map);
         return "life";
+    }
+
+    @Autowired
+    SkillService skillService;
+    @RequestMapping("/aboutme")
+    public String aboutme(ModelMap map){
+        List<Skill> skillList = skillService.selectList();
+        map.put("skillList",skillList);
+        //个人信息
+        List<Article> grxxList = new ArrayList<>();
+        MatchQueryBuilder matchQueryBuilder1 = QueryBuilders.matchQuery("classify.id", 7);
+        Iterable<Article> search = articleRepository.search(matchQueryBuilder1);
+        search.forEach(grxxList::add);
+        map.put("grxxList",grxxList);
+        //人生感悟
+        List<Article> rsgwList = new ArrayList<>();
+        MatchQueryBuilder matchQueryBuilder2 = QueryBuilders.matchQuery("classify.id", 8);
+        search = articleRepository.search(matchQueryBuilder2);
+        search.forEach(rsgwList::add);
+        map.put("rsgwList",rsgwList);
+        putPageCommon(map);
+        return "aboutme";
+    }
+
+    @RequestMapping("/message")
+    public String message(){
+
+        return "message";
     }
 }

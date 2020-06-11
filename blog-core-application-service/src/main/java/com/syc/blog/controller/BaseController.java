@@ -1,6 +1,8 @@
 package com.syc.blog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.syc.blog.constants.Constant;
+import com.syc.blog.entity.user.CardInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.ui.ModelMap;
@@ -34,6 +36,10 @@ public class BaseController {
         //图标地址
         String iconfontUrl = stringRedisTemplate.opsForValue().get(Constant.DICT_ICONFONT_URL);
         map.put("iconfontUrl",iconfontUrl);
+
+        String cardStr = stringRedisTemplate.opsForValue().get(Constant.DICT+"cardInfo");
+        CardInfo card = JSON.parseObject(cardStr, CardInfo.class);
+        map.put("card",card);
 
     }
 
