@@ -17,6 +17,7 @@ public class Constant {
     public static final String NEW_YEAR_DATE=DICT+"new_year_date";
     public static final String DICT_LOGO_URL = DICT+"logo_url";
     public static final String DICT_ICONFONT_URL = DICT+"iconfont_url";
+    public static final String HOW_BUILD_BLOG_DESC = DICT+"how_build_blog_desc";
 
     public static void main(String[] args) {
         CardInfo cardInfo = new CardInfo();

@@ -83,7 +83,7 @@
 <div class="top">
     <div class="top-center">
         <div class="top-center-l">
-            <img  th:src="@{http://www.sunyuchao.com/files/img/__${logoName}__}">
+            <img  th:src="${logoUrl}">
         </div>
         <div class="top-center-c">
             <ul class="nav">
@@ -106,7 +106,7 @@
         <div th:fragment="messageBox" class="save-message-box">
             <div class="smb-left">
                 <img th:if="${session.currentUser == null}" class="radius" src="/images/default_icon.jpg" width="50" height="50">
-                <img th:if="${session.currentUser != null && session.currentUser.identityType == 'EMAIL'}" class="radius" th:src="@{http://www.sunyuchao.com/files/img/__${session.currentUser.avatar}__}" width="50" height="50">
+                <img th:if="${session.currentUser != null && session.currentUser.identityType == 'EMAIL'}" class="radius" th:src="${session.currentUser.avatar}" width="50" height="50">
                 <img th:if="${session.currentUser != null && session.currentUser.identityType == 'QQ'}" class="radius" th:src="${session.currentUser.avatar}">
             </div>
             <div class="smb-right">
@@ -123,7 +123,7 @@
         <ul id="message-comment-body" th:fragment="comment" style="margin-top: 10px;">
             <li th:each="first : ${firstList}" class="item">
                 <div class="item-left">
-                    <img th:if="${first.identityType == 'EMAIL'}" class="radius" th:src="@{http://www.sunyuchao.com/files/img/__${first.avatar}__}" width="50" height="50">
+                    <img th:if="${first.identityType == 'EMAIL'}" class="radius" th:src="${first.avatar}" width="50" height="50">
                     <img th:if="${first.identityType == 'QQ'}" class="radius" th:src="${first.avatar}">
                 </div>
                 <div class="item-right">
@@ -144,7 +144,7 @@
                     <div class="msg-content">
                         <div th:each="child : ${first.childrenList}" class="msg-history">
                             <div class="mh-left">
-                                <img th:if="${child.identityType == 'EMAIL'}" class="radius" th:src="@{http://www.sunyuchao.com/files/img/__${child.avatar}__}" width="40" height="40">
+                                <img th:if="${child.identityType == 'EMAIL'}" class="radius" th:src="${child.avatar}" width="40" height="40">
                                 <img th:if="${child.identityType == 'QQ'}" class="radius" th:src="${child.avatar}" width="40" height="40">
                             </div>
                             <div class="mh-right">
@@ -192,7 +192,7 @@
 
     <div class="content-right">
         <div class="right-card" style="padding-bottom: 0;position: relative;">
-            <img class="myavatar" th:src="@{http://www.sunyuchao.com/files/img/__${avatarName}__}" width="80" height="80">
+            <img class="myavatar" th:src="${avatarName}" width="80" height="80">
             <div style="height: 80px;background-color: #00FFFF;"></div>
             <div style="height: 140px;padding-top: 50px;">
                 <h2 style="text-align: center;font-size: 18px;font-weight: 600;" th:text="${card.nickname}">暮色妖娆</h2>

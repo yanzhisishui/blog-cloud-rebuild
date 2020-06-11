@@ -1,7 +1,6 @@
 package com.syc.blog.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.Constant;
@@ -9,7 +8,6 @@ import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
 import com.syc.blog.entity.comment.UserComment;
 import com.syc.blog.entity.info.*;
-import com.syc.blog.entity.user.CardInfo;
 import com.syc.blog.repository.ArticleRepository;
 import com.syc.blog.service.article.ArticleClassifyService;
 import com.syc.blog.service.article.ArticleService;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Controller
 public class IndexController extends BaseController{
@@ -195,8 +192,24 @@ public class IndexController extends BaseController{
     }
 
     @RequestMapping("/message")
-    public String message(){
+    public String message(ModelMap map){
+        IPage<UserComment> page = new Page<>(1,10);
+        page = userCommentService.selectFirstLevelCommentPage(page,null,null);
+        List<UserComment> firstList = page.getRecords();
+        for(UserComment uc : firstList){
+            List<UserComment> childrenList = userCommentService.selectSecondLevelComment(null,null,uc.getId());
+            uc.setChildrenList(childrenList);
+        }
+        map.put("firstList",firstList);
 
+        List<ArticleClassify> hotTagList = articleClassifyService.selectHotTagList();
+        map.put("hotTagList",hotTagList);
+        List<OnlineUtils> onlineUtilsList = onlineUtilsService.selectListLatest(5);
+        map.put("onlineUtilsList",onlineUtilsList);
+        putPageCommon(map);
+        buildPagePlugin(1,10,map);
+        String howBuildBlogDesc = stringRedisTemplate.opsForValue().get(Constant.HOW_BUILD_BLOG_DESC);
+        map.put("howBuildBlogDesc",howBuildBlogDesc);
         return "message";
     }
 }

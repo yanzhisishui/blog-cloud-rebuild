@@ -20,4 +20,8 @@ public class ArticleClassifyService {
     public List<ArticleClassify> selectRandomList(int i) {
         return articleClassifyMapper.selectRandomList(i);
     }
+
+    public List<ArticleClassify> selectHotTagList() {
+        return articleClassifyMapper.selectList(Wrappers.<ArticleClassify>lambdaQuery().eq(ArticleClassify::getArchive,0).eq(ArticleClassify::getParentId,1));
+    }
 }
