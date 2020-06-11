@@ -208,7 +208,7 @@
 <div class="top">
     <div class="top-center">
         <div class="top-center-l">
-            <img th:src="@{http://www.sunyuchao.com/files/img/__${logoName}__}">
+            <img th:src="${logoUrl}">
         </div>
         <div class="top-center-c">
             <ul class="nav">
@@ -227,30 +227,18 @@
 
 <div class="content">
     <h1 class="motto">
-        <span class="f-right">一叶扁舟随风而去，心若定水亦静 ———— 修仙缘</span>
+        <span class="f-right">一叶扁舟随风而去，心若定水亦静 —— 修仙缘</span>
     </h1>
     <div class="content-left">
         <h2>学习<span style="color: red;">推荐</span></h2> <a href="javascript:;" id="select">筛选<i class="layui-icon layui-icon-add-1"></i></a>
         <div id="selectCondition">
-            <div class="classify-div">
-                <div class="layui-main" >
-                    <div class=""><input type="hidden" id="bread" th:value="${bread}"/></div>
-                </div>
-            </div>
-            <input type="hidden" name="field" id="field" th:value="${field}">
-            <ul class="pick">
-                <li><a id="default" onclick="queryData(this,'default')" href="javascript:;">默认</a></li>
-                <li><a id="dateInsert" onclick="queryData(this,'dateInsert')" href="javascript:;"><i class="fa fa-arrow-down"></i>发布时间</a></li>
-                <li><a id="browser" onclick="queryData(this,'browser')" href="javascript:;"><i class="fa fa-arrow-down"></i>浏览人数</a></li>
-                <li><a id="collectionCount" onclick="queryData(this,'collectionCount')" href="javascript:;"><i class="fa fa-arrow-down"></i>收藏人数</a></li>
-                <li><a id="commentCount" onclick="queryData(this,'commentCount')" href="javascript:;"><i class="fa fa-arrow-down"></i>评论人数</a></li>
-            </ul>
+
             <div id="title-search">
                 <div class="layui-input-inline">
                     <input th:value="${keyword}" type="text" id="keyword" placeholder="请输入关键词搜索" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-input-inline">
-                    <button onclick="searchByKeyword()" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-search"></i></button>
+                    <button onclick="" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-search"></i></button>
                 </div>
 
             </div>
@@ -258,15 +246,15 @@
 
         <div th:if="${not #lists.isEmpty(articleList)}" th:each="article : ${articleList}" class="article">
             <header>
-                <span th:text="${article.classifyName}"></span><i class="layui-icon layui-icon-triangle-r"></i>
+                <span th:text="${article.classify.name}"></span><i class="layui-icon layui-icon-triangle-r"></i>
                 <h3><a th:text="${article.title}" th:href="@{/article/__${article.id}__}"></a></h3>
             </header>
             <div class="focus">
-                <a th:href="@{/article/__${article.id}__}" class="focus-a"><img class="picture" th:src="@{http://www.sunyuchao.com/files/img/__${article.imageUrl}__}" height="123" width="200"></a>
+                <a th:href="@{/article/__${article.id}__}" class="focus-a"><img class="picture" th:src="${article.imageUrl}" height="123" width="200"></a>
             </div>
             <div class="note" th:text="${article.description}"></div>
             <p class="auth-span">
-                <span class="muted"><i class="fa fa-user"></i> <a href="javascript:;" th:text="${article.username}"></a></span>
+                <span class="muted"><i class="fa fa-user"></i> <a href="javascript:;">孙玉超</a></span>
                 <span class="muted"><i class="fa fa-clock-o"></i> <a href="javascript:;" th:text="${#dates.format(article.dateInsert, 'yyyy-MM-dd')}"></a></span>
                 <span class="muted"><i class="fa fa-eye"></i> <a th:text="${article.browser}"></a>浏览</span>
                 <span class="muted"><i class="fa fa-comment-o"></i> <span th:text="${article.commentCount}"></span>评论</span>
@@ -312,7 +300,7 @@
             <h3 class="square">在线工具</h3>
             <div>
                 <ul class="notice">
-                    <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}" th:text="${util.title}"> </a><span th:text="${#dates.format(util.dateUpdate, 'yyyy-MM-dd')}"></span></li>
+                    <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}" th:text="${util.title}"> </a><span th:text="${#dates.format(util.dateInsert, 'yyyy-MM-dd')}"></span></li>
                 </ul>
             </div>
 
@@ -324,7 +312,7 @@
                     <li th:each="lucom : ${latestCommentList}">
                         <div class="item">
                             <div class="item-left">
-                                <img th:if="${lucom.identityType == 'EMAIL'}" class="radius" th:src="@{http://www.sunyuchao.com/files/img/__${lucom.avatar}__}" width="60" height="60">
+                                <img th:if="${lucom.identityType == 'EMAIL'}" class="radius" th:src="${lucom.avatar}" width="60" height="60">
                                 <img th:if="${lucom.identityType == 'QQ'}" class="radius" th:src="${lucom.avatar}" width="60" height="60">
                             </div>
                             <div class="item-right">
@@ -364,17 +352,10 @@
     //文本框回车
     $("#keyword").keypress(function (e) {
         if (e.which == 13) {
-            searchByKeyword();
+
         }
     });
-    /**
-     * 关键词搜索
-     * */
-    function searchByKeyword() {
-        var keyword= $("#keyword").val();
 
-        window.location.href="/learning?field="+$("#field").val()+"&bread="+$("#bread").val()+"&keyword="+keyword
-    }
 
     //翻页
     function flipPage(obj,page) {
@@ -384,48 +365,12 @@
         }
         window.location.href='/learning?page='+page+"&field="+$("#field").val()+"&bread="+$("#bread").val()+"&keyword="+keyword
     }
-    /**
-     * 条件筛选文章
-     * */
-    function queryData(obj,field) {
-        var bread = $("#bread").val();
-        if(field == "default"){
-            field=field+",default";
-            bread="";
-        }else{
-            if(($(obj).find(".fa-arrow-down").length > 0 && $(obj).attr("active") != "active")
-                || ($(obj).find(".fa-arrow-up").length > 0 && $(obj).attr("active") == "active")
-            ){
-                field=field+",desc";
-            }else{
-                field=field+",asc";
-            }
-        }
-        $("#field").val(field);
-        var keyword= $("#keyword").val();
-        window.location.href="/learning?field="+field+"&bread="+bread+"&keyword="+keyword;
-    }
+
     layui.config({base:'/layui/extends/'});
     layui.use(['layer','element','selectY'],function () {
         var layer = layui.layer,
             element = layui.element,
-            selectY = layui.selectY,
             $ = layui.jquery;
-
-
-
-        selectY({
-            elem:'#bread',
-            url:"/article/classify/queryClassifyTree?id=1",
-            placeholder:'请选择文章分类',
-            disabledTips:'当前分类暂时维护',
-            success:function(e){    //e--> data(层级name)   ids[id1,id2,idn...](层级Id)
-                var bread = e.data;//分类
-                var field = $("#field").val();
-                var keyword = $("#keyword").val();
-                window.location.href="/learning?field="+field+"&bread="+bread+"&keyword="+keyword;
-            },dataType:"json"
-        });
 
         /*点击筛选*/
         $("#select").click(function () {
@@ -465,29 +410,6 @@
 
     });
 
-    $(function () {
-        var field = $("#field").val();
-
-        var bread = $("#bread").val();
-        if(field != "default,default" || bread != "技术") {
-            $("#selectCondition").show();
-        }
-        var arr = field.split(",");
-
-        $("#"+arr[0]).css("color","#008ff4");
-        $("#"+arr[0]).attr("active","active");//选中
-        if(arr[0] != "default"){
-            if(arr[1] == "desc"){
-                $(`#${arr[0]} i`).removeClass("fa-arrow-up");
-                $(`#${arr[0]} i`).addClass("fa-arrow-down");
-            }else{
-                $(`#${arr[0]} i`).removeClass("fa-arrow-down");
-                $(`#${arr[0]} i`).addClass("fa-arrow-up");
-            }
-        }
-
-
-    });
 </script>
 </body>
 </html>

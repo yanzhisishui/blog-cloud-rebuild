@@ -14,6 +14,7 @@ public class NoticeService {
     NoticeMapper noticeMapper;
     public List<Notice> selectListLatest(int i) {
         QueryWrapper<Notice> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("archive",0);
         queryWrapper.orderByDesc("date_insert");
         String sql = "limit "+i;
         queryWrapper.last(sql);

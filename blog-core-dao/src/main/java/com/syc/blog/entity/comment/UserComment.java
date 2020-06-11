@@ -1,10 +1,13 @@
 package com.syc.blog.entity.comment;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +23,11 @@ public class UserComment implements Serializable {
     private Byte type; //1：给我留 2：文章留  3：通知留
     private Integer bindId; //文章id或者通知id
 
+    @TableId(value = "id",type = IdType.AUTO)
+    private Integer id;
+    private Date dateInsert;
+    private Date dateUpdate;
+    private Byte archive;//删除标志 0:未删除  1：逻辑删除
     private Integer parentId;
 
     @TableField(exist = false)

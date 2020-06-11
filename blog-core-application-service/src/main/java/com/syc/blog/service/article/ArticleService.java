@@ -1,5 +1,6 @@
 package com.syc.blog.service.article;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
@@ -34,5 +35,14 @@ public class ArticleService {
             article.setCollectionCount(0);
         }
         articleRepository.saveAll(list);
+    }
+
+    public List<Article> selectListLatest(int i) {
+        QueryWrapper<Article> qw = new QueryWrapper<>();
+        qw.select("id","title","date_insert").eq("archive",0);
+        qw.orderByDesc("date_insert");
+        String sql = "limit "+i;
+        qw.last(sql);
+        return articleMapper.selectList(qw);
     }
 }
