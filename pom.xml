@@ -8,6 +8,7 @@
         <module>blog-core-utils</module>
         <module>blog-core-manage</module>
         <module>blog-core-application-service</module>
+        <module>blog-core-onlineutils-service</module>
     </modules>
 
 

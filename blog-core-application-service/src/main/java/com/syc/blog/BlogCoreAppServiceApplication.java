@@ -13,10 +13,10 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 @EnableRedisHttpSession //交给redis
 //@EnableCaching
-public class BlogCoreServiceApplication {
+public class BlogCoreAppServiceApplication {
     public static void main(String[] args) {
         System.setProperty("es.set.netty.runtime.available.processors","false");//解决redis和elasticsearch冲突
-        SpringApplication.run(BlogCoreServiceApplication.class,args);
+        SpringApplication.run(BlogCoreAppServiceApplication.class,args);
     }
 
 }

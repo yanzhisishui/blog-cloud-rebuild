@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.Constant;
+import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.comment.UserComment;
 import com.syc.blog.entity.user.CardInfo;
 import com.syc.blog.entity.user.User;
@@ -62,13 +63,13 @@ public class BaseController {
      * */
     public void putPageCommon(ModelMap map){
         //网站logo
-        String logoName = stringRedisTemplate.opsForValue().get(Constant.DICT_LOGO_URL);
+        String logoName = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_LOGO_URL);
         map.put("logoUrl",logoName);
         //图标地址
-        String iconfontUrl = stringRedisTemplate.opsForValue().get(Constant.DICT_ICONFONT_URL);
+        String iconfontUrl = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_ICONFONT_URL);
         map.put("iconfontUrl",iconfontUrl);
 
-        String cardStr = stringRedisTemplate.opsForValue().get(Constant.DICT+"cardInfo");
+        String cardStr = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_CARD_INFO);
         CardInfo card = JSON.parseObject(cardStr, CardInfo.class);
         map.put("card",card);
 
