@@ -27,17 +27,17 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <!--<dependencyManagement>
+    <dependencyManagement>
         <dependencies>
-            <dependency>
+          <!--  <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Hoxton.SR2</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
+            </dependency>-->
         </dependencies>
-    </dependencyManagement>-->
+    </dependencyManagement>
     <build>
         <plugins>
             <plugin>

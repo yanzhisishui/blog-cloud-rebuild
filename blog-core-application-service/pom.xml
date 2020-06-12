@@ -12,7 +12,11 @@
     <artifactId>blog-core-application-service</artifactId>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.syc</groupId>
             <artifactId>blog-core-dao</artifactId>

@@ -130,7 +130,7 @@
 <div class="top" th:fragment="top">
     <div class="top-center">
         <div class="top-center-l">
-            <img th:src="@{http://www.sunyuchao.com/files/img/__${logoName}__}">
+            <img th:src="${logoUrl}">
         </div>
         <div class="top-center-c">
             <ul class="nav">
@@ -156,7 +156,7 @@
                     网站公告</h3>
                 <h2 class="title" th:text="${notice.title}"></h2>
                 <p class="publish-info">
-                    <img style="border-radius: 50%;" width="35" height="35" th:src="@{http://www.sunyuchao.com/files/img/__${avatarName}__}">
+                    <img style="border-radius: 50%;" width="35" height="35" th:src="${card.avatar}">
                     <span>孙玉超</span>
                     <span th:text="${#dates.format(notice.dateInsert, 'yyyy-MM-dd')}"></span>
                     <span>【网站公告】569人已围观</span>
@@ -212,7 +212,7 @@
                         <li th:each="lucom : ${latestCommentList}">
                             <div class="item">
                                 <div class="item-left">
-                                    <img th:if="${lucom.identityType == 'EMAIL'}" class="radius" th:src="@{http://www.sunyuchao.com/files/img/__${lucom.avatar}__}" width="60" height="60">
+                                    <img th:if="${lucom.identityType == 'EMAIL'}" class="radius" th:src="${lucom.avatar}" width="60" height="60">
                                     <img th:if="${lucom.identityType == 'QQ'}" class="radius" th:src="${lucom.avatar}" width="60" height="60">
                                 </div>
                                 <div class="item-right">

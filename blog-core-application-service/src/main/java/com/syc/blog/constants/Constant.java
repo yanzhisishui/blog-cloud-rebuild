@@ -22,6 +22,9 @@ public class Constant {
 
 
 
+    /**
+     * 评论类型
+     * */
     public static final Byte USER_COMMENT_TYPE_ARTICLE = 1;
     public static final Byte USER_COMMENT_TYPE_NOTICE = 2;
     public static final Byte USER_COMMENT_TYPE_UTIL_HTTPCODE = 3;
@@ -46,5 +49,7 @@ public class Constant {
         cardInfo.setIntroduction(Constant.BLOG_INTRODUCTION);
         String s = JSON.toJSONString(cardInfo);
         System.out.println(s);
+
+        System.out.println(System.currentTimeMillis()/1000);
     }
 }

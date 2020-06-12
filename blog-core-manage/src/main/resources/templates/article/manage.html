@@ -13,12 +13,14 @@
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-normal" lay-event="add">添加</button>
         <button class="layui-btn layui-btn-normal" lay-event="init">重新初始化ES</button>
+        <button class="layui-btn layui-btn-normal" lay-event="recommendList">推荐列表</button>
     </div>
 </script>
 
 <script type="text/html" id="rightBar">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="recommend">推荐</a>
 </script>
 
 
@@ -67,6 +69,14 @@
                 case 'init':  //重新初始化ES文章列表
                     window.location.href='/article/initializeESArticle'
                     break;
+                case 'recommendList':
+                   layer.open({
+                        type: 2,
+                        area:['50%','80%'],
+                        title: "推荐文章列表",
+                        content: '/article/recommend/manage',
+                    });
+                    break;
             }
         });
 
@@ -96,6 +106,22 @@
                     area:['500px','460px'],
                     title: "技能更新",
                     content: '/article/edit?id='+data.id
+                });
+            } else if(obj.event === 'recommend'){ //添加到推荐
+                layer.confirm('将该文章添加到推荐？', function(index){
+                    $.ajax({
+                        url:"/article/recommend",
+                        type:"POST",
+                        data:{"id":data.id},
+                        success:function (e) {
+                            if(e.success){
+                                layer.msg("添加成功!");
+                                layer.close(index);
+                            }else{
+                                layer.alert(e.message);
+                            }
+                        },dataType:"json"
+                    });
                 });
             }
         });

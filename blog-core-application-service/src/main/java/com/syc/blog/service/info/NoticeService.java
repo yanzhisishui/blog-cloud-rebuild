@@ -20,4 +20,12 @@ public class NoticeService {
         queryWrapper.last(sql);
         return noticeMapper.selectList(queryWrapper);
     }
+
+    public Notice selectById(Integer id) {
+        return noticeMapper.selectById(id);
+    }
+
+    public List<Notice> selectNextAndPrev(Integer id) {
+        return noticeMapper.selectNextAndPrev(id);
+    }
 }
