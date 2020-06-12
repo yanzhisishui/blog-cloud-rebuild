@@ -173,10 +173,10 @@
     </script>
 
     <script th:inline="javascript">
-        var currentUser=[[${session.currentUser}]];
-        var currentUserId;
-        if(currentUser != null){
-            currentUserId=currentUser.id;
+        var loginUser=[[${session.loginUser}]];
+        var loginUserId;
+        if(loginUser != null){
+            loginUserId=loginUser.id;
         }
     </script>
     <script>
@@ -190,7 +190,7 @@
             replyEntity.commentedUserId=1;//被回复者默认是我（生产中放到后台）
             replyEntity.level = 1;
             replyEntity.type = 4;
-            replyEntity.userId=currentUserId;
+            replyEntity.userId=loginUserId;
             replyEntity.bindId=$("input[name=id]").val();
             if($.trim(replyEntity.content).length == 0){
                 alert("请输入内容")
@@ -240,7 +240,7 @@
             var commented = $(receiver).html();
             var commentedId = $(receiverUserId).val();
             var replyEntity={};
-            replyEntity.userId=currentUserId;
+            replyEntity.userId=loginUserId;
             replyEntity.commentedUserId=commentedId;
             replyEntity.content=msg;
             replyEntity.level=2;

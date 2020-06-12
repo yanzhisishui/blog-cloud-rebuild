@@ -105,9 +105,9 @@
     <div class="content-left">
         <div th:fragment="messageBox" class="save-message-box">
             <div class="smb-left">
-                <img th:if="${session.currentUser == null}" class="radius" src="/images/default_icon.jpg" width="50" height="50">
-                <img th:if="${session.currentUser != null && session.currentUser.identityType == 'EMAIL'}" class="radius" th:src="${session.currentUser.avatar}" width="50" height="50">
-                <img th:if="${session.currentUser != null && session.currentUser.identityType == 'QQ'}" class="radius" th:src="${session.currentUser.avatar}">
+                <img th:if="${session.loginUser == null}" class="radius" src="/images/default_icon.jpg" width="50" height="50">
+                <img th:if="${session.loginUser != null && session.loginUser.identityType == 'EMAIL'}" class="radius" th:src="${session.loginUser.avatar}" width="50" height="50">
+                <img th:if="${session.loginUser != null && session.loginUser.identityType == 'QQ'}" class="radius" th:src="${session.loginUser.avatar}">
             </div>
             <div class="smb-right">
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
@@ -306,10 +306,10 @@
 </script>
 
 <script th:inline="javascript">
-    var currentUser=[[${session.currentUser}]];
-    var currentUserId;
-      if(currentUser != null){
-          currentUserId=currentUser.id;
+    var loginUser=[[${session.loginUser}]];
+    var loginUserId;
+      if(loginUser != null){
+          loginUserId=loginUser.id;
       }
 </script>
 
@@ -358,7 +358,7 @@
         replyEntity.content = $(frameObj).html().replace(/&nbsp;/ig,'');//回复内容
         replyEntity.commentedUserId=1;//被回复者默认是我（生产中放到后台）
         replyEntity.level = 1;
-        replyEntity.userId=currentUserId;
+        replyEntity.userId=loginUserId;
         var retInfo={};
         var flag=false;
         $.ajax({
@@ -401,7 +401,7 @@
         var commented = $(receiver).html();
         var commentedId = $(receiverUserId).val();
         var replyEntity={};
-        replyEntity.userId=currentUserId;
+        replyEntity.userId=loginUserId;
         replyEntity.commentedUserId=commentedId;
         replyEntity.content=msg;
         replyEntity.level=2;

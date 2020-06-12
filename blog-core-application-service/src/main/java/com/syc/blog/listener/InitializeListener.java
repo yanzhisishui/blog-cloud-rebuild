@@ -5,6 +5,8 @@ import com.syc.blog.entity.config.BaseConfig;
 import com.syc.blog.entity.user.CardInfo;
 import com.syc.blog.service.article.ArticleService;
 import com.syc.blog.service.config.BaseConfigService;
+import com.syc.blog.utils.IllegalWordsHelper;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletContextEvent;
@@ -19,13 +21,15 @@ public class InitializeListener implements ServletContextListener {
     @Autowired
     BaseConfigService baseConfigService;
 
+    @SneakyThrows
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         //初始化数据到ES
         articleService.initRepository();
         //初始化数据到Redis
         baseConfigService.initRedis();
-
+        //初始化敏感词库
+        IllegalWordsHelper.init();
     }
 
     @Override

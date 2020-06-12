@@ -25,4 +25,8 @@ public class UserCommentService {
     public List<UserComment> selectSecondLevelComment(Byte type, Integer bindId, Integer id) {
         return userCommentMapper.selectSecondLevelComment(type,bindId,id);
     }
+
+    public int save(UserComment comment) {
+        return userCommentMapper.insert(comment);
+    }
 }

@@ -298,17 +298,17 @@
                 </ul>
             </div>
             <div th:fragment="top-center-r" class="top-center-r">
-                <span th:if="${session.currentUser == null }"><a id="login" href="javascript:;">登录</a> / <a id="regist" href="javascript:;">注册</a></span>
-                <ul th:if="${session.currentUser != null }" class="layui-nav"> <!--登录之后显示-->
+                <span th:if="${session.loginUser == null }"><a id="login" href="javascript:;">登录</a> / <a id="regist" href="javascript:;">注册</a></span>
+                <ul th:if="${session.loginUser != null }" class="layui-nav"> <!--登录之后显示-->
                     <li class="layui-nav-item">
                         <a href="javascript:;">
-                            <img th:if="${not session.isThirdLogin}" class="radius" width="50" height="50" th:src="@{http://www.sunyuchao.com/files/img/__${session.currentUser.avatar}__}">
-                            <img th:if="${session.isThirdLogin}" class="radius" th:src="${session.currentUser.avatar}">
+                            <img th:if="${not session.isThirdLogin}" class="radius" width="50" height="50" th:src="@{http://www.sunyuchao.com/files/img/__${session.loginUser.avatar}__}">
+                            <img th:if="${session.isThirdLogin}" class="radius" th:src="${session.loginUser.avatar}">
                         </a>
                         <dl class="layui-nav-child"> <!-- 二级菜单 -->
                             <dd><a href="javascript:;" id="personCenter">个人中心</a></dd>
                             <dd><a href="javascript:;" id="myMessage">我的消息<span class="layui-badge-dot"></span></a></dd>
-                            <dd th:if="${session.currentUser.identityType == 'EMAIL'}"><a href="javascript:;" id="modifyPass">忘记密码</a></dd>
+                            <dd th:if="${session.loginUser.identityType == 'EMAIL'}"><a href="javascript:;" id="modifyPass">忘记密码</a></dd>
                             <dd><a href="/login/exit">退出</a></dd>
                         </dl>
                     </li>

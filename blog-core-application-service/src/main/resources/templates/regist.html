@@ -200,7 +200,7 @@
                 url:"/login/checkValCode",
                 type:"POST",
                 async:false,
-                data:{"valCode":code},
+                data:{"valCode":code,"email":$("input[name=email]").val()},
                 success:function (e) {
                     if(e.success){
                         flag=true;

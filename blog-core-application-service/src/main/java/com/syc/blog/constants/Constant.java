@@ -38,6 +38,8 @@ public class Constant {
     public static final Byte USER_COMMENT_TYPE_UTIL_IDCARD= 11;
     public static final String LOGIN_EMAIL = "EMAIL";
     public static final String LOGIN_QQ =  "QQ";
+    public static final String SMS_EMAIL = "sms:email:";
+    public static final String USER_LOGIN_SESSION_KEY = "loginUser";
 
 
     public static void main(String[] args) {

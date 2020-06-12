@@ -11,6 +11,7 @@ import com.syc.blog.constants.Constant;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.user.User;
 import com.syc.blog.entity.user.UserAuth;
+import com.syc.blog.service.sms.email.EmailSmsCodeService;
 import com.syc.blog.service.user.UserAuthService;
 import com.syc.blog.service.user.UserService;
 import com.syc.blog.utils.MD5Helper;
@@ -21,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -121,7 +121,7 @@ public class LoginController extends BaseController {
             }
         }
         User currentUser=userService.selectById(userAuth.getUserId());
-        session.setAttribute("currentUser",currentUser);
+        session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,currentUser);
         session.setAttribute("isThirdLogin",false);
         result= ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);
@@ -161,36 +161,21 @@ public class LoginController extends BaseController {
     }
 
 
+    @Autowired
+    EmailSmsCodeService emailSmsCodeService;
     @ResponseBody
     @RequestMapping("/sendEmail")
-    public String sendEmail(@RequestParam("email") String email, HttpSession session){
-        SimpleMailMessage message=new SimpleMailMessage();
-        VCodeHelper vCode = new VCodeHelper(6);
-        String dynamicCode=vCode.createNumCode();//即将发送的验证码
-        ResultHelper resultHelper;
-        try{
-            message.setSubject("暮色妖娆丶博客注册验证");
-            message.setText("您的暮色妖娆丶博客网站动态码为\t"+dynamicCode+","+
-                    "十分钟内有效,"+"如果这不是您本人的操作，请忽略");
-            message.setFrom(from);
-            message.setTo(email);
-            mailSender.send(message);
-            session.setAttribute("dynamicCode",dynamicCode);
-            session.setMaxInactiveInterval(600);
-            resultHelper= ResultHelper.wrapSuccessfulResult(null);
-        }catch (Exception e) {
-            log.error("发送邮件失败,腾讯SMTP服务出现问题，请暂时使用QQ登录",e);
-            resultHelper= ResultHelper.wrapErrorResult(1,"发送邮件失败,腾讯SMTP服务出现问题，请暂时使用QQ登录");
-        }
-        return JSON.toJSONString(resultHelper);//发送成功
+    public String sendEmail(@RequestParam("email") String email){
+        ResultHelper send = emailSmsCodeService.send(email, from);
+        return JSON.toJSONString(send);//发送成功
 
     }
 
     @RequestMapping("/checkValCode")
     @ResponseBody
-    public String checkValCode(@RequestParam("valCode") String valCode, HttpSession session){
-        String dynamicCode = (String) session.getAttribute("dynamicCode");
-        boolean success = dynamicCode.equalsIgnoreCase(valCode);
+    public String checkValCode(@RequestParam("valCode") String valCode, @RequestParam("email") String email,HttpSession session){
+        String dynamicCode = stringRedisTemplate.opsForValue().get(Constant.SMS_EMAIL + email);
+        boolean success = dynamicCode != null && dynamicCode.equalsIgnoreCase(valCode);
         ResultHelper result=success ? ResultHelper.wrapSuccessfulResult(null) : ResultHelper.wrapErrorResult(1,"动态码错误");
         return JSON.toJSONString(result);
     }
@@ -241,7 +226,7 @@ public class LoginController extends BaseController {
                         int save = userService.save(user,userAuth);
                         user.setId(save);
                         if(save != 0){
-                            session.setAttribute("currentUser",user);
+                            session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,user);
                             return "redirect:/";
                         }
 
@@ -250,7 +235,7 @@ public class LoginController extends BaseController {
                         if(userAuth.getCredential().equals(accessToken)){
                             Integer userId = userAuth.getUserId();
                             user = userService.selectById(userId);
-                            session.setAttribute("currentUser",user);
+                            session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,user);
                             //检查用户信息是否变更
                             log.info("开始检查用户信息是否变更");
                             if(!user.getAvatar().equals(avatarURL50) || !user.getNickname().equals(nickname)){
@@ -273,7 +258,7 @@ public class LoginController extends BaseController {
 
     @RequestMapping("/exit")
     public String exit(HttpSession session){
-        session.setAttribute("currentUser",null);
+        session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,null);
         return "redirect:/";
     }
 

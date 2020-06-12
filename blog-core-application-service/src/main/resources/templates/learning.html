@@ -328,7 +328,7 @@
             <h3 class="square">友情链接</h3>
             <div>
                 <ul class="friend">
-                    <li th:each="link : ${friendLinkList}"><a th:href="${link.url}" th:text="${link.title}">小鱼儿网</a></li>
+                    <li th:each="link : ${friendLinkList}"><a target="_blank" th:href="${link.url}" th:text="${link.title}">小鱼儿网</a></li>
                 </ul>
                 <div class="layui-clear"></div>
             </div>

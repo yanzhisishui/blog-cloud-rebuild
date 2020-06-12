@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.Constant;
 import com.syc.blog.entity.comment.UserComment;
 import com.syc.blog.entity.user.CardInfo;
+import com.syc.blog.entity.user.User;
 import com.syc.blog.service.comment.UserCommentService;
+import com.syc.blog.utils.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.ui.ModelMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +72,43 @@ public class BaseController {
         CardInfo card = JSON.parseObject(cardStr, CardInfo.class);
         map.put("card",card);
 
+    }
+
+
+    /**
+     * 获取当前登录的用户
+     * */
+    public User getLoginUser(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Object currentAdminUser = session.getAttribute(Constant.USER_LOGIN_SESSION_KEY);
+        if(currentAdminUser == null){
+            return null;
+        }
+        return (User) currentAdminUser;
+    }
+
+    /**
+     * 评论检查
+     * */
+    public String commentCheck(UserComment comment, HttpServletRequest request) {
+        String content=comment.getContent();
+        if(content == null || content.trim().length() == 0){
+            return "请填写评论内容";
+        }
+        if(content.length() > 150){
+            return  "评论不得超过150个字符";
+        }
+        User loginUser = getLoginUser(request);
+        if(StringHelper.hasIllegal(content)){
+            return "请文明发言";
+        }
+        if(loginUser == null ){ //生产环境必须要登录
+            return "请先登录";
+        }
+        if(comment.getUserId().equals(comment.getCommentedUserId())){
+            return "不能自己回复自己";
+        }
+        return null;
     }
 
 }
