@@ -5,11 +5,11 @@
     <title th:text="${article.title}"></title>
     <meta name="Description" content="孙玉超个人博客是一个分享、研究Java技术的自媒体博客。Java技术栈的学习之路，我和你一起行走！" />
     <meta name="Keywords" th:content="${article.keyword}" />
-    <link href="/css/fontawesome4.7.0/css/font-awesome.css"  rel="stylesheet">
-    <link href="/layui/css/layui.css" rel="stylesheet" >
+    <link href="http://192.168.23.175:9999/static/css/fontawesome4.7.0/css/font-awesome.css"  rel="stylesheet">
+    <link href="http://192.168.23.175:9999/static/layui/css/layui.css" rel="stylesheet" >
     <script th:src="${iconfontUrl}"></script>
-    <link rel="stylesheet" href="/css/common.css" >
-    <link href="/css/reply.css" rel="stylesheet" >
+    <link rel="stylesheet" href="http://192.168.23.175:9999/static/css/common.css" >
+    <link href="http://192.168.23.175:9999/static/css/reply.css" rel="stylesheet" >
     <style>
         .content{width: 62%;margin: 0 auto;margin-top: 20px;}
         .content .content-left{float: left;width: 72%;background-color: white;}
@@ -237,9 +237,9 @@
         <p>Design by：暮色妖娆丶 备案号：皖ICP备19018192号</p>
     </div>
 
-    <script src="/layui/layui.js" th:src="@{/layui/layui.js}"></script>
-    <script src="/js/reply.js" th:src="@{/js/reply.js}"></script>
-    <script src="/js/jquery3.3.1.min.js" th:src="@{/js/jquery3.3.1.min.js}"></script>
+    <script src="http://192.168.23.175:9999/static/layui/layui.js"></script>
+    <script src="http://192.168.23.175:9999/static/js/reply.js"></script>
+    <script src="http://192.168.23.175:9999/static/js/jquery3.3.1.min.js"></script>
     <!--子回复模板-->
     <script type="text/template" id="childMsg">
         <div class="msg-history">
@@ -473,8 +473,8 @@
             }
         });
     </script>
-    <script src="/js/heart.js"></script>
-    <script src="/js/common.js"></script>
+    <script src="http://192.168.23.175:9999/static/js/heart.js"></script>
+    <script src="http://192.168.23.175:9999/static/js/common.js"></script>
     <script>
 
         window.onload = function(){

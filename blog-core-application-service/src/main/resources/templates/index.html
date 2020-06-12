@@ -5,15 +5,15 @@
     <title>孙玉超个人博客-Java技术研究</title>
     <meta name="Description" content="孙玉超个人博客是一个分享、研究Java技术的自媒体博客。Java技术栈的学习之路，我和你一起行走！" />
     <meta name="Keywords" content="孙玉超个人博客,Java技术博客,孙玉超" />
-    <link href="../static/css/fontawesome4.7.0/css/font-awesome.css" th:href="@{/css/fontawesome4.7.0/css/font-awesome.css}" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link href="http://192.168.23.175:9999/static/css/fontawesome4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://192.168.23.175:9999/static/css/animate.css">
     <script th:src="${iconfontUrl}"></script>
 
-    <link href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/common.css" th:href="@{/css/common.css}">
+    <link href="http://192.168.23.175:9999/static/layui/css/layui.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://192.168.23.175:9999/static/css/common.css">
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" th:if="${enableLantern}" th:href="@{/css/lantern.css}" href="../static/css/lantern.css"> <!--灯笼特效样式-->
+    <link rel="icon" type="image/x-icon" href="http://192.168.23.175:9999/static/images/favicon.ico">
+    <link rel="stylesheet" th:if="${enableLantern}" href="http://192.168.23.175:9999/static/css/lantern.css"> <!--灯笼特效样式-->
     <style>
 
 
@@ -462,8 +462,8 @@
     </div>
 
 
-<script src="../static/layui/layui.js" th:src="@{/layui/layui.js}"></script>
-<script src="../static/js/jquery3.3.1.min.js" th:src="@{/js/jquery3.3.1.min.js}"></script>
+<script src="http://192.168.23.175:9999/static/layui/layui.js"></script>
+<script src="http://192.168.23.175:9999/static/js/jquery3.3.1.min.js"></script>
 <script th:inline="javascript">
     var isMobile=[[${isMobile}]];
 </script>
@@ -515,7 +515,7 @@
 
         var tips;
         $("#wechat").mouseover(function () {
-            tips = layer.tips("<img width='100' height='100' src='/images/wechat.jpg'>","#wechat",{ tips: [1, '#3595CC'],time:0});
+            tips = layer.tips("<img width='100' height='100' src='http://192.168.23.175:9999/static/images/wechat.jpg'>","#wechat",{ tips: [1, '#3595CC'],time:0});
         });
         $("#wechat").mouseout(function () {
             layer.close(tips);
@@ -543,7 +543,7 @@
     });
 </script>
 <!--网页点击爱心-->
-<script th:src="@{js/heart.js}"></script>
+<script src="http://192.168.23.175:9999/static/js/jquery3.3.1.min.js"></script>
 <script>
     /*鼠标滚动时候，文章列表渐渐显示*/
     $(window).scroll(function () {
@@ -584,7 +584,7 @@
     });
 </script>
 
-<script src="../static/js/common.js" th:src="@{/js/common.js}"></script>
+<script src="http://192.168.23.175:9999/static/js/common.js"></script>
 
 </body>
 </html>
