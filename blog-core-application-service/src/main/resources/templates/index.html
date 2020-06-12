@@ -12,7 +12,6 @@
     <link href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/common.css" th:href="@{/css/common.css}">
 
-    <link rel="stylesheet" th:href="@{/css/selectY.css}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" th:if="${enableLantern}" th:href="@{/css/lantern.css}" href="../static/css/lantern.css"> <!--灯笼特效样式-->
     <style>
@@ -213,9 +212,7 @@
         input[type="radio"]:checked ~ figure figcaption {  z-index:8;  -webkit-transform:translateX(0px);  -moz-transform:translateX(0px);  -ms-transform:translateX(0px);  -o-transform:translateX(0px);  transform:translateX(0px);  -webkit-transition:all .35s, .7s;  -moz-transition:all .35s, .7s;  -o-transition:all .35s, .7s;  transition:all .35s, .7s;}
 
         #login,#regist{color: #333;}
-        /*分类样式(首页修改,不动源码)*/
-        .selectY-box .pop ul li{padding: 0 0 0 20px;line-height: 40px;}
-        .selectY-box .pop ul li.child-row:after{top:0;}
+
 
         /*图片点击*/
         .enlargeImg_wrapper {display: none;position: fixed;z-index: 999;top: 0;right: 0;bottom: 0;left: 0;background-repeat: no-repeat;background-attachment: fixed;background-position: center;background-color: rgba(52, 52, 52, 0.8);background-size: 50%;
@@ -504,10 +501,9 @@
 
 
     layui.config({base:'/layui/extends/'});
-    layui.use(['layer','element','selectY'],function () {
+    layui.use(['layer','element'],function () {
         var layer=layui.layer,
             element=layui.element,
-            selectY=layui.selectY,
             $=layui.jquery;
         if(isMobile != null){
             layer.alert("移动端暂时未做较好的页面适配，建议使用PC端访问");

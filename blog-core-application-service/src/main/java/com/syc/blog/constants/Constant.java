@@ -36,6 +36,8 @@ public class Constant {
     public static final Byte USER_COMMENT_TYPE_UTIL_QUARTZ= 9;
     public static final Byte USER_COMMENT_TYPE_UTIL_REGEXP= 10;
     public static final Byte USER_COMMENT_TYPE_UTIL_IDCARD= 11;
+    public static final String LOGIN_EMAIL = "EMAIL";
+    public static final String LOGIN_QQ =  "QQ";
 
 
     public static void main(String[] args) {

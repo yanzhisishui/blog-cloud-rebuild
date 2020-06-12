@@ -11,7 +11,6 @@
     <link href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/common.css" th:href="@{/css/common.css}">
 
-    <link rel="stylesheet" th:href="@{/css/selectY.css}">
     <script th:src="${iconfontUrl}"></script>
 
     <style>
@@ -172,9 +171,7 @@
             #title-search input{width: 130px;}
             #title-search button{width: 60px;}
         }
-        /*分类样式(首页修改,不动源码)*/
-        .selectY-box .pop ul li{padding: 0 0 0 20px;line-height: 40px;}
-        .selectY-box .pop ul li.child-row:after{top:0;}
+
 
         .content .motto{padding: 5px;margin:0 auto;margin-bottom: 20px;position: relative;border-bottom: 1px solid #ccc;
             color:#526163;font-weight: bold;font-size: 15px;overflow: hidden;padding-bottom: 10px;}
@@ -367,7 +364,7 @@
     }
 
     layui.config({base:'/layui/extends/'});
-    layui.use(['layer','element','selectY'],function () {
+    layui.use(['layer','element'],function () {
         var layer = layui.layer,
             element = layui.element,
             $ = layui.jquery;
