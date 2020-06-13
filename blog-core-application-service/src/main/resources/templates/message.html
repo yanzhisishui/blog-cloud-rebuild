@@ -106,8 +106,7 @@
         <div th:fragment="messageBox" class="save-message-box">
             <div class="smb-left">
                 <img th:if="${session.loginUser == null}" class="radius" src="/images/default_icon.jpg" width="50" height="50">
-                <img th:if="${session.loginUser != null && session.loginUser.identityType == 'EMAIL'}" class="radius" th:src="${session.loginUser.avatar}" width="50" height="50">
-                <img th:if="${session.loginUser != null && session.loginUser.identityType == 'QQ'}" class="radius" th:src="${session.loginUser.avatar}">
+                <img th:if="${session.loginUser != null}" class="radius" th:src="${session.loginUser.avatar}">
             </div>
             <div class="smb-right">
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
@@ -123,8 +122,7 @@
         <ul id="message-comment-body" th:fragment="comment" style="margin-top: 10px;">
             <li th:each="first : ${firstList}" class="item">
                 <div class="item-left">
-                    <img th:if="${first.identityType == 'EMAIL'}" class="radius" th:src="${first.avatar}" width="50" height="50">
-                    <img th:if="${first.identityType == 'QQ'}" class="radius" th:src="${first.avatar}">
+                    <img class="radius" th:src="${first.avatar}" width="50" height="50">
                 </div>
                 <div class="item-right">
                     <div>
@@ -144,8 +142,7 @@
                     <div class="msg-content">
                         <div th:each="child : ${first.childrenList}" class="msg-history">
                             <div class="mh-left">
-                                <img th:if="${child.identityType == 'EMAIL'}" class="radius" th:src="${child.avatar}" width="40" height="40">
-                                <img th:if="${child.identityType == 'QQ'}" class="radius" th:src="${child.avatar}" width="40" height="40">
+                                <img class="radius" th:src="${child.avatar}" width="40" height="40">
                             </div>
                             <div class="mh-right">
                                 <input type="hidden" class="userId" th:value="${child.userId}">
@@ -457,6 +454,6 @@
 
 
 </script>
-<script th:src="@{/js/common.js}"></script>
+<script src="http://192.168.23.175:9999/static/js/common.js"></script>
 </body>
 </html>

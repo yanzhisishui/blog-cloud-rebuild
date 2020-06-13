@@ -212,8 +212,7 @@
                         <li th:each="lucom : ${latestCommentList}">
                             <div class="item">
                                 <div class="item-left">
-                                    <img th:if="${lucom.identityType == 'EMAIL'}" class="radius" th:src="${lucom.avatar}" width="60" height="60">
-                                    <img th:if="${lucom.identityType == 'QQ'}" class="radius" th:src="${lucom.avatar}" width="60" height="60">
+                                    <img class="radius" th:src="${lucom.avatar}" width="60" height="60">
                                 </div>
                                 <div class="item-right">
                                     <h3><a href="#" th:text="${lucom.username}"></a></h3>

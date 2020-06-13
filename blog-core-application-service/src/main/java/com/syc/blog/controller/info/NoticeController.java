@@ -65,7 +65,6 @@ public class NoticeController extends BaseController {
         map.put("hotTagList",hotTagList);
         byte type = Constant.USER_COMMENT_TYPE_NOTICE;
         getCurrentCommentsListPage(map,page,id,type);
-        putPageCommon(map);
 
         return "notice";
     }

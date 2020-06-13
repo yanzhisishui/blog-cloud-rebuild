@@ -302,8 +302,7 @@
                 <ul th:if="${session.loginUser != null }" class="layui-nav"> <!--登录之后显示-->
                     <li class="layui-nav-item">
                         <a href="javascript:;">
-                            <img th:if="${not session.isThirdLogin}" class="radius" width="50" height="50" th:src="@{http://www.sunyuchao.com/files/img/__${session.loginUser.avatar}__}">
-                            <img th:if="${session.isThirdLogin}" class="radius" th:src="${session.loginUser.avatar}">
+                            <img class="radius" th:src="${session.loginUser.avatar}">
                         </a>
                         <dl class="layui-nav-child"> <!-- 二级菜单 -->
                             <dd><a href="javascript:;" id="personCenter">个人中心</a></dd>

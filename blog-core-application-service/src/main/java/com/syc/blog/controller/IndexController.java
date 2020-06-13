@@ -79,7 +79,6 @@ public class IndexController extends BaseController{
         if(requireEnableLantern()){
             map.put("enableLantern",true);
         }
-        putPageCommon(map);
 
         buildPagePlugin(1,10,map);
         return "index";
@@ -155,7 +154,6 @@ public class IndexController extends BaseController{
         }
         map.put("zhuanlanList",obj);
         buildPagePlugin(1,10,map);
-        putPageCommon(map);
         return "learning";
     }
 
@@ -165,7 +163,6 @@ public class IndexController extends BaseController{
         page = microDiaryService.selectListPage(page);
         map.put("notebookList",page.getRecords());
         buildPagePlugin(1,10,map);
-        putPageCommon(map);
         return "life";
     }
 
@@ -187,7 +184,6 @@ public class IndexController extends BaseController{
         search = articleRepository.search(matchQueryBuilder2);
         search.forEach(rsgwList::add);
         map.put("rsgwList",rsgwList);
-        putPageCommon(map);
         return "aboutme";
     }
 
@@ -206,7 +202,6 @@ public class IndexController extends BaseController{
         map.put("hotTagList",hotTagList);
         List<OnlineUtils> onlineUtilsList = onlineUtilsService.selectListLatest(5);
         map.put("onlineUtilsList",onlineUtilsList);
-        putPageCommon(map);
         buildPagePlugin(1,10,map);
         String howBuildBlogDesc = stringRedisTemplate.opsForValue().get(Constant.HOW_BUILD_BLOG_DESC);
         map.put("howBuildBlogDesc",howBuildBlogDesc);

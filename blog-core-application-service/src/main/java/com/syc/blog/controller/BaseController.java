@@ -58,22 +58,7 @@ public class BaseController {
         map.put("pageTotal",pageTotal);
     }
 
-    /**
-     * 注入页面的redis常用值
-     * */
-    public void putPageCommon(ModelMap map){
-        //网站logo
-        String logoName = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_LOGO_URL);
-        map.put("logoUrl",logoName);
-        //图标地址
-        String iconfontUrl = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_ICONFONT_URL);
-        map.put("iconfontUrl",iconfontUrl);
 
-        String cardStr = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_CARD_INFO);
-        CardInfo card = JSON.parseObject(cardStr, CardInfo.class);
-        map.put("card",card);
-
-    }
 
 
     /**

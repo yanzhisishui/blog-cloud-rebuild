@@ -47,7 +47,6 @@ public class ArticleController extends BaseController {
         byte type = Constant.USER_COMMENT_TYPE_ARTICLE;
         getCurrentCommentsListPage(map,page,id,type);
 
-        putPageCommon(map);
         return "article";
     }
 }
