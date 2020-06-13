@@ -18,7 +18,6 @@ public class Constant {
     public static final String DICT_LOGO_URL = DICT+"logo_url";
     public static final String DICT_ICONFONT_URL = DICT+"iconfont_url";
     public static final String HOW_BUILD_BLOG_DESC = DICT+"how_build_blog_desc";
-    public static final Integer PAGE_SIZE_COMMENT = 10;
 
 
 

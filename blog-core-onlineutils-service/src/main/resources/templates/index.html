@@ -5,9 +5,9 @@
     <title>孙玉超个人博客-在线工具</title>
     <meta name="Description" content="程序员在线工具" />
     <meta name="Keywords" content="个人博客,Java技术，Java学习" />
-    <link href="../static/css/fontawesome4.7.0/css/font-awesome.css" th:href="@{/css/fontawesome4.7.0/css/font-awesome.css}" rel="stylesheet">
-    <link href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/common.css" th:href="@{/css/common.css}">
+    <link href="http://192.168.23.175:9999/static/css/fontawesome4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link href="http://192.168.23.175:9999/static/layui/css/layui.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://192.168.23.175:9999/static/css/common.css">
     <script th:src="${iconfontUrl}"></script>
     <style>
 
@@ -55,14 +55,14 @@
 </head>
 <body>
 <!--搜索-->
-<div class="search">
+<div class="search" th:fragment="search">
     <form>
         <input type="text" placeholder="搜索...">
         <button id="go" type="submit"></button>
     </form>
 </div>
 <!--右下角固定-->
-<div id="permanent">
+<div id="permanent" th:fragment="permanent">
     <ul>
         <li id="toTop"><a href="javascript:;"><i class="layui-icon layui-icon-top"></i></a></li>
         <li id="feedback"><a href="javascript:;"><i class="layui-icon layui-icon-edit"></i></a></li>
@@ -83,7 +83,7 @@
     </div>
 </div>
 
-<div class="top">
+<div class="top" th:fragment="top">
     <div class="top-center">
         <div class="top-center-l">
             <img th:src="${logoUrl}">
@@ -93,7 +93,7 @@
                 <li><a href="/">首&nbsp;&nbsp;页</a></li>
                 <li><a href="/learning">爱学习</a></li>
                 <li><a href="/life">微动态</a></li>
-                <li class="nav-this"><a href="/onlineutils">工具集</a></li>
+                <li class="nav-this"><a href="javascript:;">工具集</a></li>
                 <li><a href="/aboutme">关于我</a></li>
                 <li><a href="/message">留言板</a></li>
             </ul>
@@ -103,8 +103,7 @@
             <ul th:if="${session.loginUser != null }" class="layui-nav"> <!--登录之后显示-->
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img th:if="${not session.isThirdLogin}" class="radius" width="50" height="50" th:src="@{http://www.sunyuchao.com/files/img/__${session.loginUser.avatar}__}">
-                        <img th:if="${session.isThirdLogin}" class="radius" th:src="${session.loginUser.avatar}">
+                        <img width="50" height="50" class="radius" th:src="${session.loginUser.avatar}">
                     </a>
                     <dl class="layui-nav-child"> <!-- 二级菜单 -->
                         <dd><a href="javascript:;" id="personCenter">个人中心</a></dd>
@@ -146,8 +145,8 @@
     <p>Design by：暮色妖娆丶 备案号：皖ICP备19018192号</p>
 </div>
 
-<script th:src="@{/layui/layui.js}"></script>
-<script th:src="@{/js/jquery3.3.1.min.js}"></script>
+<script src="http://192.168.23.175:9999/static/layui/layui.js"></script>
+<script src="http://192.168.23.175:9999/static/js/jquery3.3.1.min.js"></script>
 <script>
     //注意：导航 依赖 element 模块，否则无法进行功能性操作
     layui.use(['element','layer'], function(){
@@ -162,7 +161,7 @@
         //…
     });
 </script>
-<script src="../static/js/heart.js" th:src="@{/js/heart.js}"></script>
-<script th:src="@{/js/common.js}"></script>
+<script src="http://192.168.23.175:9999/static/js/heart.js"></script>
+<script src="http://192.168.23.175:9999/static/js/common.js"></script>
 </body>
 </html>

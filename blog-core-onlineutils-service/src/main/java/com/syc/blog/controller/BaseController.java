@@ -1,15 +1,12 @@
 package com.syc.blog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.Constant;
 import com.syc.blog.constants.GlobalConstant;
-import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.comment.UserComment;
-import com.syc.blog.entity.user.CardInfo;
 import com.syc.blog.entity.user.User;
-import com.syc.blog.service.comment.UserCommentService;
+import com.syc.blog.mapper.comment.UserCommentMapper;
 import com.syc.blog.utils.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,7 +23,7 @@ public class BaseController {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    UserCommentService userCommentService;
+    UserCommentMapper userCommentMapper;
 
     public void getCurrentCommentsListPage(ModelMap map,Integer page,Integer bindId,byte type){
         if(page < 1) { //页数过小
@@ -34,10 +31,10 @@ public class BaseController {
         }
         Integer pageSize= GlobalConstant.PAGE_SIZE_COMMENT;
         IPage<UserComment> commentIPage = new Page<>(page,pageSize);
-        commentIPage = userCommentService.selectFirstLevelCommentPage(commentIPage,type, bindId);
+        commentIPage = userCommentMapper.selectFirstLevelCommentPage(commentIPage,type, bindId);
         List<UserComment> firstList = commentIPage.getRecords();
         for(UserComment uc : firstList){
-            List<UserComment> childrenList = userCommentService.selectSecondLevelComment(type,bindId,uc.getId());
+            List<UserComment> childrenList = userCommentMapper.selectSecondLevelComment(type,bindId,uc.getId());
             uc.setChildrenList(childrenList);
         }
         Integer pageTotal = (int) commentIPage.getTotal();
@@ -65,14 +62,14 @@ public class BaseController {
     /**
      * 获取当前登录的用户
      * */
-    public User getLoginUser(HttpServletRequest request){
+    /*public User getLoginUser(HttpServletRequest request){
         HttpSession session = request.getSession();
         Object currentAdminUser = session.getAttribute(Constant.USER_LOGIN_SESSION_KEY);
         if(currentAdminUser == null){
             return null;
         }
         return (User) currentAdminUser;
-    }
+    }*/
 
     /**
      * 评论检查
@@ -85,13 +82,13 @@ public class BaseController {
         if(content.length() > 150){
             return  "评论不得超过150个字符";
         }
-        User loginUser = getLoginUser(request);
+        //User loginUser = getLoginUser(request);
         if(StringHelper.hasIllegal(content)){
             return "请文明发言";
         }
-        if(loginUser == null ){ //生产环境必须要登录
+        /*if(loginUser == null ){ //生产环境必须要登录
             return "请先登录";
-        }
+        }*/
         if(comment.getUserId().equals(comment.getCommentedUserId())){
             return "不能自己回复自己";
         }
