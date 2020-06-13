@@ -21,4 +21,22 @@
         </if>
 
     </select>
+
+    <select id="getTotalCountLinux" resultType="java.lang.Integer">
+        select count(*) from util_linux where 1=1
+        <if test="type != null and type != ''">
+            <choose>
+                <when test="type == 'express' ">
+                    <if test="value != null and value != ''">
+                        and express like CONCAT('%',#{value},'%')
+                    </if>
+                </when>
+                <otherwise>
+                    <if test="value != null and value != ''">
+                        and description like CONCAT('%',#{value},'%')
+                    </if>
+                </otherwise>
+            </choose>
+        </if>
+    </select>
 </mapper>

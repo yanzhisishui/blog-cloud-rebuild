@@ -12,4 +12,7 @@ import java.util.Map;
 public interface LinuxMapper extends BaseMapper<Linux> {
 
     IPage<Linux> selectByParams(Map<String, Object> map);
+
+
+    Integer selectTotalCountLinux(String type, String value);
 }

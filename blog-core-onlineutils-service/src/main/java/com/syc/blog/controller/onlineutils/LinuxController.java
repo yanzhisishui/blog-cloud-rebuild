@@ -55,4 +55,11 @@ public class LinuxController extends BaseController {
         ResultHelper<List<Linux>> result= ResultHelper.wrapSuccessfulResult(iPage.getRecords());
         return JSON.toJSONString(result);
     }
+
+    @RequestMapping("/getTotalCountLinux")
+    @ResponseBody
+    public Integer getTotalCountLinux(@RequestParam(value = "type",required = false) String type,
+                                      @RequestParam(value = "value",required = false) String value){
+        return linuxMapper.selectTotalCountLinux(type,value);
+    }
 }
