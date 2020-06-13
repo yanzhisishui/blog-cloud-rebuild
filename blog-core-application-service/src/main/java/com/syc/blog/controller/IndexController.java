@@ -4,6 +4,7 @@ package com.syc.blog.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.Constant;
+import com.syc.blog.constants.GlobalConstant;
 import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
 import com.syc.blog.entity.comment.UserComment;
@@ -22,6 +23,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -158,11 +160,14 @@ public class IndexController extends BaseController{
     }
 
     @RequestMapping("/life")
-    public String life(ModelMap map){
-        IPage<MicroDiary> page = new Page<>(1,10);
+    public String life(ModelMap map,@RequestParam(value = "page",required = false,defaultValue = "1") Integer current){
+        if(current < 1){
+            current = 1;
+        }
+        IPage<MicroDiary> page = new Page<>(current,8);
         page = microDiaryService.selectListPage(page);
         map.put("notebookList",page.getRecords());
-        buildPagePlugin(1,10,map);
+        buildPagePlugin(current,(int)page.getPages(),map);
         return "life";
     }
 
@@ -188,8 +193,11 @@ public class IndexController extends BaseController{
     }
 
     @RequestMapping("/message")
-    public String message(ModelMap map){
-        IPage<UserComment> page = new Page<>(1,10);
+    public String message(ModelMap map, @RequestParam(value = "page",required = false,defaultValue = "1") Integer current){
+        if(current < 1){
+            current = 1;
+        }
+        IPage<UserComment> page = new Page<>(current,GlobalConstant.PAGE_SIZE_COMMENT);
         page = userCommentService.selectFirstLevelCommentPage(page,null,null);
         List<UserComment> firstList = page.getRecords();
         for(UserComment uc : firstList){
@@ -202,7 +210,7 @@ public class IndexController extends BaseController{
         map.put("hotTagList",hotTagList);
         List<OnlineUtils> onlineUtilsList = onlineUtilsService.selectListLatest(5);
         map.put("onlineUtilsList",onlineUtilsList);
-        buildPagePlugin(1,10,map);
+        buildPagePlugin(current, (int)page.getPages(),map);
         String howBuildBlogDesc = stringRedisTemplate.opsForValue().get(Constant.HOW_BUILD_BLOG_DESC);
         map.put("howBuildBlogDesc",howBuildBlogDesc);
         return "message";

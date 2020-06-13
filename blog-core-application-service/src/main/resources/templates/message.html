@@ -105,13 +105,13 @@
     <div class="content-left">
         <div th:fragment="messageBox" class="save-message-box">
             <div class="smb-left">
-                <img th:if="${session.loginUser == null}" class="radius" src="/images/default_icon.jpg" width="50" height="50">
+                <img th:if="${session.loginUser == null}" class="radius" src="http://192.168.23.175:9999/static/images/default_icon.jpg" width="50" height="50">
                 <img th:if="${session.loginUser != null}" class="radius" th:src="${session.loginUser.avatar}">
             </div>
             <div class="smb-right">
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
                 <div class="smb-r-bottom">
-                    <a onclick="loadFace(this)" href="javascript:;"><img src="/layui/images/face/1.gif"></a>
+                    <a onclick="loadFace(this)" href="javascript:;"><img src="http://192.168.23.175:9999/static/layui/images/face/1.gif"></a>
                     <div class="face-frame"></div>
                     <button onclick="msgToMe(this)" class="layui-btn layui-btn-normal" style="float: right;margin-right: 8px;">留言</button>
                 </div>
@@ -189,7 +189,7 @@
 
     <div class="content-right">
         <div class="right-card" style="padding-bottom: 0;position: relative;">
-            <img class="myavatar" th:src="${avatarName}" width="80" height="80">
+            <img class="myavatar" th:src="${card.avatar}" width="80" height="80">
             <div style="height: 80px;background-color: #00FFFF;"></div>
             <div style="height: 140px;padding-top: 50px;">
                 <h2 style="text-align: center;font-size: 18px;font-weight: 600;" th:text="${card.nickname}">暮色妖娆</h2>
@@ -291,7 +291,7 @@
                 回复 <span class="receiver">{commentUsernameCopy}</span>
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
                 <div class="smb-r-bottom">
-                    <a onclick="loadFace(this)" href="javascript:;"><img src="/layui/images/face/1.gif"></a>
+                    <a onclick="loadFace(this)" href="javascript:;"><img src="http://192.168.23.175:9999/static/layui/images/face/1.gif"></a>
                     <div class="face-frame"></div>
                     <button onclick="saveMsg(this)" class="layui-btn layui-btn-normal" style="float: right;margin-right: 8px;">留言</button>
                 </div>
