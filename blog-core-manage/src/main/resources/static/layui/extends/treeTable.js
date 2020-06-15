@@ -175,10 +175,15 @@ layui.define(['jquery'], function(exports) {
 		var t = this;
 		e = o.extend(t.config(), e);
 		if(e.url) {
-			o.get(e.url, function(res) {
-				e.data = res;
-				t.template(e);
-			})
+			o.ajax({
+				url: e.url,
+				type: "GET",
+				async: false,
+				success: function (res) {
+					e.data = res.data;
+					t.template(e);
+				}, dataType: "json"
+			});
 		} else {
 			t.template(e);
 		}

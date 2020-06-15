@@ -231,15 +231,15 @@
 
         #selectCondition{width: 99.6%;background-color: white;
             position: relative;height: 300px;padding: 0 10px;
-            box-sizing: border-box;}
+            box-sizing: border-box;margin-bottom: 10px;}
 
         #selectCondition .first-level-box,#selectCondition .child-level-box{float: left;}
         #selectCondition .item{margin-top: 10px;}
         #selectCondition .child-level ul li{float: left;margin: 5px;}
         #selectCondition .first-level{width: 100px;}
-        #selectCondition .child-level{float: left;margin-top: 5px;height: 300px;width: 120px;margin-left: 20px;}
+        #selectCondition .child-level{float: left;margin-top: 5px;height: 300px;width: 140px;margin-left: 20px;}
 
-        #selectCondition .adapter-no-child-normal{width: 82px;padding-right: 25px;}
+        #selectCondition .adapter-no-child-normal{width: 85px;padding-right: 25px;}
         /*让英文字体好看,去掉微软雅黑*/
         #selectCondition button{font-family: Arial, Helvetica, sans-serif;}
     </style>
@@ -391,7 +391,14 @@
                 <div id="classify-box">
                     <div class="first-level-box">
                         <div class="first-level">
-                            <div th:each="ac : ${articleClassifyList}" class="item"><button th:onclick="showChildren([[${ac.id}]],[[${ac.directChildrenCount}]]);" th:class="${ac.directChildrenCount == 1 ? 'layui-btn layui-btn-normal adapter-no-child-normal' :'layui-btn layui-btn-normal'}">[[${ac.name}]]<i th:if="${ac.directChildrenCount != 1}" class="layui-icon layui-icon-triangle-r" style="font-size: 15px;"></i></button></div>
+                            <div th:each="ac : ${articleClassifyList}" class="item">
+                                <button
+                                    th:onclick="showChildren(this,[[${ac.id}]],[[${ac.directChildrenCount}]]);"
+                                    th:class="${ac.directChildrenCount == 0 ?
+                                    'layui-btn layui-btn-normal adapter-no-child-normal' :'layui-btn layui-btn-normal'}">[[${ac.name}]]
+                                <i th:if="${ac.directChildrenCount != 0}" class="layui-icon layui-icon-triangle-d" style="font-size: 15px;"></i>
+                            </button>
+                            </div>
                         </div>
                     </div>
                     <div class="child-level-box">
@@ -492,8 +499,10 @@
 <script>
 
 
-    function showChildren(id,directChildrenCount){
-        if(directChildrenCount > 1){  //展开子元素
+    function showChildren(obj,id,directChildrenCount){
+        if(directChildrenCount > 0){  //展开子元素
+            $(obj).children("i").removeClass("layui-icon-triangle-d");
+            $(obj).children("i").addClass("layui-icon-triangle-r");
             $.ajax({
                 url:"/article/classify/selectByParentId",
                 type:"GET",
@@ -507,7 +516,7 @@
                         if(e[i].directChildrenCount == 1){
                              item = '<li> <button class="layui-btn layui-btn-sm">'+e[i].name+'</button></li>';
                         }else{
-                             item = '<li> <button onclick="showChildren('+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-r" style="font-size: 10px;"></i></button></li>';
+                             item = '<li> <button onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-d" style="font-size: 10px;"></i></button></li>';
                         }
                         content = content+item;
                     }

@@ -87,4 +87,17 @@ public class ArticleClassifyController {
         map.put("parent",parent);
         return "articleclassify/edit";
     }
+
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public String delete(@RequestParam("id") Integer id){
+        ArticleClassify articleClassify = new ArticleClassify();
+        articleClassify.setId(id);
+        articleClassify.setArchive((byte)1);
+        articleClassify.setDateUpdate(new Date());
+        int row = articleClassifyMapper.updateById(articleClassify);
+        ResultHelper result = ResultHelper.wrapSuccessfulResult(null);
+        return JSON.toJSONString(result);
+    }
 }
