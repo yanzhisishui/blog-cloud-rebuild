@@ -237,7 +237,7 @@
         #selectCondition .item{margin-top: 10px;}
         #selectCondition .child-level ul li{float: left;margin: 5px;}
         #selectCondition .first-level{width: 100px;}
-        #selectCondition .child-level{float: left;margin-top: 5px;height: 300px;width: 140px;margin-left: 20px;}
+        #selectCondition .child-level{float: left;margin-top: 5px;height: 300px;width: 160px;margin-left: 20px;}
 
         #selectCondition .adapter-no-child-normal{width: 85px;padding-right: 25px;}
         /*让英文字体好看,去掉微软雅黑*/
@@ -393,6 +393,7 @@
                         <div class="first-level">
                             <div th:each="ac : ${articleClassifyList}" class="item">
                                 <button
+                                        th:data-level="${ac.level}"
                                     th:onclick="showChildren(this,[[${ac.id}]],[[${ac.directChildrenCount}]]);"
                                     th:class="${ac.directChildrenCount == 0 ?
                                     'layui-btn layui-btn-normal adapter-no-child-normal' :'layui-btn layui-btn-normal'}">[[${ac.name}]]
@@ -500,7 +501,15 @@
 
 
     function showChildren(obj,id,directChildrenCount){
+
         if(directChildrenCount > 0){  //展开子元素
+            var attr = parseInt($(obj).attr("data-level"))-1;//这个level是child-level的索引
+            $(".child-level").each(function (i) {
+                if(i >= attr){
+                    $(this).remove();
+                }
+            })
+
             $(obj).children("i").removeClass("layui-icon-triangle-d");
             $(obj).children("i").addClass("layui-icon-triangle-r");
             $.ajax({
@@ -513,10 +522,10 @@
                     var content = "";
                     for(var i = 0;i<e.length;i++){
                         var item = "";
-                        if(e[i].directChildrenCount == 1){
-                             item = '<li> <button class="layui-btn layui-btn-sm">'+e[i].name+'</button></li>';
+                        if(e[i].directChildrenCount == 0){
+                             item = '<li> <button data-id="'+e[i].id+'" onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'</button></li>';
                         }else{
-                             item = '<li> <button onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-d" style="font-size: 10px;"></i></button></li>';
+                             item = '<li> <button data-level="'+e[i].level+'" onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-d" style="font-size: 10px;"></i></button></li>';
                         }
                         content = content+item;
                     }
@@ -525,6 +534,7 @@
             });
         }else{
             //直接查询
+            alert(id)
         }
     }
 
