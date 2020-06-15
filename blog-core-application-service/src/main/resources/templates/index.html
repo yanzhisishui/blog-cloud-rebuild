@@ -56,7 +56,6 @@
         .content{width: 62%;margin: 0 auto;margin-top: 20px;}
         .content .content-left{float: left;width: 72%;position: relative;}
         #select{position: absolute;top: 0;right: 0;padding: 5px;font-size: 15px;}
-        #selectCondition{width: 99.6%;height: 50px;line-height: 50px;background-color: white;margin-bottom: 10px;position: relative;display: none;}
         .content .content-left .pick li{margin: 0 10px;float: left;}
         .content .content-left > h2{padding: 5px;border-left: 3px solid blueviolet;margin-bottom: 10px;color:#89919a;font-weight: 600;font-size: 20px;}
         .content .content-right{float: right;width: 27%;}
@@ -229,6 +228,20 @@
             .notice li a{width:55%;}
             .layui-main{width:600px !important}
         }
+
+        #selectCondition{width: 99.6%;background-color: white;
+            position: relative;height: 300px;padding: 0 10px;
+            box-sizing: border-box;}
+
+        #selectCondition .first-level-box,#selectCondition .child-level-box{float: left;}
+        #selectCondition .item{margin-top: 10px;}
+        #selectCondition .child-level ul li{float: left;margin: 5px;}
+        #selectCondition .first-level{width: 100px;}
+        #selectCondition .child-level{float: left;margin-top: 5px;height: 300px;width: 120px;margin-left: 20px;}
+
+        #selectCondition .adapter-no-child-normal{width: 82px;padding-right: 25px;}
+        /*让英文字体好看,去掉微软雅黑*/
+        #selectCondition button{font-family: Arial, Helvetica, sans-serif;}
     </style>
 </head>
 <body>
@@ -375,8 +388,18 @@
         <div class="content-left">
             <h2>文章<span style="color: red;">推荐</span></h2> <a href="javascript:;" id="select">筛选<i class="layui-icon layui-icon-add-1"></i></a>
             <div id="selectCondition">
+                <div id="classify-box">
+                    <div class="first-level-box">
+                        <div class="first-level">
+                            <div th:each="ac : ${articleClassifyList}" class="item"><button th:onclick="showChildren([[${ac.id}]],[[${ac.directChildrenCount}]]);" th:class="${ac.directChildrenCount == 1 ? 'layui-btn layui-btn-normal adapter-no-child-normal' :'layui-btn layui-btn-normal'}">[[${ac.name}]]<i th:if="${ac.directChildrenCount != 1}" class="layui-icon layui-icon-triangle-r" style="font-size: 15px;"></i></button></div>
+                        </div>
+                    </div>
+                    <div class="child-level-box">
 
+                    </div>
+                </div>
             </div>
+            <div class="clear"></div>
             <div th:if="${not #lists.isEmpty(articleList)}" th:each="article : ${articleList}" class="article">
                 <header>
                     <span th:text="${article.classify.name}"></span><i class="layui-icon layui-icon-triangle-r"></i>
@@ -467,6 +490,34 @@
     var isMobile=[[${isMobile}]];
 </script>
 <script>
+
+
+    function showChildren(id,directChildrenCount){
+        if(directChildrenCount > 1){  //展开子元素
+            $.ajax({
+                url:"/article/classify/selectByParentId",
+                type:"GET",
+                data:{"id":id},
+                success:function (e) {
+                    var start  ='<div class="child-level"><ul>';
+                    var end = '</ul></div>';
+                    var content = "";
+                    for(var i = 0;i<e.length;i++){
+                        var item = "";
+                        if(e[i].directChildrenCount == 1){
+                             item = '<li> <button class="layui-btn layui-btn-sm">'+e[i].name+'</button></li>';
+                        }else{
+                             item = '<li> <button onclick="showChildren('+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-r" style="font-size: 10px;"></i></button></li>';
+                        }
+                        content = content+item;
+                    }
+                    $(".child-level-box").append(start+content+end);
+                },dataType:"json"
+            });
+        }else{
+            //直接查询
+        }
+    }
 
     //图片点击
     $(".enlargeImg").click(function() {

@@ -14,7 +14,8 @@ public class ArticleClassifyService {
     ArticleClassifyMapper articleClassifyMapper;
 
     public List<ArticleClassify> selectListByLevel(int i) {
-        return articleClassifyMapper.selectList(Wrappers.<ArticleClassify>lambdaQuery().eq(ArticleClassify::getArchive,0).eq(ArticleClassify::getLevel,i));
+
+        return articleClassifyMapper.selectListByLevel(i);
     }
 
     public List<ArticleClassify> selectRandomList(int i) {
@@ -23,5 +24,9 @@ public class ArticleClassifyService {
 
     public List<ArticleClassify> selectHotTagList() {
         return articleClassifyMapper.selectList(Wrappers.<ArticleClassify>lambdaQuery().eq(ArticleClassify::getArchive,0).eq(ArticleClassify::getParentId,1));
+    }
+
+    public List<ArticleClassify> selectListByParentId(Integer id) {
+        return articleClassifyMapper.selectListByParentId(id);
     }
 }

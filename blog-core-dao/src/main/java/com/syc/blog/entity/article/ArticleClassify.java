@@ -1,6 +1,7 @@
 package com.syc.blog.entity.article;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -28,4 +29,7 @@ public class ArticleClassify implements Serializable {
     private String name;
     @Transient
     private Byte level;//类别级别
+
+    @TableField(exist = false)
+    private Integer directChildrenCount;//直接子分类个数
 }
