@@ -16,9 +16,18 @@ import com.syc.blog.service.comment.UserCommentService;
 import com.syc.blog.service.info.*;
 import com.syc.blog.utils.DateHelper;
 import com.syc.blog.utils.StringHelper;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Controller
 public class IndexController extends BaseController{
@@ -54,13 +64,17 @@ public class IndexController extends BaseController{
     MicroDiaryService microDiaryService;
 
     @RequestMapping("/")
-    public String index(ModelMap map, HttpServletRequest request){
+    public String index(ModelMap map, HttpServletRequest request,@RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
 
         Map<String,Object> params = new HashMap<>();
-        List<Article> articleList = queryArticle(params);
+        params.put("page",page);
+        List<Article> articleList = new ArrayList<>();
+        org.springframework.data.domain.Page<Article> articles = queryArticle(params);
+        articles.get().forEach(articleList::add);
         map.put("articleList",articleList);
+        map.put("field","");
         putIndexInfo(map,request);
-        buildPagePlugin(1,10,map);
+        buildPagePlugin(page,articles.getTotalPages(),map);
         return "index";
     }
 
@@ -70,20 +84,23 @@ public class IndexController extends BaseController{
     @PostMapping("/")
     public String indexQuery(ModelMap map, HttpServletRequest request,
                         @RequestParam(value = "field",required = false,defaultValue = "") String field,
+                        @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
                         @RequestParam(value = "sort",required = false,defaultValue = "") String sort,
                         @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
                         @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId
     ){
-        map.put("field",field);
-        map.put("sort",sort);
-        map.put("keyword",keyword);
-        map.put("classifyId",classifyId);
-        System.out.println(field+","+sort+","+keyword);
         Map<String,Object> params = new HashMap<>();
-        List<Article> articleList = queryArticle(params);
+        map.put("field",field);                   params.put("field",field);
+        map.put("page",page);                     params.put("page",page);
+        map.put("sort",sort);                     params.put("sort",sort);
+        map.put("keyword",keyword);               params.put("keyword",keyword);
+        map.put("classifyId",classifyId);         params.put("classifyId",classifyId);
+        org.springframework.data.domain.Page<Article> articles = queryArticle(params);
+        List<Article> articleList = new ArrayList<>();
+        articles.get().forEach(articleList::add);
         map.put("articleList",articleList);
         putIndexInfo(map,request);
-        buildPagePlugin(1,10,map);
+        buildPagePlugin(page,articles.getTotalPages(),map);
         return "index";
     }
 
@@ -124,40 +141,58 @@ public class IndexController extends BaseController{
         Date now= new Date();
         return now.compareTo(before30) > 0 && now.compareTo(after30) < 0;
     }
-    private List<Article> queryArticle(Map<String, Object> params) {
-//        String name = params.get("name").toString();
-//        QueryBuilder qb1 = QueryBuilders.wildcardQuery("name","*"+name+"*");//名称
-//        RangeQueryBuilder qb2 = QueryBuilders.rangeQuery("currentPrice").from(20).to(50);//价格筛选
-//        QueryBuilder qb3 = QueryBuilders.matchQuery("categoryId",1);//书籍分类
-//
-//        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-//        boolQueryBuilder.must(qb1).must(qb2).must(qb3);
-//        Pageable pageable = PageRequest.of(1, 10);//分页
-//
-//        FieldSortBuilder fsb = SortBuilders.fieldSort("currentPrice").order(SortOrder.DESC);//排序
-//
-//        SearchQuery query = new NativeSearchQueryBuilder()
-//                .withQuery(boolQueryBuilder)
-//                .withSort(fsb)
-//                .withPageable(pageable)
-//                .build();
-//
-//        Page<Book> search = bookRepository.search(query);
-        Iterable<Article> all = articleRepository.findAll();
-        List<Article> list = new ArrayList<>();
-        all.forEach(article -> {
-            if(list.size() < 10){
-                list.add(article);
+
+    private org.springframework.data.domain.Page<Article> queryArticle(Map<String, Object> params) {
+        String name = params.get("keyword") == null ? null : params.get("keyword").toString();
+        String classifyId = params.get("classifyId") == null ? null : params.get("classifyId").toString();
+        String field = params.get("field") == null ? null : params.get("field").toString();
+        String sort = params.get("sort") == null ? null : params.get("sort").toString();
+        Integer page = (Integer)params.get("page");
+
+        QueryBuilder qb1 = null;//名称
+        if (!StringHelper.isEmpty(name)) {
+            if (name.length() > 15) {
+                name = name.substring(0, 10);
             }
-        });
-        return list;
+            qb1 = QueryBuilders.wildcardQuery("title", "*" + name + "*");
+        }
+        QueryBuilder qb2 = null;
+        if (!StringHelper.isEmpty(classifyId)) {
+            int id = Integer.parseInt(classifyId);
+            qb2 = QueryBuilders.matchQuery("classify.id", id);
+        }
+//
+        FieldSortBuilder fsb = null;
+        if (!StringHelper.isEmpty(field)) {
+            fsb = SortBuilders.fieldSort(field).order(sort.equals("asc") ? SortOrder.ASC : SortOrder.DESC);
+        }
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        if (qb1 != null) {
+            boolQueryBuilder.must(qb1);
+        }
+        if (qb2 != null) {
+            boolQueryBuilder.must(qb2);
+        }
+        Pageable pageable = PageRequest.of(page, 10);//分页
+        //SearchQuery query = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable).build();
+        NativeSearchQueryBuilder nsqb = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
+        if(fsb != null){
+            nsqb = nsqb.withSort(fsb);
+        }
+        SearchQuery query = nsqb.build();
+        org.springframework.data.domain.Page<Article> search = articleRepository.search(query);
+
+
+        return search;
     }
 
 
     @RequestMapping("/learning")
     public String learning(ModelMap map){
         Map<String,Object> params = new HashMap<>();
-        List<Article> articleList = queryArticle(params);
+        List<Article> articleList = new ArrayList<>();
+        org.springframework.data.domain.Page<Article> articles = queryArticle(params);
+        articles.get().forEach(articleList::add);
         map.put("articleList",articleList);
 
         List<OnlineUtils> onlineUtilsList = onlineUtilsService.selectListLatest(5);

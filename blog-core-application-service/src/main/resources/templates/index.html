@@ -394,7 +394,7 @@
                 <div>
                     <div id="title-search">
                         <div class="layui-input-inline">
-                            <a th:class="${field == '' ? 'active' : ''}" onclick="" href="javascript:;">默认</a>
+                            <a th:class="${field == '' ? 'active' : ''}"  onclick="" href="javascript:;">默认</a>
                             <a th:class="${field == 'dateInsert' ? 'active' : ''}" field="dateInsert" sort="desc" onclick="" href="javascript:;">发布时间&nbsp;
                                 <i th:if="${field != 'dateInsert'}" class="fa fa-arrow-down"></i>
                                 <i th:if="${field == 'dateInsert'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
@@ -529,6 +529,11 @@
 <script th:inline="javascript">
     var isMobile=[[${isMobile}]];
     var classifyId=[[${classifyId}]];
+    var field=[[${field}]];
+    var keyword=[[${keyword}]];
+    if((field != null && field != "") || (classifyId != null && classifyId != "") || (keyword != null && keyword != "")){
+        $('html,body').animate({ scrollTop: $("#selectCondition").offset().top - 50 }, 200)
+    }
     if(classifyId != null && classifyId != ""){ //用户选了分类
         //先拿到当前分类的层级树
         $.ajax({
@@ -575,12 +580,22 @@
 </script>
 <script>
 
+    function indexQuery(keyword,field,sort,classifyId,page){
+        document.write("<form action='/' method='post' name='form1' style='display:none'>");
+        document.write("<input type='hidden' name='field' value='"+field+"'>");
+        document.write("<input type='hidden' name='sort' value='"+sort+"'>");
+        document.write("<input type='hidden' name='keyword' value='"+keyword+"'>");
+        document.write("<input type='hidden' name='classifyId' value='"+classifyId+"'>");
+        document.write("<input type='hidden' name='page' value='"+page+"'>");
+        document.write("</form>");
+        document.form1.submit();
+    }
     /**
      *排序选项点击
      * */
     $("#title-search .layui-input-inline a").click(function () {
         //如果已经激活，改变箭头
-        if($(this).hasClass("active")){
+        if($(this).hasClass("active") && $(this).html() != "默认"){
             var attr = $(this).children("i").hasClass("fa-arrow-down")
             if(attr){
                 $(this).attr("sort","asc")
@@ -590,20 +605,18 @@
         }
         var sort = $(this).attr("sort")
         var field = $(this).attr("field")
+        if($(this).html() == "默认"){
+            field  = "";
+            sort  = "";
+        }
         var keyword = $("#keyword").val();
-        var classifyId ;
+        var classifyId = 1 ;
         $(".child-level-box .child-level button").each(function () {
             if($(this).hasClass("classify-active")){
                 classifyId = $(this).attr("data-id");
             }
         });
-        document.write("<form action='/' method='post' name='form1' style='display:none'>");
-        document.write("<input type='hidden' name='field' value='"+field+"'>");
-        document.write("<input type='hidden' name='sort' value='"+sort+"'>");
-        document.write("<input type='hidden' name='keyword' value='"+keyword+"'>");
-        document.write("<input type='hidden' name='classifyId' value='"+classifyId+"'>");
-        document.write("</form>");
-        document.form1.submit();
+        indexQuery(keyword,field,sort,classifyId,1);
     });
 
     //子分类
@@ -641,22 +654,16 @@
                 },dataType:"json"
             });
         }else{
-            var sort;
-            var field;
+            var sort="";
+            var field="";
             $("#title-search .layui-input-inline a").each(function () {
-                if($(this).hasClass("active")){
+                if($(this).hasClass("active") && $(this).html() != "默认"){
                      sort = $(this).attr("sort")
                      field = $(this).attr("field")
                 }
             })
             var keyword = $("#keyword").val();
-            document.write("<form action='/' method='post' name='form1' style='display:none'>");
-            document.write("<input type='hidden' name='field' value='"+field+"'>");
-            document.write("<input type='hidden' name='sort' value='"+sort+"'>");
-            document.write("<input type='hidden' name='keyword' value='"+keyword+"'>");
-            document.write("<input type='hidden' name='classifyId' value='"+id+"'>");
-            document.write("</form>");
-            document.form1.submit();
+            indexQuery(keyword,field,sort,id,1);
         }
     }
 
@@ -689,6 +696,8 @@
         }
         window.location.href='/?page='+page+"&field="+$("#field").val()+"&bread="+$("#bread").val()
     }
+
+
 
 
     layui.config({base:'/layui/extends/'});

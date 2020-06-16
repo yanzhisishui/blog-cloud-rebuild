@@ -8,6 +8,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,7 +20,7 @@ import java.util.Date;
 //@Document(indexName = "blog",type = "article")
 @Data
 @TableName("article")
-@Document(indexName = "blog",type = "article",shards = 1, replicas = 0)
+@Document(indexName = "blog",type = "article")
 public class Article implements Serializable {
     @Id
     @TableId(value = "id",type = IdType.AUTO)
@@ -32,6 +34,8 @@ public class Article implements Serializable {
     private Integer classifyId;//类别ID
     private Integer browser;//浏览人数
     private String content;//内容(样式、图片、小标题、HTML标签都包含在内)
+
+    @Field(type = FieldType.Keyword)
     private String title;//文章标题
     private String bread;
     @Transient
