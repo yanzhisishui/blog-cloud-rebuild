@@ -22,4 +22,11 @@ public class ArticleClassifyController {
         List<ArticleClassify> list =  articleClassifyService.selectListByParentId(id);
         return JSON.toJSONString(list);
     }
+
+    @RequestMapping("/selectIdTree")
+    @ResponseBody
+    public String selectIdTree(@RequestParam("id") Integer id){
+        String str = articleClassifyService.selectIdTree(id);
+        return str;
+    }
 }

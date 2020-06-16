@@ -230,7 +230,7 @@
         }
 
         #selectCondition{width: 99.6%;background-color: white;
-            position: relative;height: 300px;padding: 0 10px;
+            position: relative;height: 350px;padding: 0 10px;
             box-sizing: border-box;margin-bottom: 10px;}
 
         #selectCondition .first-level-box,#selectCondition .child-level-box{float: left;}
@@ -242,6 +242,10 @@
         #selectCondition .adapter-no-child-normal{width: 85px;padding-right: 25px;}
         /*让英文字体好看,去掉微软雅黑*/
         #selectCondition button{font-family: Arial, Helvetica, sans-serif;}
+        #title-search {padding-top: 10px;}
+        #title-search .active{color: red;}
+        #title-search a{margin-left: 20px;}
+        .classify-active{background-color: red;}
     </style>
 </head>
 <body>
@@ -255,7 +259,6 @@
             <div class="weiba weiba-a"><div class="weiba-c"></div><div class="weiba-b"></div></div>
         </div>
     </div>
-
 
     <div th:if="${enableLantern}" class="lantern-box1">
         <div class="lantern">
@@ -388,12 +391,43 @@
         <div class="content-left">
             <h2>文章<span style="color: red;">推荐</span></h2> <a href="javascript:;" id="select">筛选<i class="layui-icon layui-icon-add-1"></i></a>
             <div id="selectCondition">
+                <div>
+                    <div id="title-search">
+                        <div class="layui-input-inline">
+                            <a th:class="${field == '' ? 'active' : ''}" onclick="" href="javascript:;">默认</a>
+                            <a th:class="${field == 'dateInsert' ? 'active' : ''}" field="dateInsert" sort="desc" onclick="" href="javascript:;">发布时间&nbsp;
+                                <i th:if="${field != 'dateInsert'}" class="fa fa-arrow-down"></i>
+                                <i th:if="${field == 'dateInsert'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                            </a>
+                            <a th:class="${field == 'browser' ? 'active' : ''}" field="browser" sort="desc" onclick="" href="javascript:;">浏览数&nbsp;
+                                <i th:if="${field != 'browser'}" class="fa fa-arrow-down"></i>
+                                <i th:if="${field == 'browser'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                            </a>
+                            <a th:class="${field == 'collection' ? 'active' : ''}" field="collection" sort="desc" onclick="" href="javascript:;">收藏数&nbsp;
+                                <i th:if="${field != 'collection'}" class="fa fa-arrow-down"></i>
+                                <i th:if="${field == 'collection'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                            </a>
+                            <a th:class="${field == 'comment' ? 'active' : ''}" field="comment" sort="desc" onclick="" href="javascript:;">评论数&nbsp;
+                                <i th:if="${field != 'comment'}" class="fa fa-arrow-down"></i>
+                                <i th:if="${field == 'comment'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                            </a>
+                        </div>
+                        <div class="layui-input-inline" style="margin-left: 20px;">
+                            <input th:value="${keyword}" type="text" id="keyword" placeholder="请输入关键词搜索" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button onclick="" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-search"></i></button>
+                        </div>
+
+                    </div>
+                </div>
                 <div id="classify-box">
                     <div class="first-level-box">
                         <div class="first-level">
                             <div th:each="ac : ${articleClassifyList}" class="item">
                                 <button
                                         th:data-level="${ac.level}"
+                                        th:data-id="${ac.id}"
                                     th:onclick="showChildren(this,[[${ac.id}]],[[${ac.directChildrenCount}]]);"
                                     th:class="${ac.directChildrenCount == 0 ?
                                     'layui-btn layui-btn-normal adapter-no-child-normal' :'layui-btn layui-btn-normal'}">[[${ac.name}]]
@@ -402,9 +436,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="child-level-box">
-
-                    </div>
+                    <div class="child-level-box"></div>
                 </div>
             </div>
             <div class="clear"></div>
@@ -496,10 +528,85 @@
 <script src="http://192.168.23.175:9999/static/js/jquery3.3.1.min.js"></script>
 <script th:inline="javascript">
     var isMobile=[[${isMobile}]];
+    var classifyId=[[${classifyId}]];
+    if(classifyId != null && classifyId != ""){ //用户选了分类
+        //先拿到当前分类的层级树
+        $.ajax({
+            url:"/article/classify/selectIdTree",
+            type:"GET",
+            data:{"id":classifyId},
+            success:function (e) {
+                var arr = e.split(",");
+                for(var i =0;i< arr.length ; i++){
+                    if(i == 0){
+                        $(".first-level .item button").each(function () {
+                            if($(this).attr("data-id") == arr[i]){
+                                showChildren($(this),arr[i],1)
+                                return;
+                            }
+                        });
+                    }
+
+                   else{
+
+                        if(i == arr.length - 1){
+                            //选中分类标红
+                            var clb = $(".child-level-box").children(".child-level:last-child");
+                            var find = $(clb).find("button");
+                            for(var j = 0;j<find.length;j++){
+                                if($(find[j]).attr("data-id") == arr[i]){
+                                    $(find[j]).addClass("classify-active");
+                                }
+                            }
+                        }else{
+                            $(".child-level li button").each(function () {
+                                if($(this).attr("data-id") == arr[i]){
+                                    showChildren($(this),arr[i],1)
+                                    return;
+                                }
+                            });
+                        }
+                   }
+
+                }
+            },dataType:"text"
+        });
+    }
 </script>
 <script>
 
+    /**
+     *排序选项点击
+     * */
+    $("#title-search .layui-input-inline a").click(function () {
+        //如果已经激活，改变箭头
+        if($(this).hasClass("active")){
+            var attr = $(this).children("i").hasClass("fa-arrow-down")
+            if(attr){
+                $(this).attr("sort","asc")
+            }else{
+                $(this).attr("sort",attr ? "asc":"desc")
+            }
+        }
+        var sort = $(this).attr("sort")
+        var field = $(this).attr("field")
+        var keyword = $("#keyword").val();
+        var classifyId ;
+        $(".child-level-box .child-level button").each(function () {
+            if($(this).hasClass("classify-active")){
+                classifyId = $(this).attr("data-id");
+            }
+        });
+        document.write("<form action='/' method='post' name='form1' style='display:none'>");
+        document.write("<input type='hidden' name='field' value='"+field+"'>");
+        document.write("<input type='hidden' name='sort' value='"+sort+"'>");
+        document.write("<input type='hidden' name='keyword' value='"+keyword+"'>");
+        document.write("<input type='hidden' name='classifyId' value='"+classifyId+"'>");
+        document.write("</form>");
+        document.form1.submit();
+    });
 
+    //子分类
     function showChildren(obj,id,directChildrenCount){
 
         if(directChildrenCount > 0){  //展开子元素
@@ -515,6 +622,7 @@
             $.ajax({
                 url:"/article/classify/selectByParentId",
                 type:"GET",
+                async:false,
                 data:{"id":id},
                 success:function (e) {
                     var start  ='<div class="child-level"><ul>';
@@ -525,7 +633,7 @@
                         if(e[i].directChildrenCount == 0){
                              item = '<li> <button data-id="'+e[i].id+'" onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'</button></li>';
                         }else{
-                             item = '<li> <button data-level="'+e[i].level+'" onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-d" style="font-size: 10px;"></i></button></li>';
+                             item = '<li> <button data-id="'+e[i].id+'" data-level="'+e[i].level+'" onclick="showChildren(this,'+e[i].id+','+e[i].directChildrenCount+')" class="layui-btn layui-btn-sm">'+e[i].name+'<i class="layui-icon layui-icon-triangle-d" style="font-size: 10px;"></i></button></li>';
                         }
                         content = content+item;
                     }
@@ -533,8 +641,22 @@
                 },dataType:"json"
             });
         }else{
-            //直接查询
-            alert(id)
+            var sort;
+            var field;
+            $("#title-search .layui-input-inline a").each(function () {
+                if($(this).hasClass("active")){
+                     sort = $(this).attr("sort")
+                     field = $(this).attr("field")
+                }
+            })
+            var keyword = $("#keyword").val();
+            document.write("<form action='/' method='post' name='form1' style='display:none'>");
+            document.write("<input type='hidden' name='field' value='"+field+"'>");
+            document.write("<input type='hidden' name='sort' value='"+sort+"'>");
+            document.write("<input type='hidden' name='keyword' value='"+keyword+"'>");
+            document.write("<input type='hidden' name='classifyId' value='"+id+"'>");
+            document.write("</form>");
+            document.form1.submit();
         }
     }
 

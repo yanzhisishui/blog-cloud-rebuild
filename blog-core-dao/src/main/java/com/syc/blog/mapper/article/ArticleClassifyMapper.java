@@ -19,4 +19,24 @@ public interface ArticleClassifyMapper extends BaseMapper<ArticleClassify> {
 
     @Select("select u.*,(select count(*) from article_classify uu where uu.parent_id = u.id and uu.archive = 0) as directChildrenCount from article_classify u  where u.parent_id = #{parentId} and u.archive = 0")
     List<ArticleClassify> selectListByParentId(@Param("parentId") Integer id);
+
+    @Select("SELECT " +
+            "  GROUP_CONCAT(id ORDER BY id asc) " +
+            "FROM " +
+            "  ( " +
+            "  SELECT " +
+            "    @r AS _id, " +
+            "    ( SELECT @r := parent_id FROM article_classify WHERE id = _id ) AS parent_id, " +
+            "    @l := @l - 1 AS lvl  " +
+            "  FROM " +
+            "    ( SELECT @r := #{id}, @l := 3 ) vars, " +
+            "    article_classify h  " +
+            "  WHERE " +
+            "    @r <> 0  " +
+            "  ) T1 " +
+            "  JOIN article_classify T2 ON T1._id = T2.id  " +
+            "ORDER BY " +
+            "  id ASC; " +
+            "  ")
+    String selectIdTree(@Param("id") Integer id);
 }

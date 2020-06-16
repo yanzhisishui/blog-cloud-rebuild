@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -54,9 +55,39 @@ public class IndexController extends BaseController{
 
     @RequestMapping("/")
     public String index(ModelMap map, HttpServletRequest request){
+
         Map<String,Object> params = new HashMap<>();
         List<Article> articleList = queryArticle(params);
         map.put("articleList",articleList);
+        putIndexInfo(map,request);
+        buildPagePlugin(1,10,map);
+        return "index";
+    }
+
+    /**
+     * 首页筛选
+     * */
+    @PostMapping("/")
+    public String indexQuery(ModelMap map, HttpServletRequest request,
+                        @RequestParam(value = "field",required = false,defaultValue = "") String field,
+                        @RequestParam(value = "sort",required = false,defaultValue = "") String sort,
+                        @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
+                        @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId
+    ){
+        map.put("field",field);
+        map.put("sort",sort);
+        map.put("keyword",keyword);
+        map.put("classifyId",classifyId);
+        System.out.println(field+","+sort+","+keyword);
+        Map<String,Object> params = new HashMap<>();
+        List<Article> articleList = queryArticle(params);
+        map.put("articleList",articleList);
+        putIndexInfo(map,request);
+        buildPagePlugin(1,10,map);
+        return "index";
+    }
+
+    void putIndexInfo(ModelMap map,HttpServletRequest request){
 
         List<Banner> bannerList = bannerService.selectList();
         map.put("bannerList",bannerList);
@@ -81,9 +112,6 @@ public class IndexController extends BaseController{
         if(requireEnableLantern()){
             map.put("enableLantern",true);
         }
-
-        buildPagePlugin(1,10,map);
-        return "index";
     }
 
     private boolean requireEnableLantern() {

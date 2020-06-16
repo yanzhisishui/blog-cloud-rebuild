@@ -29,4 +29,8 @@ public class ArticleClassifyService {
     public List<ArticleClassify> selectListByParentId(Integer id) {
         return articleClassifyMapper.selectListByParentId(id);
     }
+
+    public String selectIdTree(Integer id) {
+        return articleClassifyMapper.selectIdTree(id);
+    }
 }
