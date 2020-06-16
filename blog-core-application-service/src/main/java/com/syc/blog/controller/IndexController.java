@@ -173,15 +173,13 @@ public class IndexController extends BaseController{
         if (qb2 != null) {
             boolQueryBuilder.must(qb2);
         }
-        Pageable pageable = PageRequest.of(page, 10);//分页
-        //SearchQuery query = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable).build();
+        Pageable pageable = PageRequest.of(page - 1, 10);//分页
         NativeSearchQueryBuilder nsqb = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
         if(fsb != null){
             nsqb = nsqb.withSort(fsb);
         }
         SearchQuery query = nsqb.build();
         org.springframework.data.domain.Page<Article> search = articleRepository.search(query);
-
 
         return search;
     }
