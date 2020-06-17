@@ -231,7 +231,7 @@
 
         #selectCondition{width: 99.6%;background-color: white;
             position: relative;height: 350px;padding: 0 10px;
-            box-sizing: border-box;margin-bottom: 10px;}
+            box-sizing: border-box;margin-bottom: 10px;display: none;}
 
         #selectCondition .first-level-box,#selectCondition .child-level-box{float: left;}
         #selectCondition .first-level-box{margin-left: 16px;}
@@ -404,13 +404,13 @@
                                 <i th:if="${field != 'browser'}" class="fa fa-arrow-down"></i>
                                 <i th:if="${field == 'browser'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
                             </a>
-                            <a th:class="${field == 'collection' ? 'active' : ''}" field="collection" sort="desc" onclick="" href="javascript:;">收藏数&nbsp;
-                                <i th:if="${field != 'collection'}" class="fa fa-arrow-down"></i>
-                                <i th:if="${field == 'collection'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                            <a th:class="${field == 'collectionCount' ? 'active' : ''}" field="collectionCount" sort="desc" onclick="" href="javascript:;">收藏数&nbsp;
+                                <i th:if="${field != 'collectionCount'}" class="fa fa-arrow-down"></i>
+                                <i th:if="${field == 'collectionCount'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
                             </a>
-                            <a th:class="${field == 'comment' ? 'active' : ''}" field="comment" sort="desc" onclick="" href="javascript:;">评论数&nbsp;
-                                <i th:if="${field != 'comment'}" class="fa fa-arrow-down"></i>
-                                <i th:if="${field == 'comment'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                            <a th:class="${field == 'commentCount' ? 'active' : ''}" field="commentCount" sort="desc" onclick="" href="javascript:;">评论数&nbsp;
+                                <i th:if="${field != 'commentCount'}" class="fa fa-arrow-down"></i>
+                                <i th:if="${field == 'commentCount'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
                             </a>
                         </div>
                         <div class="layui-input-inline" style="margin-left: 20px;">
@@ -494,7 +494,7 @@
                 <h3 class="square">话题分类</h3>
                 <div>
                     <ul id="classify-card" class="flex">
-                        <li th:each="ac : ${articleClassifyList}"><a th:text="${ac.name}" href="javascript:;">技术</a></li>
+                        <li th:each="ac : ${articleClassifyList}"><a th:data-id="${ac.id}" th:text="${ac.name}" href="javascript:;">技术</a></li>
                     </ul>
                 </div>
 
@@ -534,6 +534,7 @@
     var field=[[${field}]];
     var keyword=[[${keyword}]];
     if((field != null && field != "") || (classifyId != null && classifyId != "") || (keyword != null && keyword != "")){
+        $("#selectCondition").css("display","block");
         $('html,body').animate({ scrollTop: $("#selectCondition").offset().top - 50 }, 0)
     }
     if(classifyId != null && classifyId != ""){ //用户选了分类
@@ -647,7 +648,7 @@
             sort  = "";
         }
         var keyword = $("#keyword").val();
-        var classifyId = 1 ;
+        var classifyId = "" ;
         $(".child-level-box .child-level button").each(function () {
             if($(this).hasClass("classify-active")){
                 classifyId = $(this).attr("data-id");
@@ -724,6 +725,15 @@
         colorArr=colorArr.filter(function (e) {
             return e;
         });
+    });
+
+    $("#classify-card li a").click(function () {
+        var id = $(this).attr("data-id");
+        document.write("<form action='/' method='post' name='form1' style='display:none'>");
+        document.write("<input type='hidden' name='page' value='"+1+"'>");
+        document.write("<input type='hidden' name='parentId' value='"+id+"'>");
+        document.write("</form>");
+        document.form1.submit();
     });
 
     //翻页

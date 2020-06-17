@@ -87,14 +87,15 @@ public class IndexController extends BaseController{
                         @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
                         @RequestParam(value = "sort",required = false,defaultValue = "") String sort,
                         @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
-                        @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId
+                        @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId,
+                        @RequestParam(value = "parentId",required = false,defaultValue = "") String parentId
     ){
         Map<String,Object> params = new HashMap<>();
         map.put("field",field);                   params.put("field",field);
         map.put("page",page);                     params.put("page",page);
         map.put("sort",sort);                     params.put("sort",sort);
         map.put("keyword",keyword);               params.put("keyword",keyword);
-        map.put("classifyId",classifyId);         params.put("classifyId",classifyId);
+        map.put("classifyId",classifyId);         params.put("classifyId",classifyId);params.put("parentId",parentId);
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
         List<Article> articleList = new ArrayList<>();
         articles.get().forEach(articleList::add);
@@ -147,6 +148,7 @@ public class IndexController extends BaseController{
         String classifyId = params.get("classifyId") == null ? null : params.get("classifyId").toString();
         String field = params.get("field") == null ? null : params.get("field").toString();
         String sort = params.get("sort") == null ? null : params.get("sort").toString();
+        String parentId = params.get("parentId") == null ? null : params.get("parentId").toString();
         Integer page = (Integer)params.get("page");
 
         QueryBuilder qb1 = null;//名称
@@ -162,6 +164,11 @@ public class IndexController extends BaseController{
             qb2 = QueryBuilders.matchQuery("classify.id", id);
         }
 //
+        QueryBuilder qb3 = null;
+        if (!StringHelper.isEmpty(parentId)) {
+            int id = Integer.parseInt(parentId);
+            qb3 = QueryBuilders.matchQuery("classify.parentId", id);
+        }
         FieldSortBuilder fsb = null;
         if (!StringHelper.isEmpty(field)) {
             fsb = SortBuilders.fieldSort(field).order(sort.equals("asc") ? SortOrder.ASC : SortOrder.DESC);
@@ -172,6 +179,9 @@ public class IndexController extends BaseController{
         }
         if (qb2 != null) {
             boolQueryBuilder.must(qb2);
+        }
+        if (qb3 != null) {
+            boolQueryBuilder.must(qb3);
         }
         Pageable pageable = PageRequest.of(page - 1, 6);//分页
         NativeSearchQueryBuilder nsqb = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
@@ -220,6 +230,7 @@ public class IndexController extends BaseController{
     public String learning(ModelMap map,@RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
         Map<String,Object> params = new HashMap<>();
         params.put("page",page);
+        map.put("field","");
         List<Article> articleList = new ArrayList<>();
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
         articles.get().forEach(articleList::add);

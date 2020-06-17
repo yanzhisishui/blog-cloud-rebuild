@@ -11,7 +11,9 @@ import java.util.List;
 
 @Mapper
 public interface ArticleClassifyMapper extends BaseMapper<ArticleClassify> {
-    @Select("select id,name from article_classify  where parent_id = 1  order by rand() limit #{num} ")
+    @Select("select * from (select t1.id,t1.name,(select count(*) from article_classify t2 where t2.parent_id = " +
+            "t1.id and t2.archive = 0 ) as directChildrenCount from article_classify t1  " +
+            ") t where t.directChildrenCount = 0 order by rand() limit #{num} ")
     List<ArticleClassify> selectRandomList(@Param("num") int i);
 
     @Select("select u.*,(select count(*) from article_classify uu where uu.parent_id = u.id and uu.archive = 0) as directChildrenCount from article_classify u  where u.level = #{level} and u.archive = 0")
