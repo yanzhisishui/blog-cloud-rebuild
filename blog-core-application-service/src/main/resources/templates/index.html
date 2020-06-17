@@ -226,7 +226,7 @@
             .syc .syc-center{padding: 5px;}
             .content-right .flex li{width: 45%;}
             .notice li a{width:55%;}
-            .layui-main{width:600px !important}
+
         }
 
         #selectCondition{width: 99.6%;background-color: white;
@@ -234,6 +234,7 @@
             box-sizing: border-box;margin-bottom: 10px;}
 
         #selectCondition .first-level-box,#selectCondition .child-level-box{float: left;}
+        #selectCondition .first-level-box{margin-left: 16px;}
         #selectCondition .item{margin-top: 10px;}
         #selectCondition .child-level ul li{float: left;margin: 5px;}
         #selectCondition .first-level{width: 100px;}
@@ -416,7 +417,7 @@
                             <input th:value="${keyword}" type="text" id="keyword" placeholder="请输入关键词搜索" autocomplete="off" class="layui-input">
                         </div>
                         <div class="layui-input-inline">
-                            <button onclick="" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-search"></i></button>
+                            <button id="search" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-search"></i></button>
                         </div>
 
                     </div>
@@ -426,6 +427,7 @@
                         <div class="first-level">
                             <div th:each="ac : ${articleClassifyList}" class="item">
                                 <button
+                                        th:data-children-count = "${ac.directChildrenCount}"
                                         th:data-level="${ac.level}"
                                         th:data-id="${ac.id}"
                                     th:onclick="showChildren(this,[[${ac.id}]],[[${ac.directChildrenCount}]]);"
@@ -532,7 +534,7 @@
     var field=[[${field}]];
     var keyword=[[${keyword}]];
     if((field != null && field != "") || (classifyId != null && classifyId != "") || (keyword != null && keyword != "")){
-        $('html,body').animate({ scrollTop: $("#selectCondition").offset().top - 50 }, 200)
+        $('html,body').animate({ scrollTop: $("#selectCondition").offset().top - 50 }, 0)
     }
     if(classifyId != null && classifyId != ""){ //用户选了分类
         //先拿到当前分类的层级树
@@ -546,8 +548,13 @@
                     if(i == 0){
                         $(".first-level .item button").each(function () {
                             if($(this).attr("data-id") == arr[i]){
-                                showChildren($(this),arr[i],1)
-                                return;
+                                if($(this).attr("data-children-count") == 0){
+                                    $(this).addClass("classify-active");
+                                }
+                                else{
+                                    showChildren($(this),arr[i],1)
+                                    return;
+                                }
                             }
                         });
                     }
@@ -579,6 +586,36 @@
     }
 </script>
 <script>
+    //按钮搜索
+    function keywordSearch(){
+        var keyword = $("#keyword").val();
+        var sort = "";
+        var field = "";
+        $("#title-search .layui-input-inline a").each(function () {
+            if($(this).hasClass("active") && $(this).html() != "默认"){
+                sort = $(this).attr("sort")
+                field = $(this).attr("field")
+            }
+        });
+        var classifyId = 1;
+        $(".child-level-box .child-level button").each(function () {
+            if($(this).hasClass("classify-active")){
+                classifyId = $(this).attr("data-id");
+            }
+        });
+        indexQuery(keyword,field,sort,classifyId,1);
+    }
+
+    //文本框回车
+    $("#keyword").keypress(function (e) {
+        if (e.which == 13) {
+            keywordSearch();
+        }
+    });
+
+    $("#search").click(function () {
+        keywordSearch();
+    });
 
     function indexQuery(keyword,field,sort,classifyId,page){
         document.write("<form action='/' method='post' name='form1' style='display:none'>");

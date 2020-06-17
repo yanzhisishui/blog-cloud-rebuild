@@ -173,7 +173,7 @@ public class IndexController extends BaseController{
         if (qb2 != null) {
             boolQueryBuilder.must(qb2);
         }
-        Pageable pageable = PageRequest.of(page - 1, 10);//分页
+        Pageable pageable = PageRequest.of(page - 1, 6);//分页
         NativeSearchQueryBuilder nsqb = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
         if(fsb != null){
             nsqb = nsqb.withSort(fsb);
@@ -184,17 +184,11 @@ public class IndexController extends BaseController{
         return search;
     }
 
-
-    @RequestMapping("/learning")
-    public String learning(ModelMap map){
-        Map<String,Object> params = new HashMap<>();
-        List<Article> articleList = new ArrayList<>();
-        org.springframework.data.domain.Page<Article> articles = queryArticle(params);
-        articles.get().forEach(articleList::add);
-        map.put("articleList",articleList);
+    void putLearningInfo(ModelMap map){
 
         List<OnlineUtils> onlineUtilsList = onlineUtilsService.selectListLatest(5);
         map.put("onlineUtilsList",onlineUtilsList);
+
 
         List<FriendLink> friendLinkList = friendLinkService.selectList();
         map.put("friendLinkList",friendLinkList);
@@ -215,8 +209,44 @@ public class IndexController extends BaseController{
             }
             obj.put(arr[i], ac);
         }
+
         map.put("zhuanlanList",obj);
-        buildPagePlugin(1,10,map);
+
+        List<ArticleClassify> queryClassifyList = articleClassifyService.selectListByLevel(1);
+        map.put("queryClassifyList",queryClassifyList);
+    }
+
+    @RequestMapping("/learning")
+    public String learning(ModelMap map,@RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
+        Map<String,Object> params = new HashMap<>();
+        params.put("page",page);
+        List<Article> articleList = new ArrayList<>();
+        org.springframework.data.domain.Page<Article> articles = queryArticle(params);
+        articles.get().forEach(articleList::add);
+        map.put("articleList",articleList);
+        putLearningInfo(map);
+        buildPagePlugin(page,articles.getTotalPages(),map);
+        return "learning";
+    }
+
+    @PostMapping("/learning")
+    public String learningQuery(ModelMap map,  @RequestParam(value = "field",required = false,defaultValue = "") String field,
+                                @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
+                                @RequestParam(value = "sort",required = false,defaultValue = "") String sort,
+                                @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
+                                @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId){
+        Map<String,Object> params = new HashMap<>();
+        map.put("field",field);                   params.put("field",field);
+        map.put("page",page);                     params.put("page",page);
+        map.put("sort",sort);                     params.put("sort",sort);
+        map.put("keyword",keyword);               params.put("keyword",keyword);
+        map.put("classifyId",classifyId);         params.put("classifyId",classifyId);
+        List<Article> articleList = new ArrayList<>();
+        org.springframework.data.domain.Page<Article> articles = queryArticle(params);
+        articles.get().forEach(articleList::add);
+        map.put("articleList",articleList);
+        putLearningInfo(map);
+        buildPagePlugin(page,articles.getTotalPages(),map);
         return "learning";
     }
 
