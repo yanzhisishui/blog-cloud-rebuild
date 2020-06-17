@@ -46,6 +46,10 @@ public class Article implements Serializable {
 
     @TableField(exist = false)
     private ArticleClassify classify;
+
+    @TableField(exist = false)
+    @Transient
+    private String classifyName;
     @TableField(exist = false)
     private Integer commentCount;
     @TableField(exist = false)

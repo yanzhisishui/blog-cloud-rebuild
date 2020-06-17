@@ -29,7 +29,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">封面图</label>
        <div class="layui-input-block">
-           <img src="http://192.168.23.175:4869/1021846f9c934240c47bdbd843d2193c" width="300" height="150" id="avatarImage">
+           <img src="/images/template.png" width="300" height="150" id="avatarImage">
            <button type="button" class="layui-btn layui-btn-primary" id="editimg">上传</button>
            <button type="button" class="layui-btn layui-btn-normal" id="handlePaste">开启手动粘贴</button>
            <span style="color: gray;">用于手动裁图通过admin页面上传图片到zimg</span>
@@ -39,7 +39,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">封面描述</label>
         <div class="layui-input-block" style="width: 400px">
-            <textarea id="description" name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+            <textarea id="description" name="description" placeholder="请输入内容" class="layui-textarea"></textarea>
         </div>
     </div>
 
@@ -107,18 +107,20 @@
         });
 
         form.on('submit(go)',function (data) {
-            alert(JSON.stringify(data.field))
-           /* $.ajax({
-                url:"/skill/update",
+            var fieldElement = data.field[Object.keys(data.field)[Object.keys(data.field).length - 1]];
+            data.field.classifyId = fieldElement;
+            data.content = layedit.getContent(ieditor);
+            $.ajax({
+                url:"/article/save",
                 type:"POST",
                 data:data.field,
                 success:function (e) {
                     if(e.success){
-                        window.parent.location.href='/skill/manage'
+                        window.parent.location.href='/article/manage'
                     }
                 },
                 dataType:"json"
-            });*/
+            });
             return false;
         });
 
@@ -171,6 +173,7 @@
     , height: '90%'
     });
         var ieditor = layedit.build('layeditDemo');
+
     });
 
 

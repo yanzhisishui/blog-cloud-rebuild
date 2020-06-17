@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.article.Article;
+import com.syc.blog.mapper.article.ArticleClassifyMapper;
 import com.syc.blog.mapper.article.ArticleMapper;
 import com.syc.blog.utils.JsonHelper;
 import com.syc.blog.utils.ResultHelper;
@@ -18,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/article")
@@ -29,6 +27,8 @@ public class ArticleController {
 
     @Autowired
     ArticleMapper articleMapper;
+    @Autowired
+    ArticleClassifyMapper articleClassifyMapper;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     @RequestMapping("/manage")
@@ -40,7 +40,8 @@ public class ArticleController {
     @ResponseBody
     public String queryListPage(@RequestParam("page") Integer page, @RequestParam("limit") Integer pageSize){
         IPage<Article> iPage = new Page<>(page,pageSize);
-        IPage<Article> bannerIPage = articleMapper.selectPage(iPage, Wrappers.<Article>lambdaQuery().eq(Article::getArchive,0));
+        Map<String,Object> params = new HashMap<>();
+        IPage<Article> bannerIPage = articleMapper.queryListPage(iPage,params);
         return JsonHelper.objectToJsonForTable(bannerIPage.getRecords(),bannerIPage.getTotal());
     }
 
@@ -70,7 +71,10 @@ public class ArticleController {
     public String edit(@RequestParam("id") Integer id, ModelMap map){
         Article article=articleMapper.selectById(id);
         map.put("article",article);
-        return "onlineutils/article/edit";
+        String s = articleClassifyMapper.selectIdTree(article.getId());
+        List<String> list = new ArrayList<>(Arrays.asList(s.split(",")));
+        map.put("list",list);
+        return "article/edit";
     }
 
     @RequestMapping("/delete")
