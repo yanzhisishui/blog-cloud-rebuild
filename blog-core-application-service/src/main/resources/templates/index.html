@@ -309,7 +309,7 @@
                     <li class="nav-this"><a href="#">首&nbsp;&nbsp;页</a></li>
                     <li><a href="/learning">爱学习</a></li>
                     <li><a href="/life">微动态</a></li>
-                    <li><a href="/onlineutils">工具集</a></li>
+                    <li><a href="http://www.sunyuchao.com/onlineutils">工具集</a></li>
                     <li><a href="/aboutme">关于我</a></li>
                     <li><a href="/message">留言板</a></li>
                 </ul>
@@ -598,7 +598,7 @@
                 field = $(this).attr("field")
             }
         });
-        var classifyId = 1;
+        var classifyId = "";
         $(".child-level-box .child-level button").each(function () {
             if($(this).hasClass("classify-active")){
                 classifyId = $(this).attr("data-id");
@@ -741,7 +741,22 @@
         if($(obj).hasClass("layui-btn-disabled")){
             return;
         }
-        window.location.href='/?page='+page+"&field="+$("#field").val()+"&bread="+$("#bread").val()
+        var keyword = $("#keyword").val();
+        var sort = "";
+        var field = "";
+        $("#title-search .layui-input-inline a").each(function () {
+            if($(this).hasClass("active") && $(this).html() != "默认"){
+                sort = $(this).attr("sort")
+                field = $(this).attr("field")
+            }
+        });
+        var classifyId = "";
+        $(".child-level-box .child-level button").each(function () {
+            if($(this).hasClass("classify-active")){
+                classifyId = $(this).attr("data-id");
+            }
+        });
+        indexQuery(keyword,field,sort,classifyId,page);
     }
 
 

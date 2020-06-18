@@ -23,7 +23,7 @@ public class ArticleClassifyService {
     }
 
     public List<ArticleClassify> selectHotTagList() {
-        return articleClassifyMapper.selectList(Wrappers.<ArticleClassify>lambdaQuery().eq(ArticleClassify::getArchive,0).eq(ArticleClassify::getParentId,1));
+        return articleClassifyMapper.selectList(Wrappers.<ArticleClassify>lambdaQuery().eq(ArticleClassify::getArchive,0).eq(ArticleClassify::getLevel,3));
     }
 
     public List<ArticleClassify> selectListByParentId(Integer id) {

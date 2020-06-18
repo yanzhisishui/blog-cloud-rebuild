@@ -246,13 +246,16 @@ public class IndexController extends BaseController{
                                 @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
                                 @RequestParam(value = "sort",required = false,defaultValue = "") String sort,
                                 @RequestParam(value = "keyword",required = false,defaultValue = "") String keyword,
-                                @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId){
+                                @RequestParam(value = "classifyId",required = false,defaultValue = "") String classifyId,
+                                @RequestParam(value = "parentId",required = false,defaultValue = "") String parentId
+    ){
         Map<String,Object> params = new HashMap<>();
         map.put("field",field);                   params.put("field",field);
         map.put("page",page);                     params.put("page",page);
         map.put("sort",sort);                     params.put("sort",sort);
         map.put("keyword",keyword);               params.put("keyword",keyword);
         map.put("classifyId",classifyId);         params.put("classifyId",classifyId);
+        map.put("parentId",parentId);         params.put("parentId",parentId);
         List<Article> articleList = new ArrayList<>();
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
         articles.get().forEach(articleList::add);
@@ -289,7 +292,7 @@ public class IndexController extends BaseController{
         map.put("grxxList",grxxList);
         //人生感悟
         List<Article> rsgwList = new ArrayList<>();
-        MatchQueryBuilder matchQueryBuilder2 = QueryBuilders.matchQuery("classify.id", 2);
+        MatchQueryBuilder matchQueryBuilder2 = QueryBuilders.matchQuery("classify.id", 4);
         Iterable<Article>  search = articleRepository.search(matchQueryBuilder2);
         search.forEach(rsgwList::add);
         map.put("rsgwList",rsgwList);

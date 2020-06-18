@@ -50,6 +50,7 @@
 
         .skill-label{margin-left: 5px;}
         .skill-label li{float: left;margin:4px 6px;}
+        .skill-label li a{font-family: Arial, Helvetica, sans-serif;}
 
         .content-right .square{padding: 5px;margin:0 auto;margin-bottom: 10px;position: relative;border-bottom: 1px solid #e7e7e7;
             padding-bottom: 15px;width: 90%;padding-top: 12px;color:#526163;font-weight: bold;}
@@ -137,7 +138,7 @@
                 <li><a href="/">首&nbsp;&nbsp;页</a></li>
                 <li><a href="/learning">爱学习</a></li>
                 <li><a href="/life">微动态</a></li>
-                <li><a href="/onlineutils">工具集</a></li>
+                <li><a href="http://www.sunyuchao.com/onlineutils">工具集</a></li>
                 <li><a href="/aboutme">关于我</a></li>
                 <li><a href="/message">留言板</a></li>
             </ul>
@@ -198,8 +199,8 @@
             <div class="right-card">
                 <h3 class="square" style="margin-bottom: 8px;">热门标签</h3>
                 <div>
-                    <ul class="skill-label">
-                        <li th:each="tag : ${hotTagList}"><a class="layui-btn layui-btn-sm layui-btn-radius" th:href="@{/learning(bread=${tag.name},field=default+','+default)}" th:text="${tag.name}"></a></li>
+                    <ul class="skill-label" id="hot-tag-box">
+                        <li th:each="tag : ${hotTagList}"><a class="layui-btn layui-btn-sm layui-btn-radius" th:data-id="${tag.id}" th:text="${tag.name}"></a></li>
                     </ul>
                 </div>
                 <div class="layui-clear"></div>
@@ -430,6 +431,15 @@
             timeago = layui.timeago,
             element=layui.element;
         timeago.render($('.timeago'));
+        $("#hot-tag-box li a").click(function () {
+
+            var id = $(this).attr("data-id");
+            document.write("<form action='/learning' method='post' name='form1' style='display:none'>");
+            document.write("<input type='hidden' name='page' value='"+1+"'>");
+            document.write("<input type='hidden' name='parentId' value='"+id+"'>");
+            document.write("</form>");
+            document.form1.submit();
+        });
     });
 </script>
 <script src="http://192.168.23.175:9999/static/js/heart.js"></script>

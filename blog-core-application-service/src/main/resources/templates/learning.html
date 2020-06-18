@@ -228,7 +228,7 @@
                 <li><a href="/">首&nbsp;&nbsp;页</a></li>
                 <li class="nav-this"><a href="#">爱学习</a></li>
                 <li><a href="/life">微动态</a></li>
-                <li><a href="/onlineutils">工具集</a></li>
+                <li><a href="http://www.sunyuchao.com/onlineutils">工具集</a></li>
                 <li><a href="/aboutme">关于我</a></li>
                 <li><a href="/message">留言板</a></li>
             </ul>
@@ -582,13 +582,26 @@
     }
 
 
-    //翻页
     function flipPage(obj,page) {
-        var keyword= $("#keyword").val();
         if($(obj).hasClass("layui-btn-disabled")){
             return;
         }
-        window.location.href='/learning?page='+page+"&field="+$("#field").val()+"&bread="+$("#bread").val()+"&keyword="+keyword
+        var keyword = $("#keyword").val();
+        var sort = "";
+        var field = "";
+        $("#title-search .layui-input-inline a").each(function () {
+            if($(this).hasClass("active") && $(this).html() != "默认"){
+                sort = $(this).attr("sort")
+                field = $(this).attr("field")
+            }
+        });
+        var classifyId = "";
+        $(".child-level-box .child-level button").each(function () {
+            if($(this).hasClass("classify-active")){
+                classifyId = $(this).attr("data-id");
+            }
+        });
+        indexQuery(keyword,field,sort,classifyId,page);
     }
 
     layui.config({base:'http://192.168.23.175:9999/static/layui/extends/'});
