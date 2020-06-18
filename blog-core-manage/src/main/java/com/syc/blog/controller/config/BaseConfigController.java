@@ -72,11 +72,14 @@ public class BaseConfigController {
     public String add(){
         return "config/add";
     }
+
     @RequestMapping("/card/manage")
     public String card(ModelMap map){
         String s = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_CARD_INFO);
         CardInfo cardInfo = JSON.parseObject(s, CardInfo.class);
         map.put("card",cardInfo);
+        String logoUrl = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_LOGO_URL);
+        map.put("logoUrl",logoUrl);
         return "card/manage";
     }
 

@@ -221,7 +221,7 @@
 <div class="top">
     <div class="top-center">
         <div class="top-center-l">
-            <img th:src="${logoUrl}">
+            <img  th:src="${logoUrl}">
         </div>
         <div class="top-center-c">
             <ul class="nav">
@@ -591,7 +591,7 @@
         window.location.href='/learning?page='+page+"&field="+$("#field").val()+"&bread="+$("#bread").val()+"&keyword="+keyword
     }
 
-    layui.config({base:'/layui/extends/'});
+    layui.config({base:'http://192.168.23.175:9999/static/layui/extends/'});
     layui.use(['layer','element'],function () {
         var layer = layui.layer,
             element = layui.element,

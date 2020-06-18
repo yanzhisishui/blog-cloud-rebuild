@@ -30,15 +30,14 @@ public class PageInterceptor implements HandlerInterceptor {
         StringRedisTemplate stringRedisTemplate = applicationContext.getBean(StringRedisTemplate.class);
         //网站logo
         String logoName = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_LOGO_URL);
-        ModelMap map = modelAndView.getModelMap();
-        map.put("logoUrl",logoName);
+        request.setAttribute("logoUrl",logoName);
         //图标地址
         String iconfontUrl = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_ICONFONT_URL);
-        map.put("iconfontUrl",iconfontUrl);
+        request.setAttribute("iconfontUrl",iconfontUrl);
         //个人信息
         String cardStr = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_CARD_INFO);
         CardInfo card = JSON.parseObject(cardStr, CardInfo.class);
-        map.put("card",card);
+        request.setAttribute("card",card);
     }
 
     @Override

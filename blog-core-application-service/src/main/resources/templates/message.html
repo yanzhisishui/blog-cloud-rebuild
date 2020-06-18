@@ -106,7 +106,7 @@
         <div th:fragment="messageBox" class="save-message-box">
             <div class="smb-left">
                 <img th:if="${session.loginUser == null}" class="radius" src="http://192.168.23.175:9999/static/images/default_icon.jpg" width="50" height="50">
-                <img th:if="${session.loginUser != null}" class="radius" th:src="${session.loginUser.avatar}">
+                <img th:if="${session.loginUser != null}" class="radius" width="50" height="50" th:src="${session.loginUser.avatar}">
             </div>
             <div class="smb-right">
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
@@ -212,7 +212,7 @@
             <h3 class="square">在线工具</h3>
             <div>
                 <ul class="notice">
-                    <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}"> [[${util.title}]]</a><span class="timeago" th:datetime="${#dates.format(util.dateUpdate, 'yyyy-MM-dd')}"></span></li>
+                    <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}"> [[${util.title}]]</a><span class="timeago" th:datetime="${#dates.format(util.dateInsert, 'yyyy-MM-dd')}"></span></li>
                 </ul>
             </div>
 
@@ -312,7 +312,7 @@
 
 <script>
 
-    layui.config({base:'/layui/extends/'});
+    layui.config({base:'http://192.168.23.175:9999/static/layui/extends/'});
     layui.use(['element','layer','timeago'], function(){
         var element = layui.element,
             layer=layui.layer,

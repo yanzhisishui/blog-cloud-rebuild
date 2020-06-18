@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title th:text="${article.title}"></title>
     <meta name="Description" content="孙玉超个人博客是一个分享、研究Java技术的自媒体博客。Java技术栈的学习之路，我和你一起行走！" />
-    <meta name="Keywords" th:content="${article.keyword}" />
     <link href="http://192.168.23.175:9999/static/css/fontawesome4.7.0/css/font-awesome.css"  rel="stylesheet">
     <link href="http://192.168.23.175:9999/static/layui/css/layui.css" rel="stylesheet" >
     <script th:src="${iconfontUrl}"></script>
@@ -431,7 +430,7 @@
         }
 
 
-        layui.config({base:'/layui/extends/'});
+        layui.config({base:'http://192.168.23.175:9999/static/layui/extends/'});
         layui.use(['element','code','layer','timeago'], function(){
             var element = layui.element,
                 code = layui.code,

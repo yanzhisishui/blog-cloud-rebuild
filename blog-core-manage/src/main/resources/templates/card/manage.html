@@ -86,26 +86,34 @@
 
     </div>
 
-    <div style="width:30%;float: left;">
+    <div style="width:40%;float: left;">
         <form class="layui-form">
             <div class="layui-form-item">
                 <label class="layui-form-label">网站logo</label>
+                <img th:src="${logoUrl}">
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择</label>
                 <input id="logo" class="file"  type="file">
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">操作</label>
-                <button type="button" class="layui-btn layui-btn-normal" id="logoBtn">上传网站logo</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="logoBtn">修改网站logo</button>
             </div>
         </form>
         <hr>
         <form class="layui-form">
             <div class="layui-form-item">
                 <label class="layui-form-label">我的头像</label>
+                <img width="100" height="100" th:src="${card.avatar}">
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择</label>
                 <input id="avatar" class="file" type="file">
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">操作</label>
-                <button type="button" class="layui-btn layui-btn-normal" id="avatarBtn">上传我的头像logo</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="avatarBtn">修改我的头像logo</button>
             </div>
         </form>
     </div>
@@ -118,14 +126,13 @@
     layui.config({
         base:'/layui/extends/cropper/'
     }).use(['layer','form','upload','croppers'], function(){
-
         var form=layui.form,
             $=layui.jquery,
             croppers = layui.croppers,
-            layer=layui.layer,
+            layer=layui.layer;
 
         //监听提交
-        form.on('submit(go)', function(data){
+            form.on('submit(go)',function (data) {
             var len = data.field.introduction.length;
             if(len >81 || len < 62){
                 layer.msg("为了保证页面美观，个人简介的字数要在62 - 81之间");

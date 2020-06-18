@@ -167,7 +167,8 @@ public class IndexController extends BaseController{
         QueryBuilder qb3 = null;
         if (!StringHelper.isEmpty(parentId)) {
             int id = Integer.parseInt(parentId);
-            qb3 = QueryBuilders.matchQuery("classify.parentId", id);
+            qb3 = QueryBuilders.boolQuery().should(QueryBuilders.termQuery("classify.parentId", id))
+                    .should(QueryBuilders.termQuery("classify.id", id));
         }
         FieldSortBuilder fsb = null;
         if (!StringHelper.isEmpty(field)) {
@@ -281,14 +282,15 @@ public class IndexController extends BaseController{
         map.put("skillList",skillList);
         //个人信息
         List<Article> grxxList = new ArrayList<>();
-        MatchQueryBuilder matchQueryBuilder1 = QueryBuilders.matchQuery("classify.id", 7);
-        Iterable<Article> search = articleRepository.search(matchQueryBuilder1);
-        search.forEach(grxxList::add);
+        Article article1 = articleRepository.findById(2).orElse(null);
+        Article article2 = articleRepository.findById(14).orElse(null);
+        grxxList.add(article1);
+        grxxList.add(article2);
         map.put("grxxList",grxxList);
         //人生感悟
         List<Article> rsgwList = new ArrayList<>();
-        MatchQueryBuilder matchQueryBuilder2 = QueryBuilders.matchQuery("classify.id", 8);
-        search = articleRepository.search(matchQueryBuilder2);
+        MatchQueryBuilder matchQueryBuilder2 = QueryBuilders.matchQuery("classify.id", 2);
+        Iterable<Article>  search = articleRepository.search(matchQueryBuilder2);
         search.forEach(rsgwList::add);
         map.put("rsgwList",rsgwList);
         return "aboutme";

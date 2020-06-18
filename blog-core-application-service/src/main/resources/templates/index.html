@@ -302,7 +302,7 @@
     <div class="top">
         <div class="top-center">
             <div class="top-center-l">
-                <img th:src="${logoUrl}">
+                <img width="130" height="78" th:src="${logoUrl}">
             </div>
             <div class="top-center-c">
                 <ul class="nav">
@@ -319,7 +319,7 @@
                 <ul th:if="${session.loginUser != null }" class="layui-nav"> <!--登录之后显示-->
                     <li class="layui-nav-item">
                         <a href="javascript:;">
-                            <img class="radius" th:src="${session.loginUser.avatar}">
+                            <img class="radius" width="50" height="50" th:src="${session.loginUser.avatar}">
                         </a>
                         <dl class="layui-nav-child"> <!-- 二级菜单 -->
                             <dd><a href="javascript:;" id="personCenter">个人中心</a></dd>
@@ -747,7 +747,7 @@
 
 
 
-    layui.config({base:'/layui/extends/'});
+    layui.config({base:'http://192.168.23.175:9999/static/layui/extends/'});
     layui.use(['layer','element'],function () {
         var layer=layui.layer,
             element=layui.element,
