@@ -90,16 +90,16 @@
         </div>
         <div class="top-center-c">
             <ul class="nav">
-                <li><a href="/">首&nbsp;&nbsp;页</a></li>
-                <li><a href="/learning">爱学习</a></li>
-                <li><a href="/life">微动态</a></li>
+                <li><a href="http://www.sunyuchao.com/">首&nbsp;&nbsp;页</a></li>
+                <li><a href="http://www.sunyuchao.com/learning">爱学习</a></li>
+                <li><a href="http://www.sunyuchao.com/life">微动态</a></li>
                 <li class="nav-this"><a href="javascript:;">工具集</a></li>
-                <li><a href="/aboutme">关于我</a></li>
-                <li><a href="/message">留言板</a></li>
+                <li><a href="http://www.sunyuchao.com/aboutme">关于我</a></li>
+                <li><a href="http://www.sunyuchao.com/message">留言板</a></li>
             </ul>
         </div>
         <div th:fragment="top-center-r" class="top-center-r">
-            <span th:if="${session.loginUser == null }"><a id="login" href="javascript:;">登录</a> / <a id="regist" href="javascript:;">注册</a></span>
+            <span th:if="${session.loginUser == null }"><a id="util-login" href="javascript:;">登录</a> / <a id="util-regist" href="javascript:;">注册</a></span>
             <ul th:if="${session.loginUser != null }" class="layui-nav"> <!--登录之后显示-->
                 <li class="layui-nav-item">
                     <a href="javascript:;">
@@ -163,5 +163,6 @@
 </script>
 <script src="http://192.168.23.175:9999/static/js/heart.js"></script>
 <script src="http://192.168.23.175:9999/static/js/common.js"></script>
+<script src="/login.js"></script>
 </body>
 </html>

@@ -49,7 +49,7 @@ public class IdCardCodeGenerateController extends BaseController {
     @RequestMapping("/getCitysByParentId")
     @ResponseBody
     public String getCitysByParentId(@RequestParam("provinceId") Integer provinceId){
-        List<Provinces> list = provincesMapper.selectList(Wrappers.<Provinces>lambdaQuery().eq(Provinces::getParentId,provinceId));
+        List<Provinces> list = provincesMapper.selectList(Wrappers.<Provinces>lambdaQuery().eq(Provinces::getParentId,provinceId).eq(Provinces::getArchive,0));
         ResultHelper result = ResultHelper.wrapSuccessfulResult(list);
         return JSON.toJSONString(result);
     }
@@ -57,7 +57,7 @@ public class IdCardCodeGenerateController extends BaseController {
     @RequestMapping("/getProvincesByLevel")
     @ResponseBody
     public String getProvincesByLevel(@RequestParam("level") Integer level){
-        List<Provinces> list = provincesMapper.selectList(Wrappers.<Provinces>lambdaQuery().eq(Provinces::getLevel,level));
+        List<Provinces> list = provincesMapper.selectList(Wrappers.<Provinces>lambdaQuery().eq(Provinces::getLevel,level).eq(Provinces::getArchive,0));
         ResultHelper result = ResultHelper.wrapSuccessfulResult(list);
         return JSON.toJSONString(result);
     }

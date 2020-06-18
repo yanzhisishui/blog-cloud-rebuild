@@ -17,6 +17,6 @@ public interface ProvincesMapper extends BaseMapper<Provinces> {
             "        ) t")
     String selectDistrictPrefix(@Param("provinceId") Integer provinceId, @Param("cityId")Integer cityId, @Param("districtId") Integer districtId);
 
-    @Select("select children_code from provinces where id = #{districtId}")
+    @Select("select children_code from provinces where id = #{districtId} and archive = 0")
     String selectChildrenCodeById(@Param("districtId") Integer districtId);
 }
