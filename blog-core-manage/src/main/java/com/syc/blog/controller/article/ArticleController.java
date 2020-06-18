@@ -7,14 +7,19 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.article.Article;
+import com.syc.blog.entity.article.ArticleClassify;
+import com.syc.blog.entity.comment.UserComment;
 import com.syc.blog.mapper.article.ArticleClassifyMapper;
 import com.syc.blog.mapper.article.ArticleMapper;
+import com.syc.blog.mapper.comment.UserCommentMapper;
+import com.syc.blog.repository.ArticleRepository;
 import com.syc.blog.utils.JsonHelper;
 import com.syc.blog.utils.ResultHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,10 +52,12 @@ public class ArticleController {
 
     @RequestMapping("/save")
     @ResponseBody
-    public String save(Article article){
+    public String save( Article article){
         article.setDateInsert(new Date());
+        String bread = articleClassifyMapper.selectNameTree(article.getClassifyId()).replace(",", "/");
+        article.setBread(bread);
         int row = articleMapper.insert(article);
-        ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"添加技能失败") : ResultHelper.wrapSuccessfulResult(null);
+        ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"添加失败") : ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);
     }
 
@@ -58,8 +65,10 @@ public class ArticleController {
     @ResponseBody
     public String update(Article article){
         article.setDateUpdate(new Date());
+        String bread = articleClassifyMapper.selectNameTree(article.getClassifyId()).replace(",", "/");
+        article.setBread(bread);
         int row = articleMapper.updateById(article);
-        ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"更新技能失败") : ResultHelper.wrapSuccessfulResult(null);
+        ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"更新失败") : ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);
     }
     @RequestMapping("/add")
@@ -71,7 +80,7 @@ public class ArticleController {
     public String edit(@RequestParam("id") Integer id, ModelMap map){
         Article article=articleMapper.selectById(id);
         map.put("article",article);
-        String s = articleClassifyMapper.selectIdTree(article.getId());
+        String s = articleClassifyMapper.selectIdTree(article.getClassifyId());
         List<String> list = new ArrayList<>(Arrays.asList(s.split(",")));
         map.put("list",list);
         return "article/edit";
@@ -135,6 +144,26 @@ public class ArticleController {
         List<Article> articleList = JSON.parseArray(s, Article.class);
         articleList.removeIf(next -> next.getId().equals(id));
         stringRedisTemplate.opsForValue().set(RedisConstant.ARTICLE_RECOMMEND,JSON.toJSONString(articleList));
+        return JSON.toJSONString(ResultHelper.wrapSuccessfulResult(null));
+    }
+
+    @Autowired
+    UserCommentMapper userCommentMapper;
+    @Autowired
+    ArticleRepository articleRepository;
+
+    @RequestMapping("/initializeESArticle")
+    @ResponseBody
+    public String initializeESArticle(){
+        List<Article> list =  articleMapper.selectList(Wrappers.<Article>lambdaQuery().eq(Article::getArchive,0));
+        for(Article article : list){
+            ArticleClassify articleClassify = articleClassifyMapper.selectById(article.getClassifyId());
+            article.setClassify(articleClassify);
+            Integer count = userCommentMapper.selectCount(Wrappers.<UserComment>lambdaQuery().eq(UserComment::getBindId, article.getId()).eq(UserComment::getType, 1));
+            article.setCommentCount(count);
+            article.setCollectionCount(0);
+        }
+        articleRepository.saveAll(list);
         return JSON.toJSONString(ResultHelper.wrapSuccessfulResult(null));
     }
 }

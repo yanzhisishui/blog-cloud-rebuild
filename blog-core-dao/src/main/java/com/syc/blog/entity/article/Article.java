@@ -39,8 +39,6 @@ public class Article implements Serializable {
     private String title;//文章标题
     private String bread;
     @Transient
-    private String keyword;
-    @Transient
     private Integer userId;//发布者id
     private String imageUrl;//图片地址
 

@@ -41,4 +41,24 @@ public interface ArticleClassifyMapper extends BaseMapper<ArticleClassify> {
             "  id ASC; " +
             "  ")
     String selectIdTree(@Param("id") Integer id);
+
+    @Select("SELECT " +
+            "  GROUP_CONCAT(name ORDER BY id asc) " +
+            "FROM " +
+            "  ( " +
+            "  SELECT " +
+            "    @r AS _id, " +
+            "    ( SELECT @r := parent_id FROM article_classify WHERE id = _id ) AS parent_id, " +
+            "    @l := @l - 1 AS lvl  " +
+            "  FROM " +
+            "    ( SELECT @r := #{id}, @l := 3 ) vars, " +
+            "    article_classify h  " +
+            "  WHERE " +
+            "    @r <> 0  " +
+            "  ) T1 " +
+            "  JOIN article_classify T2 ON T1._id = T2.id  " +
+            "ORDER BY " +
+            "  id ASC; " +
+            "  ")
+    String selectNameTree(@Param("id") Integer id);
 }

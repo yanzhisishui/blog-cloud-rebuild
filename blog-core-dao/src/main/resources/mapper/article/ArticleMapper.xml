@@ -20,5 +20,6 @@
             LEFT JOIN user_comment t3 ON t3.bind_id = t1.id where t1.archive = 0
         GROUP BY
             t1.id
+            ORDER BY date_insert DESC
     </select>
 </mapper>

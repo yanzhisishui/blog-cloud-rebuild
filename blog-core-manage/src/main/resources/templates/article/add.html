@@ -109,7 +109,7 @@
         form.on('submit(go)',function (data) {
             var fieldElement = data.field[Object.keys(data.field)[Object.keys(data.field).length - 1]];
             data.field.classifyId = fieldElement;
-            data.content = layedit.getContent(ieditor);
+            data.field.content = layedit.getContent(ieditor);
             $.ajax({
                 url:"/article/save",
                 type:"POST",
