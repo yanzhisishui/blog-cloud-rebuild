@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    # 配置数据源
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 使用druid连接池
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/blog?characterEncoding=utf8&useAffectedRows=true&useSSL=false
+    username: root
+    password: 123456
+
+  elasticsearch:
+    rest:
+      uris: http://127.0.0.1:9200
+
+  thymeleaf:
+    cache: false
+    #redis相关
+  redis:
+    timeout: 2000
+    host: 127.0.0.1
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure: ERROR  #去掉不用的启动日志
+    com.syc.blog.mapper: DEBUG
+  config: classpath:config/logback-spring.xml
+  path: $[log.path]  #logback-spring.xml 取值
