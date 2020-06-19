@@ -173,7 +173,7 @@
     </springProfile>-->
 
     <root level="info">
-        <appender-ref ref="CONSOLE" />  <!--输出控制台-->
+       <!-- <appender-ref ref="CONSOLE" /> --> <!--输出控制台-->
         <appender-ref ref="DEBUG_FILE" />   <!--输出文件-->
         <appender-ref ref="INFO_FILE" />    <!--输出文件-->
         <appender-ref ref="WARN_FILE" />    <!--输出文件-->
