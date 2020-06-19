@@ -165,6 +165,7 @@
                     </p>
                     <hr>
                     <div class="article-text" th:utext="${article.content}"></div>
+                    <div th:if="${isMobile}" style="text-align: center"><a href="javascript:;" id="readMore">下滑阅读全文 <i class="layui-icon layui-icon-down"></i></a></div>
                     <h3 style="margin-top: 20px;"> 转载请注明出处：<a href="#">转载请注明出处</a></h3>
                     <!--<div class="auto-80">
                         <h2 class="donate">写文章不容易，如果这边文章对您有帮助。可以打赏激励一下作者！ ~(@^_^@)~</h2>
@@ -173,8 +174,8 @@
                         <div class="layui-clear"></div>
                     </div>-->
                     <div class="other-article">
-                        <span>上一篇 : <a th:href="@{/article/__${article.id-1}__}" th:text="${pre}"></a></span>
-                        <span style="float: right;">下一篇 : <a th:href="@{/article/__${article.id+1}__}" th:text="${next}"></a></span>
+                        <span>上一篇 : <a th:href="@{/article/__${pre.id}__}" th:text="${pre.title}"></a></span>
+                        <span style="float: right;">下一篇 : <a th:href="@{/article/__${next.id}__}" th:text="${next.title}"></a></span>
                     </div>
                 </div>
             </div>
@@ -450,6 +451,13 @@
 
             timeago.render($(".timeago"));
 
+            $("#readMore").click(function () {
+                $("#readMore").fadeOut(500);
+            });
+
+           if($(".article-text").height() < 800){
+               $("#readMore").hide();
+           }
             layui.code({
                 title: 'code'
             });

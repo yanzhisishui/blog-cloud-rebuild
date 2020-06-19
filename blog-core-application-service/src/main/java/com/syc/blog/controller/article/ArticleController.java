@@ -9,6 +9,7 @@ import com.syc.blog.entity.info.OnlineUtils;
 import com.syc.blog.repository.ArticleRepository;
 import com.syc.blog.service.article.ArticleClassifyService;
 import com.syc.blog.service.info.OnlineUtilsService;
+import com.syc.blog.utils.StringHelper;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +41,41 @@ public class ArticleController extends BaseController {
 
         Article article = articleRepository.findById(id).orElse(null);
         map.put("article",article);
+        map.put("pre",recursionFindArticle(id,0));
+        map.put("next",recursionFindArticle(id,1));
+
         List<OnlineUtils> onlineUtilsList = onlineUtilsService.selectListLatest(5);
         map.put("onlineUtilsList",onlineUtilsList);
         List<ArticleClassify> articleClassifyList = articleClassifyService.selectListByLevel(1);
         map.put("articleClassifyList",articleClassifyList);
 
+        String ua= request.getHeader("User-Agent");
+        if(StringHelper.checkAgentIsMobile(ua)){ //验证手机端登录
+            map.put("isMobile",true);
+        }
         byte type = Constant.USER_COMMENT_TYPE_ARTICLE;
         getCurrentCommentsListPage(map,page,id,type);
 
         return "article";
     }
 
+    /**
+     * flag = 0 :反向查找
+     * flag = 1 :正向查找
+     * 递归查找上一篇下一篇文章
+     * */
+    Article recursionFindArticle(int id,int flag){
+        if(id < 1 || id > 100){
+            Article a = new Article();
+            a.setTitle("");
+            return a;
+        }
+        id = flag == 0 ? id - 1 : id +1;
+        Article article = articleRepository.findById(id).orElse(null);
+        if(article == null){
+            return recursionFindArticle(id,flag);
+        }
+        return article;
+    }
 
 }

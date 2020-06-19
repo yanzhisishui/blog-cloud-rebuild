@@ -535,6 +535,8 @@
     var keyword=[[${keyword}]];
     if((field != null && field != "") || (classifyId != null && classifyId != "") || (keyword != null && keyword != "")){
         $("#selectCondition").css("display","block");
+        $("#select i").removeClass("layui-icon-add-1");
+        $("#select i ").addClass(" layui-icon-close");
         $('html,body').animate({ scrollTop: $("#selectCondition").offset().top - 50 }, 0)
     }
     if(classifyId != null && classifyId != ""){ //用户选了分类
@@ -692,6 +694,10 @@
                 },dataType:"json"
             });
         }else{
+            //已经标红
+            if($(obj).hasClass("classify-active")){
+                return;
+            }
             var sort="";
             var field="";
             $("#title-search .layui-input-inline a").each(function () {
