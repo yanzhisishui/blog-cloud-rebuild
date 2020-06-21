@@ -38,3 +38,12 @@ spring:
             required: true
     default-encoding: UTF-8
 
+  rabbitmq:
+    username: guest
+    password: guest
+    addresses: 192.168.23.175
+    listener:
+      simple:
+        retry:
+          max-attempts: 5 #五次之后丢掉消息
+          enabled: true

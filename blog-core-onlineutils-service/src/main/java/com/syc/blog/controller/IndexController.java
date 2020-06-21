@@ -1,6 +1,7 @@
 package com.syc.blog.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.syc.blog.constants.Constant;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.info.OnlineUtils;
 import com.syc.blog.entity.user.CardInfo;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -26,6 +28,12 @@ public class IndexController {
 
         putPageCommon(map);
         return "index";
+    }
+
+    @RequestMapping("/login/exit")
+    public String exit(HttpSession session){
+        session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,null);
+        return "redirect:/";
     }
 
 

@@ -20,7 +20,12 @@ public class Constant {
     public static final String HOW_BUILD_BLOG_DESC = DICT+"how_build_blog_desc";
 
 
+    /**
+     * rabbitmq
+     * */
 
+    public static final String RABBITMQ_EXCHANGE = "application-service.browser";
+    public static final String RABBITMQ_QUEUE = "application-service.browser.count";
     /**
      * 评论类型
      * */

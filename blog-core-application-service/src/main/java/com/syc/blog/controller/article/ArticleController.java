@@ -6,6 +6,7 @@ import com.syc.blog.controller.BaseController;
 import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
 import com.syc.blog.entity.info.OnlineUtils;
+import com.syc.blog.rabbitmq.MQProducer;
 import com.syc.blog.repository.ArticleRepository;
 import com.syc.blog.service.article.ArticleClassifyService;
 import com.syc.blog.service.info.OnlineUtilsService;
@@ -35,6 +36,8 @@ public class ArticleController extends BaseController {
     OnlineUtilsService onlineUtilsService;
     @Autowired
     ArticleClassifyService articleClassifyService;
+    @Autowired
+    MQProducer mqProducer;
     @RequestMapping("/{id}")
     public String chapter(@PathVariable("id") Integer id, ModelMap map,
                           @RequestParam(value = "page",required = false,defaultValue = "1") Integer page, HttpServletRequest request){
@@ -53,6 +56,9 @@ public class ArticleController extends BaseController {
         if(StringHelper.checkAgentIsMobile(ua)){ //验证手机端登录
             map.put("isMobile",true);
         }
+        //浏览量增加
+        mqProducer.articleBrowserCountMessage(article);
+
         byte type = Constant.USER_COMMENT_TYPE_ARTICLE;
         getCurrentCommentsListPage(map,page,id,type);
 
