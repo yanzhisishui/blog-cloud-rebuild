@@ -5,10 +5,10 @@
     <title>孙玉超个人博客-留言板</title>
     <meta name="Description" content="给博主留言" />
     <meta name="Keywords" content="个人博客,Java技术，Java学习" />
-    <link href="http://192.168.23.175:9999/static/css/fontawesome4.7.0/css/font-awesome.css" rel="stylesheet">
-    <link href="http://192.168.23.175:9999/static/layui/css/layui.css" rel="stylesheet">
-    <link href="http://192.168.23.175:9999/static/css/common.css" rel="stylesheet">
-    <link href="http://192.168.23.175:9999/static/css/reply.css" rel="stylesheet">
+    <link href="http://www.sunyuchao.com/static/css/fontawesome4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link href="http://www.sunyuchao.com/static/layui/css/layui.css" rel="stylesheet">
+    <link href="http://www.sunyuchao.com/static/css/common.css" rel="stylesheet">
+    <link href="http://www.sunyuchao.com/static/css/reply.css" rel="stylesheet">
     <script th:src="${iconfontUrl}"></script>
     <style>
 
@@ -106,13 +106,13 @@
     <div class="content-left">
         <div th:fragment="messageBox" class="save-message-box">
             <div class="smb-left">
-                <img th:if="${session.loginUser == null}" class="radius" src="http://192.168.23.175:9999/static/images/default_icon.jpg" width="50" height="50">
+                <img th:if="${session.loginUser == null}" class="radius" src="http://www.sunyuchao.com/static/images/default_icon.jpg" width="50" height="50">
                 <img th:if="${session.loginUser != null}" class="radius" width="50" height="50" th:src="${session.loginUser.avatar}">
             </div>
             <div class="smb-right">
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
                 <div class="smb-r-bottom">
-                    <a onclick="loadFace(this)" href="javascript:;"><img src="http://192.168.23.175:9999/static/layui/images/face/1.gif"></a>
+                    <a onclick="loadFace(this)" href="javascript:;"><img src="http://www.sunyuchao.com/static/layui/images/face/1.gif"></a>
                     <div class="face-frame"></div>
                     <button onclick="msgToMe(this)" class="layui-btn layui-btn-normal" style="float: right;margin-right: 8px;">留言</button>
                 </div>
@@ -236,10 +236,10 @@
 </div>
 
 
-<script src="http://192.168.23.175:9999/static/js/heart.js"></script>
-<script src="http://192.168.23.175:9999/static/layui/layui.js"></script>
-<script src="http://192.168.23.175:9999/static/js/reply.js"></script>
-<script src="http://192.168.23.175:9999/static/js/jquery3.3.1.min.js"></script>
+<script src="http://www.sunyuchao.com/static/js/heart.js"></script>
+<script src="http://www.sunyuchao.com/static/layui/layui.js"></script>
+<script src="http://www.sunyuchao.com/static/js/reply.js"></script>
+<script src="http://www.sunyuchao.com/static/js/jquery3.3.1.min.js"></script>
 <!--子回复模板-->
 <script type="text/template" id="childMsg">
     <div class="msg-history">
@@ -292,7 +292,7 @@
                 回复 <span class="receiver">{commentUsernameCopy}</span>
                 <div contenteditable="true" class="layui-textarea" placeholder=""></div>
                 <div class="smb-r-bottom">
-                    <a onclick="loadFace(this)" href="javascript:;"><img src="http://192.168.23.175:9999/static/layui/images/face/1.gif"></a>
+                    <a onclick="loadFace(this)" href="javascript:;"><img src="http://www.sunyuchao.com/static/layui/images/face/1.gif"></a>
                     <div class="face-frame"></div>
                     <button onclick="saveMsg(this)" class="layui-btn layui-btn-normal" style="float: right;margin-right: 8px;">留言</button>
                 </div>
@@ -313,7 +313,7 @@
 
 <script>
 
-    layui.config({base:'http://192.168.23.175:9999/static/layui/extends/'});
+    layui.config({base:'http://www.sunyuchao.com/static/layui/extends/'});
     layui.use(['element','layer','timeago'], function(){
         var element = layui.element,
             layer=layui.layer,
@@ -465,6 +465,6 @@
 
 
 </script>
-<script src="http://192.168.23.175:9999/static/js/common.js"></script>
+<script src="http://www.sunyuchao.com/static/js/common.js"></script>
 </body>
 </html>

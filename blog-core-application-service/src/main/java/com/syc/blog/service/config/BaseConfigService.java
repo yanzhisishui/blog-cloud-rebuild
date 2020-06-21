@@ -22,7 +22,7 @@ public class BaseConfigService {
             String name = bc.getName();
             Boolean flag = stringRedisTemplate.hasKey(name);
             if(flag == null || !flag){
-                stringRedisTemplate.opsForValue().set(Constant.DICT+name,bc.getValue());
+                stringRedisTemplate.opsForValue().set(name,bc.getValue());
             }
         }
     }
