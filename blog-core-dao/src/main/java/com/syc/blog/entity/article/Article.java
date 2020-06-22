@@ -52,4 +52,13 @@ public class Article implements Serializable {
     private Integer commentCount;
     @TableField(exist = false)
     private Integer collectionCount;
+
+    @Override
+    public boolean equals(Object  o){
+        if(!(o instanceof Article)){
+            return false;
+        }
+        Article o1 = (Article) o;
+        return o1.getId().equals(this.getId());
+    }
 }

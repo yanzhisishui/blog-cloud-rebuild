@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.syc.blog.constant.Constant;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
@@ -68,6 +69,18 @@ public class ArticleController {
         String bread = articleClassifyMapper.selectNameTree(article.getClassifyId()).replace(",", "/");
         article.setBread(bread);
         int row = articleMapper.updateById(article);
+        if(row != 0){
+            String s = stringRedisTemplate.opsForValue().get(RedisConstant.ARTICLE_RECOMMEND);
+            List<Article> articleList = JSON.parseArray(s, Article.class);
+            if(articleList != null){
+                for(Article aa : articleList){
+                    if(aa.getId().equals(article.getId())){
+                        aa.setTitle(article.getTitle());
+                    }
+                }
+            }
+            stringRedisTemplate.opsForValue().set(RedisConstant.ARTICLE_RECOMMEND,JSON.toJSONString(articleList));
+        }
         ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"更新失败") : ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);
     }
