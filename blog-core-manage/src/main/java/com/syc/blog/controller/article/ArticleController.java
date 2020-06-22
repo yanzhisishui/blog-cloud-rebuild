@@ -14,6 +14,7 @@ import com.syc.blog.mapper.article.ArticleClassifyMapper;
 import com.syc.blog.mapper.article.ArticleMapper;
 import com.syc.blog.mapper.comment.UserCommentMapper;
 import com.syc.blog.repository.ArticleRepository;
+import com.syc.blog.service.ArticleService;
 import com.syc.blog.utils.JsonHelper;
 import com.syc.blog.utils.ResultHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class ArticleController {
     ArticleClassifyMapper articleClassifyMapper;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    ArticleService articleService;
     @RequestMapping("/manage")
     public String manage(){
         return "article/manage";
@@ -58,6 +61,9 @@ public class ArticleController {
         String bread = articleClassifyMapper.selectNameTree(article.getClassifyId()).replace(",", "/");
         article.setBread(bread);
         int row = articleMapper.insert(article);
+        if(row != 0){
+            articleService.syncToElasticsearch(articleMapper.selectById(article.getId()));
+        }
         ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"添加失败") : ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);
     }
@@ -80,6 +86,8 @@ public class ArticleController {
                 }
             }
             stringRedisTemplate.opsForValue().set(RedisConstant.ARTICLE_RECOMMEND,JSON.toJSONString(articleList));
+            //更新es
+            articleService.syncToElasticsearch(articleMapper.selectById(article.getId()));
         }
         ResultHelper result= row == 0 ? ResultHelper.wrapErrorResult(1,"更新失败") : ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);

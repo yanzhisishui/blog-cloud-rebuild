@@ -31,7 +31,7 @@ $("#util-login").click(function () {
         type: 2,
         title:'登录',
         area: getAppropriateWindowSize(), //瀹介珮
-        content: 'http://www.sunyuchao.com/login/login'
+        content: 'https://www.sunyuchao.com/login/login'
     });
 });
 
@@ -43,7 +43,7 @@ $("#util-regist").click(function () {
         type: 2,
         title:'注册',
         area: getAppropriateWindowSize(), //瀹介珮
-        content: 'http://www.sunyuchao.com/login/regist'
+        content: 'https://www.sunyuchao.com/login/regist'
     });
 });
 
@@ -58,7 +58,7 @@ $("#feedback").click(function () {
         type: 2,
         title:'在线反馈',
         area: getAppropriateWindowSize(), //瀹介珮
-        content: 'http://www.sunyuchao.com/feedback'
+        content: 'https://www.sunyuchao.com/feedback'
     });
 });
 
@@ -68,6 +68,6 @@ $("#util-modifyPass").click(function () {
         type: 2,
         title:'蹇樿瀵嗙爜',
         area: getAppropriateWindowSize(), //瀹介珮
-        content: 'http://www.sunyuchao.com/login/forgotPassword'
+        content: 'https://www.sunyuchao.com/login/forgotPassword'
     });
 });
