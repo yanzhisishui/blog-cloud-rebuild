@@ -60,7 +60,6 @@ public class IllegalWordsHelper {
                 }
             }
         }
-        System.out.println(wordMap);
     }
 
     /**

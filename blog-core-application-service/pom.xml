@@ -21,6 +21,12 @@
             <groupId>com.syc</groupId>
             <artifactId>blog-core-dao</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.syc</groupId>
