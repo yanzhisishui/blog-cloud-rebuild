@@ -15,5 +15,5 @@ public interface LinuxMapper extends BaseMapper<Linux> {
     IPage<Linux> selectByParams(IPage<Linux> iPage,@Param("params") Map<String, Object> map);
 
 
-    Integer selectTotalCountLinux(String type, String value);
+    Integer selectTotalCountLinux(@Param("type") String type, @Param("value") String value);
 }

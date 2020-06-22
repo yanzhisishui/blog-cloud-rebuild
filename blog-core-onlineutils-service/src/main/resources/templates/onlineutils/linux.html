@@ -370,8 +370,9 @@
         var timeago=layui.timeago,
             layer=layui.layer,
             form=layui.form,
-        laypage=layui.laypage;
-        timeago.render($('.timeago'));
+            $=layui.jquery,
+            laypage=layui.laypage;
+            timeago.render($('.timeago'));
         //自定义样式
 
         function getTotal(data){
@@ -382,8 +383,8 @@
                 async:false,
                 data:data,
                 success:function (e) {
-                    count=e.data;
-                },dataType:"json"
+                    count=e;
+                },dataType:"text"
             });
             return count;
         }
@@ -399,13 +400,16 @@
             return false;
         });
 
+
         searchData([]);
+
         function searchData(data) {
             laypage.render({
                 elem: 'demo2'
                 ,count: getTotal(data)
                 ,theme: '#1E9FFF'
-                ,jump: function(obj, first) {
+                //,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                ,jump: function(obj) {
                     var o = {};
                     o.page = obj.curr;
                     o.limit=obj.limit;
@@ -414,6 +418,7 @@
                     $.ajax({
                         url:"/util/linux/queryData",
                         type:"POST",
+                        async:false,
                         data:o,
                         success:function (e) {
                             if(e.success){
@@ -426,10 +431,7 @@
                             }
                         },dataType:"json"
                     });
-                    //首次不执行
-                    if (!first) {
-                        //do something
-                    }
+
                 }});
         }
     });
