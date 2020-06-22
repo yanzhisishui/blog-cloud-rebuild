@@ -51,14 +51,14 @@ public class LinuxController extends BaseController {
         map.put("type",type);
         IPage<Linux> iPage = new Page<>(page,10);
         map.put("value",value);
-        iPage = linuxMapper.selectByParams(map);
+        iPage = linuxMapper.selectByParams(iPage,map);
         ResultHelper<List<Linux>> result= ResultHelper.wrapSuccessfulResult(iPage.getRecords());
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping("/getTotalCountLinux")
+    @RequestMapping("/getTotal")
     @ResponseBody
-    public Integer getTotalCountLinux(@RequestParam(value = "type",required = false) String type,
+    public Integer getTotal(@RequestParam(value = "type",required = false) String type,
                                       @RequestParam(value = "value",required = false) String value){
         return linuxMapper.selectTotalCountLinux(type,value);
     }

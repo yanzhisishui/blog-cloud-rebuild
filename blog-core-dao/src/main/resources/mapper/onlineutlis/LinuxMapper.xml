@@ -22,7 +22,7 @@
 
     </select>
 
-    <select id="getTotalCountLinux" resultType="java.lang.Integer">
+    <select id="selectTotalCountLinux" resultType="java.lang.Integer">
         select count(*) from util_linux where 1=1
         <if test="type != null and type != ''">
             <choose>

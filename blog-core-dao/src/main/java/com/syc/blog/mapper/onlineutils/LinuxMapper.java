@@ -5,13 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.syc.blog.entity.onlineutils.HttpCode;
 import com.syc.blog.entity.onlineutils.Linux;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
 
 @Mapper
 public interface LinuxMapper extends BaseMapper<Linux> {
 
-    IPage<Linux> selectByParams(Map<String, Object> map);
+    IPage<Linux> selectByParams(IPage<Linux> iPage,@Param("params") Map<String, Object> map);
 
 
     Integer selectTotalCountLinux(String type, String value);

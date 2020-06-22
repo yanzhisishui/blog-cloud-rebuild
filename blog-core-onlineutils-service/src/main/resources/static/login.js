@@ -52,7 +52,7 @@ $("#util-regist").click(function () {
 /**
  * 鍙嶉
  * */
-$("#feedback").click(function () {
+$("#util-feedback").click(function () {
 
     layer.open({
         type: 2,
