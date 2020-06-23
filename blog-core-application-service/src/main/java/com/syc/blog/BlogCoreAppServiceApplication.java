@@ -1,6 +1,7 @@
 package com.syc.blog;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -12,10 +13,9 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 
 @SpringBootApplication
-//@EnableRabbit //开启rabbitMQ注解
+@EnableRabbit //开启rabbitMQ注解
 @ServletComponentScan
 @MapperScan(basePackages = {"com.syc.blog.mapper"})//扫描@Mapper注解
-
 @EnableRedisHttpSession //交给redis
 //@EnableCaching
 public class BlogCoreAppServiceApplication {

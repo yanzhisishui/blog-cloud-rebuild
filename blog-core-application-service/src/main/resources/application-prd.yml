@@ -10,6 +10,17 @@ spring:
     username: root
     password: 123456
 
+  rabbitmq:
+    username: guest
+    password: guest
+    addresses: 127.0.0.1
+    listener:
+      simple:
+        retry:
+          max-attempts: 5 #五次之后丢掉消息
+          enabled: true
+    port: 5673
+
   elasticsearch:
     rest:
       uris: http://127.0.0.1:9200
@@ -40,8 +51,8 @@ spring:
 
 logging:
   level:
-    root: info
-    org.springframework.boot.autoconfigure: ERROR  #去掉不用的启动日志
-    com.syc.blog.mapper: debug
+    classpath:com.syc.blog.mapper: debug
+    org.elasticsearch.client.RestClient: ERROR
   config: classpath:config/logback-spring.xml
-  path: $[log.path]  #logback-spring.xml 取值
+  file:
+    path: $[log.path]

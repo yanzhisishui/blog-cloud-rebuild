@@ -172,23 +172,23 @@
         <logger name="com.syc.blog" level="debug"/>
     </springProfile>-->
 
-    <root level="info">
-        <appender-ref ref="CONSOLE" />  <!--输出控制台-->
-        <appender-ref ref="DEBUG_FILE" />   <!--输出文件-->
-        <appender-ref ref="INFO_FILE" />    <!--输出文件-->
-        <appender-ref ref="WARN_FILE" />    <!--输出文件-->
-        <appender-ref ref="ERROR_FILE" />   <!--输出文件-->
-    </root>
+    <!--<root level="info">
+        <appender-ref ref="CONSOLE" />  &lt;!&ndash;输出控制台&ndash;&gt;
+        <appender-ref ref="DEBUG_FILE" />   &lt;!&ndash;输出文件&ndash;&gt;
+        <appender-ref ref="INFO_FILE" />    &lt;!&ndash;输出文件&ndash;&gt;
+        <appender-ref ref="WARN_FILE" />    &lt;!&ndash;输出文件&ndash;&gt;
+        <appender-ref ref="ERROR_FILE" />   &lt;!&ndash;输出文件&ndash;&gt;
+    </root>-->
 
     <!--生产环境:输出到文件-->
-    <!--<springProfile name="prod">
-    <root level="info">
-    <appender-ref ref="CONSOLE" />
-    <appender-ref ref="DEBUG_FILE" />
-    <appender-ref ref="INFO_FILE" />
-    <appender-ref ref="ERROR_FILE" />
-    <appender-ref ref="WARN_FILE" />
-    </root>
-    </springProfile>-->
+    <springProfile name="prd">
+        <root level="info">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="DEBUG_FILE" />
+            <appender-ref ref="INFO_FILE" />
+            <appender-ref ref="ERROR_FILE" />
+            <appender-ref ref="WARN_FILE" />
+        </root>
+    </springProfile>
 
 </configuration>
