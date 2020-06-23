@@ -1,5 +1,6 @@
 application:
   zimg_upload_url: http://localhost:4869/upload
+  zimg_address_url: http://localhost:4869/
 
 spring:
   datasource:

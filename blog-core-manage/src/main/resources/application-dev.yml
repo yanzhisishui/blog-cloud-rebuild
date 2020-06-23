@@ -1,6 +1,7 @@
 
 application:
   zimg_upload_url: http://192.168.23.175:4869/upload
+  zimg_address_url: http://192.168.23.175:4869/
 
 spring:
   datasource:
