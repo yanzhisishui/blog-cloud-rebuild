@@ -1,3 +1,7 @@
+
+application:
+  zimg_upload_url: http://192.168.23.175:4869/upload
+
 spring:
   datasource:
     # 配置数据源

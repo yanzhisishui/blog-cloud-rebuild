@@ -17,12 +17,12 @@ import java.nio.charset.StandardCharsets;
  * 上传文件到Zimg
  * */
 public class ZimgUploadHelper {
-    public static String uploadImageToZimg(MultipartFile file) {
+    public static String uploadImageToZimg(MultipartFile file,String address) {
         String fileName = file.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
         StringBuilder respXML = new StringBuilder();
         try {
-            URL url = new URL("http://192.168.23.175:4869/upload");
+            URL url = new URL(address);
             URLConnection connection = url.openConnection();
             connection.setReadTimeout(5000);
             connection.setConnectTimeout(2500);

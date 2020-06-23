@@ -1,3 +1,6 @@
+application:
+  zimg_upload_url: http://localhost:4869/upload
+
 spring:
   datasource:
     # 配置数据源
