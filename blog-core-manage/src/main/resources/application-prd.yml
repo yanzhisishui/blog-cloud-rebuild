@@ -22,6 +22,8 @@ spring:
 logging:
   level:
     org.springframework.boot.autoconfigure: ERROR  #去掉不用的启动日志
-    com.syc.blog.mapper: DEBUG
+    classpath:com.syc.blog.mapper: DEBUG
+    org.elasticsearch.client.RestClient: ERROR
   config: classpath:config/logback-spring.xml
-  path: $[log.path]  #logback-spring.xml 取值
+  file:
+    path: $[log.path]  #logback-spring.xml 取值
