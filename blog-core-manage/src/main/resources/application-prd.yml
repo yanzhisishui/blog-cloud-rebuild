@@ -1,6 +1,9 @@
+
+#先从外面走一圈回来，这样zimg接受到的IP是自己的外网IP，不然由于docker原因zimg得到的始终是docker的IP，
+#这个IP  172.20.0.1 和nginx查询图片是一样的IP。如果暴露这个IP权限，那么所有人都能访问zimg，不安全
 application:
-  zimg_upload_url: http://localhost:4869/upload
-  zimg_address_url: http://localhost:4869/
+  zimg_upload_url: http://111.229.128.32:4869/upload
+  zimg_address_url: http://111.229.128.32:4869/
 
 spring:
   datasource:
