@@ -62,14 +62,14 @@ public class BaseController {
     /**
      * 获取当前登录的用户
      * */
-    /*public User getLoginUser(HttpServletRequest request){
+    public User getLoginUser(HttpServletRequest request){
         HttpSession session = request.getSession();
         Object currentAdminUser = session.getAttribute(Constant.USER_LOGIN_SESSION_KEY);
         if(currentAdminUser == null){
             return null;
         }
         return (User) currentAdminUser;
-    }*/
+    }
 
     /**
      * 评论检查
@@ -82,13 +82,13 @@ public class BaseController {
         if(content.length() > 150){
             return  "评论不得超过150个字符";
         }
-        //User loginUser = getLoginUser(request);
+        User loginUser = getLoginUser(request);
         if(StringHelper.hasIllegal(content)){
             return "请文明发言";
         }
-        /*if(loginUser == null ){ //生产环境必须要登录
+        if(loginUser == null ){ //生产环境必须要登录
             return "请先登录";
-        }*/
+        }
         if(comment.getUserId().equals(comment.getCommentedUserId())){
             return "不能自己回复自己";
         }
