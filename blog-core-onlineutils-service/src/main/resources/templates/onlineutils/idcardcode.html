@@ -217,7 +217,7 @@
 </script>
 
 <script th:inline="javascript">
-    var currentUser=[[${session.currentUser}]];
+    var currentUser=[[${session.loginUser}]];
     var currentUserId;
     if(currentUser != null){
         currentUserId=currentUser.id;

@@ -91,7 +91,7 @@
         </form>
 
 
-        <div class="tab-wrap" style="padding: 10px 20px;">
+        <div class="tab-wrap" style="padding: 10px 20px;margin-top: 50px;">
             <h3 class="tab-wrap-square">留言评论</h3>
 
             <div th:replace="onlineutils/linux :: messageBox"></div>
@@ -188,7 +188,7 @@
 </script>
 
 <script th:inline="javascript">
-    var currentUser=[[${session.currentUser}]];
+    var currentUser=[[${session.loginUser}]];
     var currentUserId;
     if(currentUser != null){
         currentUserId=currentUser.id;
