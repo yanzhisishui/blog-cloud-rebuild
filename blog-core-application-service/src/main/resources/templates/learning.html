@@ -7,11 +7,11 @@
     <meta name="Keywords" content="个人博客,Java技术，Java学习" />
     <link href="https://www.sunyuchao.com/static/css/fontawesome4.7.0/css/font-awesome.css"  rel="stylesheet">
     <link rel="stylesheet" href="https://www.sunyuchao.com/static/css/animate.css">
-
+    <script th:src="${iconfontUrl}"></script>
     <link href="https://www.sunyuchao.com/static/layui/css/layui.css" rel="stylesheet">
     <link rel="stylesheet" href="https://www.sunyuchao.com/static/css/common.css">
 
-    <script th:src="${iconfontUrl}"></script>
+
 
     <style>
 
@@ -163,12 +163,17 @@
 
         /*手机小屏幕*/
         @media screen and (max-width: 980px) {
+            .syc,.content{width: 95%;}
             .notice li a{width:55%;}
             .new-reply .item .item-right{width:70%;}
             .new-reply .item .item-left{width:50px;height: 50px;}
             .new-reply .item .item-left .radius{width: 50px;height: 50px;}
             #title-search input{width: 130px;}
             #title-search button{width: 60px;}
+            #title-search a{font-size: 12px;}
+            .content-right .right-card{max-height: 240px;overflow-y: hidden;}
+            .new-reply-time{display: none;}
+            .friend li{width: 45%;}
         }
 
 
@@ -210,6 +215,7 @@
         #title-search a{margin-left: 20px;}
         .classify-active{background-color: red;}
 
+        .content-right .right-card{margin-top: 20px;background-color: white;}
     </style>
 </head>
 <body>
@@ -338,7 +344,7 @@
                 </div>
             </div>
         </div>
-        <div style="background-color: white;margin-top: 20px;">
+        <div class="right-card">
             <h3 class="square">最新文章</h3>
             <div>
                 <ul class="notice">
@@ -347,7 +353,7 @@
             </div>
 
         </div>
-        <div style="margin-top: 20px;background-color: white;">
+        <div class="right-card">
             <h3 class="square">在线工具</h3>
             <div>
                 <ul class="notice">
@@ -368,7 +374,7 @@
                             <div class="item-right">
                                 <h3><a href="#" th:text="${lucom.username}"></a></h3>
                                 <p class="reply-msg"><span th:utext="${lucom.content}"></span></p>
-                                <p><span th:text="${#dates.format(lucom.dateInsert, 'yyyy年MM月dd日 HH:mm:ss')}"></span></p>
+                                <p class="new-reply-time"><span th:text="${#dates.format(lucom.dateInsert, 'yyyy年MM月dd日 HH:mm:ss')}"></span></p>
                             </div>
                             <div class="layui-clear"></div>
                         </div>

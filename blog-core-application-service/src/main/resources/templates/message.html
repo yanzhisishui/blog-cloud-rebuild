@@ -59,18 +59,32 @@
         .skill-label li{float: left;margin:4px 6px;}
         .skill-label li a{font-family: Arial, Helvetica, sans-serif;}
         .comment,.commented{font-weight: 600;}
+
+        .mycard{padding-bottom: 0;position: relative;}
+        .mycard-fill{height: 80px;background-color: #00FFFF;}
+        .mycard-bottom{height: 140px;padding-top: 50px;}
+        .mycard-bottom h2{text-align: center;font-size: 18px;font-weight: 600;}
+        .mycard-bottom p{width: 85%;margin: 0 auto;margin-top: 10px;}
+        .myavatar{position: absolute;top: 40px;left: 120px;border-radius: 50%;}
         @media screen and (max-width: 1366px) {
             .content {
                 width: 88%;
             }
 
         }
-        .myavatar{position: absolute;top: 40px;left: 120px;border-radius: 50%;}
+
         /*手机*/
         @media screen and (max-width: 980px) {
            .content-left{padding: 15px;}
-            .myavatar{left: 80px;}
+            .myavatar{width: 60px;height: 60px;left: 86px;top: 30px;}
             .smb-right{width:88%;}
+            .content-right .right-card{max-height: 220px;overflow: hidden;}
+            .skill-label li a{height: 25px;}
+
+            .mycard-fill{height: 60px;}
+            .mycard-bottom{padding-top: 45px;}
+            .mycard-bottom h2{font-size: 16px;font-weight: 600;}
+            .mycard-bottom p{font-size: 12px;}
         }
 
     </style>
@@ -189,13 +203,12 @@
     </div>
 
     <div class="content-right">
-        <div class="right-card" style="padding-bottom: 0;position: relative;">
+        <div class="right-card mycard">
             <img class="myavatar" th:src="${card.avatar}" width="80" height="80">
-            <div style="height: 80px;background-color: #00FFFF;"></div>
-            <div style="height: 140px;padding-top: 50px;">
-                <h2 style="text-align: center;font-size: 18px;font-weight: 600;" th:text="${card.nickname}">暮色妖娆</h2>
-                <p style="width: 85%;margin: 0 auto;margin-top: 10px;" th:text="${card.introduction}">
-                </p>
+            <div class="mycard-fill"></div>
+            <div class="mycard-bottom">
+                <h2 th:text="${card.nickname}">暮色妖娆</h2>
+                <p th:text="${card.introduction}"></p>
             </div>
 
         </div>

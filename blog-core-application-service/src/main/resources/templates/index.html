@@ -93,6 +93,7 @@
         .content-right .friend li{float: left;margin:6px 3px;width: 31%;height: 20px;line-height: 20px;text-align: center; }
         .content-right .friend li a{color:#999;}
         .content-right .right-card{margin-top: 20px;background-color: white;padding-bottom: 30px;}
+        .right-card .introduction{padding:0 10px;color: #999;}
        /*鼠标悬停div修改子元素样式*/
         .content-right > div:hover .square:first-child::after{
             width: 200px;
@@ -224,9 +225,14 @@
             .syc,.content{width: 95%;}
             .syc .syc-left a{padding: 5px;}
             .syc .syc-center{padding: 5px;}
-            .content-right .flex li{width: 45%;}
+            .content-right .flex li{width: 30%;height: 70px;line-height: 70px;}
             .notice li a{width:55%;}
 
+            #title-search a{font-size: 12px;}
+            .content-right .friend li{width: 45%;}
+            .right-card{max-height: 220px;overflow: hidden;}
+            .right-card .introduction{font-size: 13px;}
+            .right-card .introduction img{width: 60px;height: 60px;}
         }
 
         #selectCondition{width: 99.6%;background-color: white;
@@ -247,6 +253,8 @@
         #title-search .active{color: red;}
         #title-search a{margin-left: 20px;}
         .classify-active{background-color: red;}
+
+
     </style>
 </head>
 <body>
@@ -502,7 +510,7 @@
             <div class="right-card">
                 <h3 class="square">个人简介</h3>
                 <div>
-                    <p style="padding:0 10px;color: #999;">
+                    <p class="introduction">
                         <img th:src="${card.avatar}" width="80" height="80" align="left"   style="border-radius: 50%;float: left;margin-right:20px;">
                         [[${card.introduction}]]
                     </p>
@@ -851,7 +859,7 @@
         scroll();
     });
 </script>
-
+<script src="https://www.sunyuchao.com/static/js/heart.js"></script>
 <script src="https://www.sunyuchao.com/static/js/common.js"></script>
 
 </body>
