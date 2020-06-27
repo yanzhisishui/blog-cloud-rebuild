@@ -119,6 +119,11 @@
         @media screen and (max-width: 980px) {
             .new-reply .item .item-right{width:70%;}
             .new-reply .item .item-left{width:50px;height: 50px;}
+            .smb-right{width:88%;}
+            .new-reply-time{display: none;}
+            .new-reply .item .item-left .radius{width: 50px;height: 50px;}
+            .skill-label li a{height: 25px;}
+
         }
     </style>
 </head>
@@ -218,7 +223,7 @@
                                 <div class="item-right">
                                     <h3><a href="#" th:text="${lucom.username}"></a></h3>
                                     <p class="reply-msg"><span th:utext="${lucom.content}"></span></p>
-                                    <p><span th:text="${#dates.format(lucom.dateInsert, 'yyyy年MM月dd日 HH:mm:ss')}"></span></p>
+                                    <p class="new-reply-time"><span th:text="${#dates.format(lucom.dateInsert, 'yyyy年MM月dd日 HH:mm:ss')}"></span></p>
                                 </div>
                                 <div class="layui-clear"></div>
                             </div>

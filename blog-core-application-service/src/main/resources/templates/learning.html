@@ -153,28 +153,6 @@
         .new-reply .item .item-right p{color:#777;}
         .new-reply .item .item-right .reply-msg{overflow: hidden;text-overflow:ellipsis;}
         .new-reply .item .item-right .reply-msg span{white-space: nowrap;}
-        /*小屏幕 1366 x 768*/
-        @media screen and (max-width: 1366px) {
-            .content {
-                width: 88%;
-            }
-
-        }
-
-        /*手机小屏幕*/
-        @media screen and (max-width: 980px) {
-            .syc,.content{width: 95%;}
-            .notice li a{width:55%;}
-            .new-reply .item .item-right{width:70%;}
-            .new-reply .item .item-left{width:50px;height: 50px;}
-            .new-reply .item .item-left .radius{width: 50px;height: 50px;}
-            #title-search input{width: 130px;}
-            #title-search button{width: 60px;}
-            #title-search a{font-size: 12px;}
-            .content-right .right-card{max-height: 240px;overflow-y: hidden;}
-            .new-reply-time{display: none;}
-            .friend li{width: 45%;}
-        }
 
 
         .content .motto{padding: 5px;margin:0 auto;margin-bottom: 20px;position: relative;border-bottom: 1px solid #ccc;
@@ -216,6 +194,30 @@
         .classify-active{background-color: red;}
 
         .content-right .right-card{margin-top: 20px;background-color: white;}
+
+        /*小屏幕 1366 x 768*/
+        @media screen and (max-width: 1366px) {
+            .content {
+                width: 88%;
+            }
+
+        }
+
+        /*手机小屏幕*/
+        @media screen and (max-width: 980px) {
+            .syc,.content{width: 95%;}
+            .notice li a{width:55%;}
+            .new-reply .item .item-right{width:70%;}
+            .new-reply .item .item-left{width:50px;height: 50px;}
+            .new-reply .item .item-left .radius{width: 50px;height: 50px;}
+            #title-search input{width: 130px;}
+            #title-search button{width: 60px;}
+            #title-search a{font-size: 12px;}
+            .content-right .right-card{max-height: 240px;overflow-y: hidden;}
+            .new-reply-time{display: none;}
+            .friend li{width: 45%;}
+        }
+
     </style>
 </head>
 <body>
@@ -357,7 +359,7 @@
             <h3 class="square">在线工具</h3>
             <div>
                 <ul class="notice">
-                    <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}" th:text="${util.title}"> </a><span th:text="${#dates.format(util.dateInsert, 'yyyy-MM-dd')}"></span></li>
+                    <li th:each="util : ${onlineUtilsList}"><a th:href="@{http://onlineutils.sunyuchao.com__${util.url}__(bindId=${util.id})}" th:text="${util.title}"> </a><span th:text="${#dates.format(util.dateInsert, 'yyyy-MM-dd')}"></span></li>
                 </ul>
             </div>
 

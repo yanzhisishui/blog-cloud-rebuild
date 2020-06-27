@@ -165,12 +165,6 @@
         .notice li a{display: inline-block;text-overflow:ellipsis;width: 65%;overflow: hidden;white-space:nowrap;}
 
 
-        /*小屏幕 1366 x 768*/
-        @media screen and (max-width: 1366px) {
-            .content,.syc{
-                width: 88%;
-            }
-        }
 
         /*修改动画框架的动画时间*/
         .animated {
@@ -220,20 +214,7 @@
         .enlargeImg{position: absolute;top: 8px;right: 12px;border-radius: 50%;}
         .enlargeImg:hover {cursor: zoom-in;}
         .enlargeImg_wrapper:hover {cursor: zoom-out;}
-        /*手机*/
-        @media screen and (max-width: 980px) {
-            .syc,.content{width: 95%;}
-            .syc .syc-left a{padding: 5px;}
-            .syc .syc-center{padding: 5px;}
-            .content-right .flex li{width: 30%;height: 70px;line-height: 70px;}
-            .notice li a{width:55%;}
 
-            #title-search a{font-size: 12px;}
-            .content-right .friend li{width: 45%;}
-            .right-card{max-height: 220px;overflow: hidden;}
-            .right-card .introduction{font-size: 13px;}
-            .right-card .introduction img{width: 60px;height: 60px;}
-        }
 
         #selectCondition{width: 99.6%;background-color: white;
             position: relative;height: 350px;padding: 0 10px;
@@ -254,6 +235,29 @@
         #title-search a{margin-left: 20px;}
         .classify-active{background-color: red;}
 
+
+        /*小屏幕 1366 x 768*/
+        @media screen and (max-width: 1366px) {
+            .content,.syc{
+                width: 88%;
+            }
+        }
+
+
+        /*手机*/
+        @media screen and (max-width: 980px) {
+            .syc,.content{width: 95%;}
+            .syc .syc-left a{padding: 5px;}
+            .syc .syc-center{padding: 5px;}
+            .content-right .flex li{width: 30%;height: 70px;line-height: 70px;}
+            .notice li a{width:55%;}
+
+            #title-search a{font-size: 12px;}
+            .content-right .friend li{width: 45%;}
+            .right-card{max-height: 220px;overflow: hidden;}
+            .right-card .introduction{font-size: 13px;}
+            .right-card .introduction img{width: 60px;height: 60px;}
+        }
 
     </style>
 </head>
@@ -494,7 +498,7 @@
                 <h3 class="square">在线工具</h3>
                 <div>
                     <ul class="notice">
-                        <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}"> [[${util.title}]]</a><span th:text="${#dates.format(util.dateInsert, 'yyyy-MM-dd')}"></span></li>
+                        <li th:each="util : ${onlineUtilsList}"><a th:href="@{http://onlineutils.sunyuchao.com__${util.url}__(bindId=${util.id})}"> [[${util.title}]]</a><span th:text="${#dates.format(util.dateInsert, 'yyyy-MM-dd')}"></span></li>
                     </ul>
                 </div>
             </div>

@@ -106,19 +106,7 @@
         .enlargeImg:hover {cursor: zoom-in;}
         .zoomOut:hover {cursor: zoom-in;}
         .enlargeImg_wrapper:hover {cursor: zoom-out;}
-        /*小屏幕 1366 x 768*/
-        @media screen and (max-width: 1366px) {
-            .content {
-                width: 88%;
-            }
 
-        }
-
-        @media screen and (max-width: 980px) {
-            .content-right .flex li{width: 45%;}
-            .new-reply .item .item-left .radius{width: 50px;height: 50px;}
-            .enlargeImg{left:80px;}
-        }
         /**留言评论*/
 
         .content-left .reply-all-head{font-size: 18px;font-weight: bold;}
@@ -131,6 +119,35 @@
             pointer-events: auto !important;
         }
         .layui-table th{text-align: center !important;}
+
+
+        .mycard{padding-bottom: 0;position: relative;}
+        .mycard-fill{height: 80px;background-color: #00FFFF;}
+        .mycard-bottom{height: 140px;padding-top: 50px;}
+        .mycard-bottom h2{text-align: center;font-size: 18px;font-weight: 600;}
+        .mycard-bottom p{width: 85%;margin: 0 auto;margin-top: 10px;}
+        .myavatar{position: absolute;top: 40px;left: 120px;border-radius: 50%;}
+        /*小屏幕 1366 x 768*/
+        @media screen and (max-width: 1366px) {
+            .content {
+                width: 88%;
+            }
+
+        }
+
+        @media screen and (max-width: 980px) {
+
+            .new-reply .item .item-left .radius{width: 50px;height: 50px;}
+            .content-right .flex li{width: 30%;height: 65px;line-height: 65px;}
+            .enlargeImg{left:80px;}
+            .myavatar{width: 60px;height: 60px;left: 86px;top: 30px;}
+
+            .mycard-fill{height: 60px;}
+            .mycard-bottom{padding-top: 45px;}
+            .mycard-bottom h2{font-size: 16px;font-weight: 600;}
+            .mycard-bottom p{font-size: 12px;}
+            .content-right .right-card{max-height: 220px;overflow: hidden;}
+        }
     </style>
 </head>
 <body>
@@ -194,20 +211,20 @@
             </div>
         </div>
         <div class="content-right">
-            <div class="right-card" style="position: relative;">
-                <img class="enlargeImg" th:src="${card.avatar}" width="80" height="80">
-                <div style="height: 80px;background-color: #00FFFF;"></div>
-                <div style="height: 140px;padding-top: 50px;">
-                    <h2 style="text-align: center;font-size: 18px;font-weight: 600;" th:text="${card.nickname}"></h2>
-                    <p style="width: 85%;margin: 0 auto;margin-top: 10px;" th:text="${card.introduction}">
-                    </p>
+            <div class="right-card mycard">
+                <img class="myavatar" th:src="${card.avatar}" width="80" height="80">
+                <div class="mycard-fill"></div>
+                <div class="mycard-bottom">
+                    <h2 th:text="${card.nickname}">暮色妖娆</h2>
+                    <p th:text="${card.introduction}"></p>
                 </div>
+
             </div>
             <div class="right-card">
                 <h3 class="square">在线工具</h3>
                 <div>
                     <ul class="notice">
-                        <li th:each="util : ${onlineUtilsList}"><a th:href="${util.url+'?bindId='+util.id}" th:text="${util.title}"> </a><span class="timeago" th:datetime="${#dates.format(util.dateInsert, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
+                        <li th:each="util : ${onlineUtilsList}"><a th:href="@{http://onlineutils.sunyuchao.com__${util.url}__(bindId=${util.id})}" th:text="${util.title}"> </a><span class="timeago" th:datetime="${#dates.format(util.dateInsert, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
                     </ul>
                 </div>
             </div>
