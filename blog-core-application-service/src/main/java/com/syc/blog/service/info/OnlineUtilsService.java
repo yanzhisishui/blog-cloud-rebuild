@@ -17,6 +17,7 @@ public class OnlineUtilsService {
     public List<OnlineUtils> selectListLatest(int i) {
         QueryWrapper<OnlineUtils> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("archive",0);
+        queryWrapper.eq("status",1);
         queryWrapper.orderByDesc("date_insert");
         String sql = "limit "+5;
         queryWrapper.last(sql);

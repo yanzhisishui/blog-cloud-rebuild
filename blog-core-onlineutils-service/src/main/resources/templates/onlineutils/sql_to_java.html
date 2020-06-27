@@ -304,7 +304,11 @@
                 data:{"sql":val},
                 async:false,
                 success:function (e) {
-
+                    if(e.success){
+                        $("textarea[name=java]").html(e.data)
+                    }else{
+                        layer.msg(e.message);
+                    }
                 },dataType: "json"
             });
         });

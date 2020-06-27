@@ -3,15 +3,15 @@ package com.syc.blog.controller.onlineutils;
 import com.alibaba.fastjson.JSON;
 import com.syc.blog.controller.BaseController;
 import com.syc.blog.utils.ResultHelper;
+import com.syc.blog.utils.StringHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 正则表达式
@@ -39,24 +39,54 @@ public class SqlToJavaController extends BaseController {
         if(!sql.contains("CREATE TABLE")|| !sql.contains("(")){
             return JSON.toJSONString(ResultHelper.wrapErrorResult(1,"请确定建表语句完整"));
         }
-        int n = sql.indexOf("(");
-        sql =sql.substring(n);
-        System.out.println(sql);
+        StringBuilder lineResult  = new StringBuilder();
+        sql = sql.replace("\n","");
+        char[] arr = sql.toCharArray();
         StringBuilder sb = new StringBuilder();
-        char[] chars = sql.toCharArray();
-        boolean flag = false;
-        int count = 0;
-        for(int i = 0; i< chars.length; i++){
-            char c = chars[i];
-            if(flag && count != 2){
-                sb.append(i);
-            }
-            if(c == '`'){ //字段开始
-                count++;
-                flag = true;
+        String target = "";
+        List<String> list = new ArrayList<>();
+        String className = "";
+
+        for (char c : arr) {
+            sb.append(c);
+            if ((int) c == 32) { //空格
+                target = sb.toString().replace(" ","");
+                if(!StringHelper.containChinese(target) && !StringHelper.isEmpty(target)){
+                    list.add(target);
+                }
+                //如果target不是MySQL关键字,并且不包含中文
+                if (!StringHelper.containsMySQLKeywords(target) && !StringHelper.containChinese(target) && !StringHelper.isEmpty(target)) {
+                    //判断是不是表名
+                    if (list.size() > 1) {
+                        String s = list.get(list.size() - 2);
+                        if (s.equals("TABLE")) {
+                            className = target.replace("`", ""); //类名
+                            className = StringHelper.toHump(className);
+                            className = className.substring(0, 1).toUpperCase() + className.substring(1);
+                        }
+                    }
+                    //如果是MySQL类型,则获取对应的Java类型
+                    String type = StringHelper.mysqlTypeToJava(target);
+                    if (type != null) { //说明是mysql类型
+                        //获取前一个字段
+                        String prev = list.get(list.size() - 2).replace("`", "");//上一个单词(字段)
+                        String field = StringHelper.toHump(prev);
+                        lineResult.append("\t");
+                        lineResult.append("private");
+                        lineResult.append("  ");
+                        lineResult.append(type);
+                        lineResult.append("  ");
+                        lineResult.append(field);
+                        lineResult.append(";\n");
+                    }
+                }
+                sb = new StringBuilder();
             }
         }
-        return "";
+        String prefix  = "public class "+className+"{\n";
+        String suffix = "}";
+        result = ResultHelper.wrapSuccessfulResult(prefix+lineResult.toString()+suffix);
+        return JSON.toJSONString(result);
     }
 
 }
