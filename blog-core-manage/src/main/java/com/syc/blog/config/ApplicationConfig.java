@@ -13,7 +13,9 @@ public class ApplicationConfig {
 
     public static final String PREFIX = "application";
 
-    public String zimgUploadUrl ;
-    public String zimgAddressUrl ;
+    private String zimgUploadUrl ;
+    private String zimgAddressUrl ;
+    private String videoUploadUrl ;
+    private String videoAddressUrl ;
 
 }
