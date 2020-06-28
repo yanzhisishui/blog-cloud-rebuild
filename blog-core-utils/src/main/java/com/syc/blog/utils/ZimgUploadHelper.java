@@ -70,4 +70,12 @@ public class ZimgUploadHelper {
         String md5 = zimgResponse.getInfo().getMd5();
         return address+md5;
     }
+
+    /**
+     * 加上后缀p=0,提高清晰度，
+     * */
+    public static String uploadImageToZimgResource(MultipartFile file,String upload,String address){
+        String s = uploadImageToZimg(file, upload, address);
+        return s+"?p=0";
+    }
 }
