@@ -5,7 +5,7 @@ application:
   zimg_upload_url: http://111.229.128.32:4869/upload
   zimg_address_url: https://www.sunyuchao.com/files/img/
   video_upload_url: /docker/video   #映射到服务器的地址，供nginx访问
-  video_address_url: http://www.sunyuchao.com/files/video/
+  video_address_url: https://www.sunyuchao.com/files/video/
 spring:
   datasource:
     # 配置数据源
