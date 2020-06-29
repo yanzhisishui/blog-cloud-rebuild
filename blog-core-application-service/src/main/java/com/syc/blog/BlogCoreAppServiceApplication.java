@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
@@ -14,6 +15,7 @@ import org.springframework.session.web.http.HttpSessionIdResolver;
 
 @SpringBootApplication
 @EnableRabbit //开启rabbitMQ注解
+@EnableScheduling //开启定时任务
 @ServletComponentScan
 @MapperScan(basePackages = {"com.syc.blog.mapper"})//扫描@Mapper注解
 @EnableRedisHttpSession //交给redis
@@ -24,7 +26,7 @@ public class BlogCoreAppServiceApplication {
         SpringApplication.run(BlogCoreAppServiceApplication.class,args);
     }
 
-    @Bean
+    /*@Bean
     public HttpSessionIdResolver httpSessionIdResolver() {
         CookieHttpSessionIdResolver cookieHttpSessionIdResolver = new CookieHttpSessionIdResolver();
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
@@ -35,6 +37,6 @@ public class BlogCoreAppServiceApplication {
         cookieSerializer.setUseBase64Encoding(false);
         cookieHttpSessionIdResolver.setCookieSerializer(cookieSerializer);
         return cookieHttpSessionIdResolver;
-    }
+    }*/
 
 }

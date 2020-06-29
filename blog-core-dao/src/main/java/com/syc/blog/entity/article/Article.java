@@ -33,6 +33,7 @@ public class Article implements Serializable {
     private String description;//文章描述 用于首页展示，长度（250-270）
     private Integer classifyId;//类别ID
     private Integer browser;//浏览人数
+    private Integer praise;//点赞人数
     private String content;//内容(样式、图片、小标题、HTML标签都包含在内)
 
     @Field(type = FieldType.Keyword)
