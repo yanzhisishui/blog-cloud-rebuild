@@ -26,7 +26,10 @@ public class BlogCoreAppServiceApplication {
         SpringApplication.run(BlogCoreAppServiceApplication.class,args);
     }
 
-    /*@Bean
+    /**
+     * 开发环境需要注释掉，不然登录不上
+     * */
+    @Bean
     public HttpSessionIdResolver httpSessionIdResolver() {
         CookieHttpSessionIdResolver cookieHttpSessionIdResolver = new CookieHttpSessionIdResolver();
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
@@ -37,6 +40,6 @@ public class BlogCoreAppServiceApplication {
         cookieSerializer.setUseBase64Encoding(false);
         cookieHttpSessionIdResolver.setCookieSerializer(cookieSerializer);
         return cookieHttpSessionIdResolver;
-    }*/
+    }
 
 }
