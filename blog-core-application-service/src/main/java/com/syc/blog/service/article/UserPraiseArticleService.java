@@ -39,8 +39,10 @@ public class UserPraiseArticleService {
         List<Article> articles = getPraisedCountFromRedis();
         int row2 = articleMapper.updateList(articles);
         /**
-         * 这样会存在问题，当mysql语句执行时是比较慢的相对。此时用户点赞，那么这个数据不会被同步到mysql
-         * 如果在获取list的时候就删除redis，那么又会存在问题。当mysql语句执行报错时，spring事务会回滚。但是redis没有做事务
+         * 1.这样会存在问题，当mysql语句执行时是比较慢的相对。此时用户点赞，那么这个数据不会被同步到mysql
+         * 2.如果在获取list的时候就删除redis，那么又会存在问题。当mysql语句执行报错时，spring事务会回滚。但是redis没有做事务
+         * 3.考虑到每隔一个小时会同步数据，且是在准点时刻进行例如 12:00，可以在同步数据执行mysql的时候给redis加锁。
+         *      然后点赞接口那里。判断时间是否已经快到整点，如果还差几秒到整点数据。那么尝试获取锁，等锁释放再执行点赞！完美
          * */
         //删除redis
         deletePraiseDataFromRedis();
