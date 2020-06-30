@@ -1,4 +1,6 @@
 
+application:
+  domain_name: sunyuchao.com  #生产环境
 
 spring:
   datasource:
@@ -6,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 使用druid连接池
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/blog?characterEncoding=utf8&useAffectedRows=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/blog?characterEncoding=utf8&useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
     password: 123456
 

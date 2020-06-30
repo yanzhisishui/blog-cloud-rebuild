@@ -27,11 +27,10 @@ public class ApplicationSchedule {
      * 定时同步redis文章点赞的数据到MySQL,每小时执行一次
      * */
     @Scheduled(cron = "0 0 0/1 * * ?")
-    //@Scheduled(cron = "0/20 * * * * ?")
+    //@Scheduled(cron = "0/10 * * * * ?")
     public void redisArticlePraiseToMySQL(){
         log.info("同步redis文章点赞数据开始");
-        Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(RedisConstant.ARTICLE_PRAISE);
-        userPraiseArticleService.syncRedisData(map);
+        userPraiseArticleService.syncRedisData();
         log.info("同步redis文章点赞数据结束");
     }
 }

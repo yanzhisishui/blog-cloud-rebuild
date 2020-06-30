@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
 import java.util.Map;
 
 @Mapper
@@ -15,4 +16,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     @Update("update article set browser  = #{browser} + 1  where id = #{id}")
     int increaseBrowser(Article article);
+
+    int updateList(List<Article> list);
 }

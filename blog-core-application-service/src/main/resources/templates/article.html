@@ -148,6 +148,7 @@
             .mycard-bottom p{font-size: 12px;}
             .content-right .right-card{max-height: 220px;overflow: hidden;}
         }
+
     </style>
 </head>
 <body>
@@ -179,8 +180,8 @@
                         <span class="option-item"><i class="layui-icon layui-icon-file"></i> [[${article.browser}]] 浏览</span>
                         <span class="option-item"><i class="layui-icon layui-icon-star"></i> [[${article.collectionCount}]] 收藏</span>
                         <span class="option-item">
-                            <a th:if="${articlePraised}" style="color: red;" id="praise" href="javascript:;"><i class="layui-icon layui-icon-praise"></i><span th:text="${article.praise}">&nbsp;201</span> 赞</a>
-                            <a th:if="${!articlePraised}" id="praise" href="javascript:;"><i class="layui-icon layui-icon-praise"></i><span th:text="${article.praise}">&nbsp;201</span> 赞</a>
+                            <a th:if="${articlePraised}" th:praised="yes" style="color: red;" id="praise" href="javascript:;"><i class="layui-icon layui-icon-praise"></i><span th:text="${article.praise}">&nbsp;201</span> 赞</a>
+                            <a th:if="${!articlePraised}" th:praised="no" id="praise" href="javascript:;"><i class="layui-icon layui-icon-praise"></i><span th:text="${article.praise}">&nbsp;201</span> 赞</a>
                         </span>
                     </p>
                     <hr>
@@ -493,16 +494,20 @@
                     data:{"articleId":articleId},
                     success:function (e) {
                         if(e.success){
-                            //手势换颜色
-                            $("#praise").css("color","red");
                             var html = $("#praise").children("span").html();
-                            $("#praise").children("span").html(parseInt(html)+1)
+                            //手势换颜色
+                            var praised = $("#praise").attr("praised");
+                            if( praised == "yes"){
+                                $("#praise").css("color","#999");
+                                $("#praise").attr("praised","no");
+                                $("#praise").children("span").html(parseInt(html) - 1)
+                            }else{
+                                $("#praise").css("color","red");
+                                $("#praise").attr("praised","yes");
+                                $("#praise").children("span").html(parseInt(html)+1)
+                            }
                         }else if(e.code == 1){
                             $("#login").click();
-                        }else if(e.code == 2){ //取消点赞
-                            $("#praise").css("color","#999");
-                            var html = $("#praise").children("span").html();
-                            $("#praise").children("span").html(parseInt(html) - 1)
                         }
                     },dataType:"json"
                 });

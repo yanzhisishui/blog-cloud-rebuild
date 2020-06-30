@@ -1,13 +1,17 @@
 package com.syc.blog.controller.article;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.syc.blog.constants.Constant;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.controller.BaseController;
 import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
+import com.syc.blog.entity.article.UserPraiseArticle;
 import com.syc.blog.entity.info.OnlineUtils;
 import com.syc.blog.entity.user.User;
+import com.syc.blog.mapper.article.UserPraiseArticleMapper;
 import com.syc.blog.rabbitmq.MQProducer;
 import com.syc.blog.repository.ArticleRepository;
 import com.syc.blog.service.article.ArticleClassifyService;
@@ -20,6 +24,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,13 +50,15 @@ public class ArticleController extends BaseController {
     @Autowired
     ArticleClassifyService articleClassifyService;
     @Autowired
+    UserPraiseArticleMapper userPraiseArticleMapper;
+    @Autowired
     MQProducer mqProducer;
     @RequestMapping("/{id}")
     public String chapter(@PathVariable("id") Integer id, ModelMap map,
                           @RequestParam(value = "page",required = false,defaultValue = "1") Integer page, HttpServletRequest request){
 
         Article article = articleRepository.findById(id).orElse(null);
-        map.put("article",article);
+
         map.put("pre",recursionFindArticle(id,0));
         map.put("next",recursionFindArticle(id,1));
 
@@ -70,15 +77,38 @@ public class ArticleController extends BaseController {
         byte type = Constant.USER_COMMENT_TYPE_ARTICLE;
         getCurrentCommentsListPage(map,page,id,type);
 
-        Object o = stringRedisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE, id.toString());
         User loginUser = getLoginUser(request);
-        if(o == null || loginUser == null){
-            map.put("articlePraised",false);
-        }else{
-            HashSet<String> set = JSON.parseObject(o.toString(), HashSet.class);
-            map.put("articlePraised",set.contains(loginUser.getId().toString()));
-        }
+        //查询用户是否点过赞
+        boolean flag  =userIsPraised(loginUser,id);
+        //从redis查询文章点赞数量
+        Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE_COUNT, id.toString());
+        article.setPraise((Integer)o);
+        map.put("article",article);
+        map.put("articlePraised",flag);
+
+
         return "article";
+    }
+
+    //判断用户是否点过赞
+    private boolean userIsPraised(User loginUser, Integer id) {
+        if(loginUser == null){
+           return false;
+        }else{
+            Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE, loginUser.getId()+"::"+id);
+            if(o == null){ //redis没有，去数据库查
+                UserPraiseArticle upa = userPraiseArticleMapper.selectOne(Wrappers.<UserPraiseArticle>lambdaQuery().eq(UserPraiseArticle::getArticleId, id).eq(UserPraiseArticle::getUserId, loginUser.getId()));
+                if(upa != null){
+                    return upa.getStatus() == 1;
+                }else{ //数据库也没有,说明没点过赞
+                    return false;
+                }
+            }
+            else{
+                Integer v = (Integer) o;
+                return v == 1 ;
+            }
+        }
     }
 
     /**
@@ -105,7 +135,7 @@ public class ArticleController extends BaseController {
      * 用户点赞
      * */
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    RedisTemplate<String,Object> redisTemplate;
 
     @RequestMapping("/praise")
     @ResponseBody
@@ -116,9 +146,29 @@ public class ArticleController extends BaseController {
             result = ResultHelper.wrapErrorResult(1,"请先登录");
             return JSON.toJSONString(result);
         }
+
+        String userId = loginUser.getId().toString();
+        String key = userId + "::" + articleId;
         log.info("文章点赞存入Redis开始，articleId:{},userId:{}",articleId,loginUser.getId());
         synchronized (this){
-            Boolean flag = stringRedisTemplate.hasKey(RedisConstant.ARTICLE_PRAISE);
+            Boolean flag = redisTemplate.hasKey(RedisConstant.ARTICLE_PRAISE);
+            if(flag != null && flag){
+                Map<Object, Object> map = redisTemplate.opsForHash().entries(RedisConstant.ARTICLE_PRAISE);
+                if(map.containsKey(key)){ //已存在
+                    Integer v = (Integer)map.get(key);
+                    redisTemplate.opsForHash().put(RedisConstant.ARTICLE_PRAISE, key,v == 1 ? 0 : 1);
+                    redisTemplate.opsForHash().increment(RedisConstant.ARTICLE_PRAISE_COUNT, articleId.toString(),v == 1 ? -1 : 1);
+
+                }else{ //点赞
+                    redisTemplate.opsForHash().put(RedisConstant.ARTICLE_PRAISE, key,1);
+                    redisTemplate.opsForHash().increment(RedisConstant.ARTICLE_PRAISE_COUNT, articleId.toString(),1);
+
+                }
+            }else{
+                redisTemplate.opsForHash().put(RedisConstant.ARTICLE_PRAISE, key,1);
+                redisTemplate.opsForHash().put(RedisConstant.ARTICLE_PRAISE_COUNT, articleId.toString(),1);
+            }
+           /* Boolean flag = stringRedisTemplate.hasKey(RedisConstant.ARTICLE_PRAISE);
             Article article = articleRepository.findById(articleId).orElse(null);
             if(flag != null && flag) {
                 Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(RedisConstant.ARTICLE_PRAISE);//拿到map
@@ -152,7 +202,7 @@ public class ArticleController extends BaseController {
                 stringRedisTemplate.opsForHash().put(RedisConstant.ARTICLE_PRAISE,articleId.toString(),JSON.toJSONString(set));
                 article.setPraise(article.getPraise() + 1);
                 articleRepository.save(article);
-            }
+            }*/
         }
         result = ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);

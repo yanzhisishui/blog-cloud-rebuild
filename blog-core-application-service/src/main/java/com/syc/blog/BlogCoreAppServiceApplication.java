@@ -1,7 +1,10 @@
 package com.syc.blog;
 
+import com.syc.blog.config.ApplicationConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -26,16 +29,15 @@ public class BlogCoreAppServiceApplication {
         SpringApplication.run(BlogCoreAppServiceApplication.class,args);
     }
 
-    /**
-     * 开发环境需要注释掉，不然登录不上
-     * */
+    @Autowired
+    ApplicationConfig applicationConfig;
     @Bean
     public HttpSessionIdResolver httpSessionIdResolver() {
         CookieHttpSessionIdResolver cookieHttpSessionIdResolver = new CookieHttpSessionIdResolver();
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
 
         //不加前缀，实现子域名session共享
-        cookieSerializer.setDomainName("sunyuchao.com");
+        cookieSerializer.setDomainName(applicationConfig.getDomainName());
         cookieSerializer.setCookiePath("/");
         cookieSerializer.setUseBase64Encoding(false);
         cookieHttpSessionIdResolver.setCookieSerializer(cookieSerializer);

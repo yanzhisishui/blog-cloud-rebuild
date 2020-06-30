@@ -10,6 +10,9 @@ import com.syc.blog.mapper.article.ArticleMapper;
 import com.syc.blog.mapper.article.UserPraiseArticleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,35 +28,83 @@ public class UserPraiseArticleService {
     @Autowired
     UserPraiseArticleMapper userPraiseArticleMapper;
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    RedisTemplate<String,Object> redisTemplate;
+
     //同步redis数据到mysql
     @Transactional
-    public void syncRedisData(Map<Object, Object> map) {
+    public void syncRedisData() {
+        List<UserPraiseArticle> upaList = getPraisedDataFromRedis();
+        int row = userPraiseArticleMapper.saveList(upaList);
+        List<Article> articles = getPraisedCountFromRedis();
+        int row2 = articleMapper.updateList(articles);
+        /**
+         * 这样会存在问题，当mysql语句执行时是比较慢的相对。此时用户点赞，那么这个数据不会被同步到mysql
+         * 如果在获取list的时候就删除redis，那么又会存在问题。当mysql语句执行报错时，spring事务会回滚。但是redis没有做事务
+         * */
+        //删除redis
+        deletePraiseDataFromRedis();
+        deletePraiseCountFromRedis();
+        log.info("同步点赞数据完成-----");
+    }
 
-        for (Map.Entry<Object, Object> entry : map.entrySet()) {
-            String articleId = entry.getKey().toString();
-            Boolean flag = stringRedisTemplate.hasKey(RedisConstant.ARTICLE_SYNC_PRAISE_ARTICLE + articleId);
-            if(flag != null && flag){
-                //已经同步过了,同步下一篇
-                continue;
-            }
-            HashSet<String> set = JSON.parseObject(entry.getValue().toString(), HashSet.class);
-            Article a = new Article();
-            a.setId(Integer.parseInt(articleId));
-            a.setPraise(set.size());
-            articleMapper.updateById(a);//更新文章收藏数
-
-            List<UserPraiseArticle> list = new ArrayList<>();
-            for (String userId : set) {
-                UserPraiseArticle upa = new UserPraiseArticle();
-                upa.setUserId(Integer.parseInt(userId));
-                upa.setArticleId(Integer.parseInt(articleId));
-                upa.setDateInsert(new Date());
-                list.add(upa);
-            }
-            int row = userPraiseArticleMapper.saveList(list);
-            stringRedisTemplate.opsForValue().set(RedisConstant.ARTICLE_SYNC_PRAISE_ARTICLE+articleId,articleId);//标记该文章已同步过
-            log.info("文章:{} 同步完成-----",articleId);
+    private void deletePraiseCountFromRedis() {
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisConstant.ARTICLE_PRAISE_COUNT, ScanOptions.NONE);
+        while (cursor.hasNext()){
+            Map.Entry<Object, Object> map = cursor.next();
+            String key = (String)map.getKey();
+            redisTemplate.opsForHash().delete(RedisConstant.ARTICLE_PRAISE_COUNT, key);
         }
     }
+
+    private void deletePraiseDataFromRedis() {
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisConstant.ARTICLE_PRAISE, ScanOptions.NONE);
+        while (cursor.hasNext()){
+            Map.Entry<Object, Object> entry = cursor.next();
+            String key = (String) entry.getKey();
+            redisTemplate.opsForHash().delete(RedisConstant.ARTICLE_PRAISE, key);
+        }
+    }
+
+    //查询用户点赞文章数据
+    public List<UserPraiseArticle> getPraisedDataFromRedis() {
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisConstant.ARTICLE_PRAISE, ScanOptions.NONE);
+        List<UserPraiseArticle> list = new ArrayList<>();
+        while (cursor.hasNext()){
+            Map.Entry<Object, Object> entry = cursor.next();
+            String key = (String) entry.getKey();
+            //分离出 userId，articleId
+            String[] split = key.split("::");
+            String userId = split[0];
+            String articleId = split[1];
+            Integer value = (Integer) entry.getValue();
+
+            //组装成 UserLike 对象
+            UserPraiseArticle upa = new UserPraiseArticle();
+            upa.setUserId(Integer.parseInt(userId));
+            upa.setArticleId(Integer.parseInt(articleId));
+            upa.setStatus(value.byteValue());
+            upa.setDateInsert(new Date());
+            list.add(upa);
+        }
+
+        return list;
+    }
+
+
+    public List<Article> getPraisedCountFromRedis() {
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisConstant.ARTICLE_PRAISE_COUNT, ScanOptions.NONE);
+        List<Article> list = new ArrayList<>();
+        while (cursor.hasNext()){
+            Map.Entry<Object, Object> map = cursor.next();
+            //将点赞数量存储在 LikedCountDT
+            String key = (String)map.getKey();
+            Integer value = (Integer)map.getValue();
+            Article article = new Article();
+            article.setId(Integer.parseInt(key));
+            article.setPraise(value);
+            list.add(article);
+        }
+        return list;
+    }
+
 }

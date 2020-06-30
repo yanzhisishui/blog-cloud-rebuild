@@ -15,6 +15,7 @@ public class UserPraiseArticle implements Serializable {
     private Integer id;
     private Integer userId;
     private Integer articleId;
+    private Byte status;
     private Byte archive;
     private Date dateInsert;
     private Date dateUpdate;

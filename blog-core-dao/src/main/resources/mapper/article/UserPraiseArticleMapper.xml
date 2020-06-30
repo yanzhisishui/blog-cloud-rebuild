@@ -4,10 +4,10 @@
 <mapper namespace="com.syc.blog.mapper.article.UserPraiseArticleMapper">
     <insert id="saveList" parameterType="java.util.List" useGeneratedKeys="true">
         insert into user_praise_article
-        (user_id,article_id,date_insert)
+        (user_id,article_id,date_insert,status)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            ( #{item.userId}, #{item.articleId}, #{item.dateInsert} )
+            ( #{item.userId}, #{item.articleId}, #{item.dateInsert},#{item.status} )
         </foreach>
     </insert>
 </mapper>

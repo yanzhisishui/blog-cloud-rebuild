@@ -1,12 +1,13 @@
 
-
+application:
+  domain_name:  #开发环境
 spring:
   datasource:
     # 配置数据源
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 使用druid连接池
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true
     username: root
     password: 123456
 
