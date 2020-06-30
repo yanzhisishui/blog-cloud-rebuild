@@ -39,13 +39,6 @@ public class ArticleService {
             Integer count = userCommentMapper.selectCount(Wrappers.<UserComment>lambdaQuery().eq(UserComment::getBindId, article.getId()).eq(UserComment::getType, 1));
             article.setCommentCount(count);
             article.setCollectionCount(0);
-            Object o = stringRedisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE, article.getId().toString());
-            if(o == null){
-                article.setPraise(0);
-            }else{
-                HashSet set = JSON.parseObject(o.toString(), HashSet.class);
-                article.setPraise(set.size());
-            }
         }
         articleRepository.saveAll(list);
     }
