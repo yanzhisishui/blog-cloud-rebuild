@@ -82,7 +82,9 @@ public class ArticleController extends BaseController {
         boolean flag  =userIsPraised(loginUser,id);
         //从redis查询文章点赞数量
         Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE_COUNT, id.toString());
-        article.setPraise((Integer)o);
+        if(o != null){ //如果redis中有。说明还没有同步到mysql和es，此时取redis中的点赞数
+            article.setPraise((Integer)o);
+        }
         map.put("article",article);
         map.put("articlePraised",flag);
 

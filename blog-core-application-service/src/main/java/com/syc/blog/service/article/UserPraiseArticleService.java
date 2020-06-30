@@ -29,7 +29,8 @@ public class UserPraiseArticleService {
     UserPraiseArticleMapper userPraiseArticleMapper;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
-
+    @Autowired
+    ArticleService articleService;
     //同步redis数据到mysql
     @Transactional
     public void syncRedisData() {
@@ -44,6 +45,7 @@ public class UserPraiseArticleService {
         //删除redis
         deletePraiseDataFromRedis();
         deletePraiseCountFromRedis();
+        articleService.initRepository();//把点赞数更新到es
         log.info("同步点赞数据完成-----");
     }
 
