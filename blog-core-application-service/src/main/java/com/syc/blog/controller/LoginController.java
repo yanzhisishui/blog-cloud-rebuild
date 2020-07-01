@@ -214,7 +214,7 @@ public class LoginController extends BaseController {
                     if(userAuth == null) { //新用户
                         user=new User();
                         user.setDateInsert(new Date());
-                        user.setAvatar(avatarURL50);
+                        user.setAvatar(avatarURL50.replace("http","https"));
                         user.setNickname(nickname);
                         user.setStatus((byte)1);
 
