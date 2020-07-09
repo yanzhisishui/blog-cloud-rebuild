@@ -1,4 +1,6 @@
 
+application:
+  zimg_address_url_delete: http://192.168.23.175:4869/admin
 
 spring:
   datasource:

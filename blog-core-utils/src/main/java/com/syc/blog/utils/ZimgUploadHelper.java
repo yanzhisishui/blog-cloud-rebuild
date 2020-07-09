@@ -78,4 +78,11 @@ public class ZimgUploadHelper {
         String s = uploadImageToZimg(file, upload, address);
         return s+"?p=0";
     }
+
+    public static boolean deleteImageFromZimg(String url,String md5){
+        String address = url+"?md5="+md5+"&t=1";
+        String s = HttpClientHelper.doGet(address);
+        System.out.println(s);
+        return s.contains("Successful");
+    }
 }

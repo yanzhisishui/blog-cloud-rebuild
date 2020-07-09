@@ -71,21 +71,21 @@
                             <input type="text" value="水印文字" name="number" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-inline">
-                       <button class="layui-btn layui-btn-normal">上传Logo水印</button>
-                    </div>
-                    <div class="layui-inline">
+                    <div class="layui-inline" style="margin-left: 25px;">
                         <label class="layui-form-label">透明度</label>
                         <div class="layui-input-inline">
                             <div id="slideTest7" style="margin-top: 18px"></div>
                         </div>
                     </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-normal">Logo水印</button>
+                    </div>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <div class="layui-btn-group">
-                            <button  type="button" style="width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;" class="layui-btn layui-btn-primary"><b>B</b></button>
-                            <button  type="button" style="width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;" class="layui-btn layui-btn-primary"><b><i>I</i></b></button>
+                            <button  type="button" style="width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)" class="layui-btn layui-btn-primary"><b>B</b></button>
+                            <button  type="button" style="width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)" class="layui-btn layui-btn-primary"><b><i>I</i></b></button>
                             <div id="test9" style="margin-top: 5px;"></div>
                         </div>
                     </div>
@@ -333,7 +333,7 @@
             ,max: 10
             ,setTips: function(value){ //自定义提示文本
 
-                return value + 'f';
+                return value/10 + 'f';
             }
         });
 
