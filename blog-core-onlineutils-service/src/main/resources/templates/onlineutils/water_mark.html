@@ -38,6 +38,9 @@
 
 
 
+        #mark_text{position: absolute;top: 30px;left: 330px;}
+        #mark_text:hover{cursor: move;}
+
         /*手机*/
         @media screen and (max-width: 980px) {
             .smb-right{width:88%;}
@@ -59,10 +62,10 @@
         <h2>图片添加水印</h2>
 
         <div style="text-align: center;position: relative;">
-            <span style="position: absolute;top: 30px;left: 330px;">水印文字</span>
-            <img src="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?w=600&q=100">
+            <span id="mark_text">水印文字</span>
+            <img id="origin_image" src="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?w=600&q=100">
         </div>
-        <div style="text-align: center;margin-top: 20px;"><button class="layui-btn layui-btn-normal layui-btn-lg">上传图片</button></div>
+        <div style="text-align: center;margin-top: 20px;"><button id="uploadOrigin" class="layui-btn layui-btn-normal layui-btn-lg">上传图片</button></div>
         <div style="margin-top: 20px;">
             <form class="layui-form">
                 <div class="layui-form-item">
@@ -78,7 +81,7 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <button class="layui-btn layui-btn-normal">Logo水印</button>
+                        <button type="button" class="layui-btn layui-btn-normal">Logo水印</button>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -307,14 +310,72 @@
 </script>
 <script>
     layui.config({base:'https://www.sunyuchao.com/static/layui/extends/'});
-    layui.use(['form','layer','timeago','colorpicker','slider'], function(){
+    layui.use(['form','layer','timeago','colorpicker','slider','upload'], function(){
         var form=layui.form,
             $=layui.jquery,
+            upload=layui.upload,
             colorpicker=layui.colorpicker,
             slider=layui.slider,
             timeago=layui.timeago,
          layer=layui.layer;
         timeago.render($('.timeago'));
+
+
+
+        var dragging = false;
+        var iX, iY;
+        $("#mark_text").mousedown(function(e) {
+            dragging = true;
+            iX = e.clientX - this.offsetLeft;
+            iY = e.clientY - this.offsetTop;
+            this.setCapture && this.setCapture();
+            return false;
+        });
+
+
+        document.onmousemove = function(e) {
+
+
+            if (dragging) {
+                var e = e || window.event;
+                var oX = e.clientX - iX;
+                var oY = e.clientY - iY;
+                $("#mark_text").css({
+                    "left": oX + "px",
+                    "top": oY + "px"
+                });
+                return false;
+            }
+        };
+
+        //释放鼠标的时候
+        $(document).mouseup(function(e) {
+            dragging = false;
+            $("#mark_text").releaseCapture();
+            e.cancelBubble = true;
+        })
+
+
+        upload.render({
+            elem: '#uploadOrigin'
+            ,url: '/util/watermark/uploadOrigin'
+            ,accept:"images"
+            ,exts:'ico|jpg|png|gif|jpeg|bmp|webp'
+            ,before: function(obj){
+                obj.preview(function(index, file, result){
+                    $('#origin_image').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }else{
+                    $('#origin_image').attr('src', res.data.src); //图片链接（base64）
+                }
+                //上传成功
+            }
+        });
 
 
         //文本大小

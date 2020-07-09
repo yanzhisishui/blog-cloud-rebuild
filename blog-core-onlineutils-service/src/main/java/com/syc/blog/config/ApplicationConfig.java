@@ -14,5 +14,7 @@ public class ApplicationConfig {
     public static final String PREFIX = "application";
 
     private String zimgAddressUrlDelete ;
+    private String zimgAddressUrl ;
+    private String zimgUploadUrl ;
 
 }
