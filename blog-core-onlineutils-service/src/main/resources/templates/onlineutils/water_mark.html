@@ -38,8 +38,10 @@
 
 
 
-        #mark_text{position: absolute;top: 30px;left: 330px;}
+        #mark_text{position: absolute;top: 30px;left: 330px;font-size: 20px;font-family: 微软雅黑;}
         #mark_text:hover{cursor: move;}
+
+        #bold,#italic{width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)}
 
         /*手机*/
         @media screen and (max-width: 980px) {
@@ -61,17 +63,20 @@
     <div>
         <h2>图片添加水印</h2>
 
-        <div style="text-align: center;position: relative;">
+        <div id="box" style="text-align: center;position: relative;">
             <span id="mark_text">水印文字</span>
             <img id="origin_image" src="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?w=600&q=100">
         </div>
-        <div style="text-align: center;margin-top: 20px;"><button id="uploadOrigin" class="layui-btn layui-btn-normal layui-btn-lg">上传图片</button></div>
+        <div style="text-align: center;margin-top: 20px;">
+            <button id="uploadOrigin" class="layui-btn layui-btn-normal layui-btn-lg">上传图片</button>
+            <button id="download" class="layui-btn layui-btn-normal layui-btn-lg">下载水印图</button>
+        </div>
         <div style="margin-top: 20px;">
             <form class="layui-form">
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <div class="layui-input-inline">
-                            <input type="text" value="水印文字" name="number" autocomplete="off" class="layui-input">
+                            <input type="text" value="水印文字" id="text" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline" style="margin-left: 25px;">
@@ -87,24 +92,31 @@
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <div class="layui-btn-group">
-                            <button  type="button" style="width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)" class="layui-btn layui-btn-primary"><b>B</b></button>
-                            <button  type="button" style="width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)" class="layui-btn layui-btn-primary"><b><i>I</i></b></button>
+                            <button id="bold"  type="button" class="layui-btn layui-btn-primary"><b>B</b></button>
+                            <button id="italic"  type="button"  class="layui-btn layui-btn-primary"><b><i>I</i></b></button>
                             <div id="test9" style="margin-top: 5px;"></div>
                         </div>
                     </div>
                     <div class="layui-inline" style="width: 120px;margin-left: -20px;">
-                        <select name="city" lay-verify="required" >
-                            <option value="0">黑体</option>
-                            <option value="1">宋体</option>
-                            <option value="2">微软雅黑</option>
-                            <option value="3">深圳</option>
-                            <option value="4">杭州</option>
+                        <select lay-filter="font" name="fontfamily" lay-verify="required" >
+                            <option value="黑体">黑体</option>
+                            <option value="宋体">宋体</option>
+                            <option value="仿宋">仿宋</option>
+                            <option value="楷体">楷体</option>
+                            <option value="Arial">Arial</option>
+                            <option value="幼圆">幼圆</option>
                         </select>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">字体大小</label>
                         <div class="layui-input-inline">
                             <div id="slideTest6" style="margin-top: 18px"></div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">旋转角度</label>
+                        <div class="layui-input-inline">
+                            <div id="slideTest8" style="margin-top: 18px"></div>
                         </div>
                     </div>
                 </div>
@@ -320,7 +332,19 @@
          layer=layui.layer;
         timeago.render($('.timeago'));
 
+        form.on('select(font)',function (data) {
+            $("#mark_text").css("font-family",data.value);
+        });
 
+        $("#text").bind("input propertychange", function() {
+                $("#mark_text").html($(this).val());
+        });
+        $("#italic").click(function () {
+            $("#mark_text").css("font-style","italic");
+        });
+        $("#bold").click(function () {
+            $("#mark_text").css("font-weight","bold");
+        });
 
         var dragging = false;
         var iX, iY;
@@ -332,18 +356,35 @@
             return false;
         });
 
-
         document.onmousemove = function(e) {
 
+            //图片左边边距
+            var leftMin = $("#box").width() / 2 - $("#origin_image").width()/2;
+            var rightMax = $("#box").width() / 2 + $("#origin_image").width()/2 - $("#mark_text").width();
+            var topMax = $('#box').offset().top + $("#box").height() ;//距离顶部位置
 
             if (dragging) {
                 var e = e || window.event;
                 var oX = e.clientX - iX;
                 var oY = e.clientY - iY;
+                //下面代码限制水印只能在图片内部移动
+                if(oX < leftMin){
+                    oX = leftMin;
+                }
+                if(oX > rightMax){
+                    oX = rightMax;
+                }
+                if(oY < 0){
+                    oY = 0 ;
+                }
+                if(oY > $("#box").height() - $("#mark_text").height() ){
+                    oY =  $("#box").height()- $("#mark_text").height();
+                }
                 $("#mark_text").css({
                     "left": oX + "px",
                     "top": oY + "px"
                 });
+
                 return false;
             }
         };
@@ -354,6 +395,7 @@
             $("#mark_text").releaseCapture();
             e.cancelBubble = true;
         })
+
 
 
         upload.render({
@@ -376,24 +418,40 @@
                 //上传成功
             }
         });
-
-
         //文本大小
         slider.render({
             elem: '#slideTest6'
             ,min: 8
-            ,max: 50
+            ,max: 80
+            ,value:20
             ,setTips: function(value){ //自定义提示文本
+                $("#mark_text").css("font-size",value+"px");
                 return value + 'px';
             }
         });
+
+        var degree = 0;
+        //旋转角度
+         slider.render({
+            elem: '#slideTest8'
+            ,min: 0
+            ,max: 360
+            ,setTips: function(value){ //自定义提示文本
+                $("#mark_text").css("transform","rotate("+value+"deg)");
+                degree = value;
+                return value + '°';
+            }
+        });
+
+
         //透明度
         slider.render({
             elem: '#slideTest7'
-            ,min: 0
+            ,min: 1
             ,max: 10
+            ,value:10
             ,setTips: function(value){ //自定义提示文本
-
+                $("#mark_text").css("opacity",value/10);
                 return value/10 + 'f';
             }
         });
@@ -403,8 +461,47 @@
             ,color: '#9d8a0e'
             ,predefine: true // 开启预定义颜色
             ,colors: ['#ff8c00','#00ced1','#9d8a0e'] //自定义预定义颜色项
+            ,change: function(color){
+                //给当前页面头部和左侧设置主题色
+                $('#mark_text').css('color', color);
+            }
         });
 
+        /**
+         * 下载水印图
+         * */
+        $("#download").click(function () {
+
+            var url = $("#origin_image").attr("src");
+            var text = $("#text").val();//文本
+            var fontFamily = $("select[name=fontfamily]").val();
+            var fontWeight = $("#mark_text").css("font-weight");
+            var fontStyle = $("#mark_text").css("font-style");
+            var color = $("#mark_text").css("color");
+            var fontSize = $("#mark_text").css("font-size").replace("px","");
+            var opacity = $("#mark_text").css("opacity");
+            var top = parseInt($("#mark_text").css("top").replace("px","")) + parseInt($("#mark_text").height());//Y坐标
+            var left = parseInt($("#mark_text").css("left").replace("px","")) - (Math.round($("#box").width()/2) - Math.round($("#origin_image").width()/2));
+
+            /*document.write("<form action='/util/watermark/downloadMarkTextPicture' target='_blank' method='post' name='form1' style='display:none'>");
+            document.write("<input type='hidden' name='url' value='"+url+"'>");
+            document.write("<input type='hidden' name='text' value='"+text+"'>");
+            document.write("<input type='hidden' name='fontFamily' value='"+fontFamily+"'>");
+            document.write("<input type='hidden' name='fontWeight' value='"+fontWeight+"'>");
+            document.write("<input type='hidden' name='fontStyle' value='"+fontStyle+"'>");
+            document.write("<input type='hidden' name='color' value='"+color+"'>");
+            document.write("<input type='hidden' name='fontSize' value='"+fontSize+"'>");
+            document.write("<input type='hidden' name='positionY' value='"+top+"'>");
+            document.write("<input type='hidden' name='positionX' value='"+left+"'>");
+            document.write("<input type='hidden' name='opacity' value='"+opacity+"'>");
+            document.write("<input type='hidden' name='degree' value='"+degree+"'>");
+            document.write("</form>");
+            document.form1.submit();*/
+            window.open("/util/watermark/downloadMarkTextPicture?url="+url+"&text="+text+"&fontFamily="+fontFamily
+            +"&fontWeight="+fontWeight+"&fontStyle="+fontStyle+"&color="+color+"&fontSize="+fontSize
+                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity+"&degree="+degree
+            );
+        });
     });
 </script>
 <script src="/login.js"></script>
