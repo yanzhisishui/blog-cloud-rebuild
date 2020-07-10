@@ -42,7 +42,7 @@
         #mark_text:hover{cursor: move;}
 
         #bold,#italic{width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)}
-
+        #box{margin-top: 20px;}
         /*手机*/
         @media screen and (max-width: 980px) {
             .smb-right{width:88%;}
@@ -65,7 +65,7 @@
 
         <div id="box" style="text-align: center;position: relative;">
             <span id="mark_text">水印文字</span>
-            <img id="origin_image" src="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?w=600&q=100">
+            <img id="origin_image" src="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?p=0">
         </div>
         <div style="text-align: center;margin-top: 20px;">
             <button id="uploadOrigin" class="layui-btn layui-btn-normal layui-btn-lg">上传图片</button>
@@ -480,26 +480,15 @@
             var color = $("#mark_text").css("color");
             var fontSize = $("#mark_text").css("font-size").replace("px","");
             var opacity = $("#mark_text").css("opacity");
-            var top = parseInt($("#mark_text").css("top").replace("px","")) + parseInt($("#mark_text").height());//Y坐标
+            //var top = parseInt($("#mark_text").css("top").replace("px","")) + parseInt($("#mark_text").height());//Y坐标
+            var top = $("#mark_text").css("top").replace("px","");//Y坐标
             var left = parseInt($("#mark_text").css("left").replace("px","")) - (Math.round($("#box").width()/2) - Math.round($("#origin_image").width()/2));
 
-            /*document.write("<form action='/util/watermark/downloadMarkTextPicture' target='_blank' method='post' name='form1' style='display:none'>");
-            document.write("<input type='hidden' name='url' value='"+url+"'>");
-            document.write("<input type='hidden' name='text' value='"+text+"'>");
-            document.write("<input type='hidden' name='fontFamily' value='"+fontFamily+"'>");
-            document.write("<input type='hidden' name='fontWeight' value='"+fontWeight+"'>");
-            document.write("<input type='hidden' name='fontStyle' value='"+fontStyle+"'>");
-            document.write("<input type='hidden' name='color' value='"+color+"'>");
-            document.write("<input type='hidden' name='fontSize' value='"+fontSize+"'>");
-            document.write("<input type='hidden' name='positionY' value='"+top+"'>");
-            document.write("<input type='hidden' name='positionX' value='"+left+"'>");
-            document.write("<input type='hidden' name='opacity' value='"+opacity+"'>");
-            document.write("<input type='hidden' name='degree' value='"+degree+"'>");
-            document.write("</form>");
-            document.form1.submit();*/
+            var centerX= parseInt(left) + Math.round($("#mark_text").height() / 2);//中心点
+            var centerY= parseInt(top) + Math.round($("#mark_text").height() / 2);//中心点
             window.open("/util/watermark/downloadMarkTextPicture?url="+url+"&text="+text+"&fontFamily="+fontFamily
             +"&fontWeight="+fontWeight+"&fontStyle="+fontStyle+"&color="+color+"&fontSize="+fontSize
-                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity+"&degree="+degree
+                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity+"&degree="+degree+"&centerX="+centerX+"&centerY="+centerY
             );
         });
     });

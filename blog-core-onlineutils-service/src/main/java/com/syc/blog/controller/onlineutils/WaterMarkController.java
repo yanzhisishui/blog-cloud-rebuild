@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import sun.awt.SunHints;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -67,17 +68,21 @@ public class WaterMarkController extends BaseController {
                                         @RequestParam("opacity") Float opacity,
                                         @RequestParam("positionX") Integer positionX,
                                         @RequestParam("positionY") Integer positionY,
-                                        @RequestParam("degree") Integer degree
+                                        @RequestParam("degree") Integer degree,
+                                        @RequestParam("centerX") Integer centerX,
+                                        @RequestParam("centerY") Integer centerY
+
     ) throws IOException {
 
-        url="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?w=600&q=100";
+        System.out.println("坐标:"+positionX+","+positionY);
+        System.out.println("中心点:"+centerX+","+centerY);
+        System.out.println(url);
         color = color.replace("rgb(","").replace(")","");
         Image srcImg = ImageIO.read(getImageStream(url));
         BufferedImage buffImg = new BufferedImage(srcImg.getWidth(null), srcImg.getHeight(null), BufferedImage.TYPE_INT_RGB);
         // 2、得到画笔对象
         Graphics2D g = buffImg.createGraphics();
-        // 3、设置对线段的锯齿状边缘处理
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
         g.drawImage(srcImg, 0, 0,buffImg.getWidth(),buffImg.getHeight(), null);
         // 4、设置水印旋转
         if (0 != degree && degree != 360) {
@@ -87,15 +92,30 @@ public class WaterMarkController extends BaseController {
         }
         // 5、设置水印文字颜色
         String[] colorArr = color.split(",");
-        g.setColor(new Color(Integer.parseInt(colorArr[0].trim()),Integer.parseInt(colorArr[1].trim()),Integer.parseInt(colorArr[2].trim())));
+        int colorR = Integer.parseInt(colorArr[0].trim());
+        int colorG = Integer.parseInt(colorArr[1].trim());
+        int colorB = Integer.parseInt(colorArr[2].trim());
+
         // 6、设置水印文字Font
-        g.setFont(new Font(fontFamily, Font.PLAIN, fontSize));
+        int mode = fontWeight.equals("700") ? Font.BOLD : Font.PLAIN;
+        mode = fontStyle.equals("italic") ? Font.ITALIC : Font.PLAIN;
+        g.setFont(new Font(fontFamily, mode, fontSize));
         // 7、设置水印文字透明度
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, opacity));
         // 8、第一参数->设置的内容，后面两个参数->文字在图片上的坐标位置(x,y)
+        FontMetrics metrics = g.getFontMetrics(g.getFont());
+        //计算文字的坐标位置，根据基线、高度来计算
+        int logoX = positionX;
+        int logoH = positionY + metrics.getHeight() - metrics.getLeading() ;
 
+        //设置抗锯齿，并且先用阴影画一遍，不然字体会模糊
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);//设置抗锯齿
+        g.setPaint(new Color(colorR, colorG, colorB));//阴影颜色
+        g.drawString("", logoX, logoH);//先绘制阴影
 
-        g.drawString(text, positionX, positionY);
+        //画水印
+        g.setColor(new Color(colorR,colorG,colorB));
+        g.drawString(text, logoX, logoH);
         g.dispose();
         ImageIO.write(buffImg, "JPG", response.getOutputStream());
     }
@@ -120,5 +140,22 @@ public class WaterMarkController extends BaseController {
         return null;
     }
 
+    /**
+     * 计算按照中心点旋转后，新坐标位置
+     * */
 
+    private static Point calcNewPoint(Point p, Point pCenter, int angle) {
+        // calc arc
+        float l = (float) ((angle * Math.PI) / 180);
+
+        //sin/cos value
+        float cosv = (float) Math.cos(l);
+        float sinv = (float) Math.sin(l);
+
+        // calc new point
+        float newX = (float) ((p.x - pCenter.x) * cosv - (p.y - pCenter.y) * sinv + pCenter.x);
+        float newY = (float) ((p.x - pCenter.x) * sinv + (p.y - pCenter.y) * cosv + pCenter.y);
+        System.out.println("新坐标:"+newX+","+newY);
+        return new Point((int) newX, (int) newY);
+    }
 }
