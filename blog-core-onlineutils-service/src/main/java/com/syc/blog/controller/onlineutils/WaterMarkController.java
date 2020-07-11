@@ -4,6 +4,7 @@ import com.syc.blog.config.ApplicationConfig;
 import com.syc.blog.controller.BaseController;
 import com.syc.blog.utils.JsonHelper;
 import com.syc.blog.utils.ZimgUploadHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ import java.net.URL;
 
 @Controller
 @RequestMapping("/util/watermark")
+@Slf4j
 public class WaterMarkController extends BaseController {
 
     @Autowired
@@ -99,6 +101,9 @@ public class WaterMarkController extends BaseController {
         // 7、设置水印文字透明度
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, opacity));
         // 8、第一参数->设置的内容，后面两个参数->文字在图片上的坐标位置(x,y)
+
+        System.out.println("g:"+g);
+        System.out.println("font:"+g.getFont());
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         //计算文字的坐标位置，根据基线、高度来计算
         int logoX = positionX;

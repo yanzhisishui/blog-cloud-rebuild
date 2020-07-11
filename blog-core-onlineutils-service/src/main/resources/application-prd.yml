@@ -2,7 +2,7 @@
 application:
   zimg_address_url_delete: http://111.229.128.32:4869/admin
   zimg_upload_url: http://111.229.128.32:4869/upload
-  zimg_address_url: http://111.229.128.32:4869/
+  zimg_address_url: https://www.sunyuchao.com/files/img/
 spring:
   datasource:
     # 配置数据源

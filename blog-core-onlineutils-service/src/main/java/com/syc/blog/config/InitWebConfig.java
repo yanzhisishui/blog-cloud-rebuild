@@ -24,7 +24,7 @@ public class InitWebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new PageInterceptor())
                 .addPathPatterns("/","/util/idCardCode","/util/imgPress","/util/jsonFormat",
                         "/util/linux","/util/numMoneyConvert","/util/qrCode","/util/quartz",
-                        "/util/regexp","/util/timestamp","/util/sqlToJava");
+                        "/util/regexp","/util/timestamp","/util/sqlToJava","/util/watermark");
     }
 
     @Override
