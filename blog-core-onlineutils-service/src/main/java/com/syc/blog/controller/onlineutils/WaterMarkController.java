@@ -95,8 +95,13 @@ public class WaterMarkController extends BaseController {
         int colorB = Integer.parseInt(colorArr[2].trim());
 
         // 6、设置水印文字Font
-        int mode = fontWeight.equals("700") ? Font.BOLD : Font.PLAIN;
-        mode = fontStyle.equals("italic") ? Font.ITALIC : Font.PLAIN;
+        int mode = Font.PLAIN;
+        if(fontWeight.equals("700")){
+            mode = Font.BOLD;
+        }
+        if(fontStyle.equals("italic")){
+            mode = Font.ITALIC;
+        }
         g.setFont(new Font(fontFamily, mode, fontSize));
         // 7、设置水印文字透明度
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, opacity));
