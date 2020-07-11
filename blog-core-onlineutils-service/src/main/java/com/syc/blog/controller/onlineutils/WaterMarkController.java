@@ -68,15 +68,11 @@ public class WaterMarkController extends BaseController {
                                         @RequestParam("opacity") Float opacity,
                                         @RequestParam("positionX") Integer positionX,
                                         @RequestParam("positionY") Integer positionY,
-                                        @RequestParam("degree") Integer degree,
-                                        @RequestParam("centerX") Integer centerX,
-                                        @RequestParam("centerY") Integer centerY
+                                        @RequestParam(value = "degree",required = false) Integer degree
 
     ) throws IOException {
 
-        System.out.println("坐标:"+positionX+","+positionY);
-        System.out.println("中心点:"+centerX+","+centerY);
-        System.out.println(url);
+
         color = color.replace("rgb(","").replace(")","");
         Image srcImg = ImageIO.read(getImageStream(url));
         BufferedImage buffImg = new BufferedImage(srcImg.getWidth(null), srcImg.getHeight(null), BufferedImage.TYPE_INT_RGB);
@@ -85,7 +81,7 @@ public class WaterMarkController extends BaseController {
 
         g.drawImage(srcImg, 0, 0,buffImg.getWidth(),buffImg.getHeight(), null);
         // 4、设置水印旋转
-        if (0 != degree && degree != 360) {
+        if (null != degree && degree != 360) {
             g.rotate(Math.toRadians(degree),
                     (double) buffImg.getWidth() / 2,
                     (double) buffImg.getHeight() / 2);

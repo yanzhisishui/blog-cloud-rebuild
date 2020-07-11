@@ -38,7 +38,7 @@
 
 
 
-        #mark_text{position: absolute;top: 30px;left: 330px;font-size: 20px;font-family: 微软雅黑;}
+        #mark_text{position: absolute;top: 30px;left: 330px;font-size: 20px;font-family: 微软雅黑;display: none;}
         #mark_text:hover{cursor: move;}
 
         #bold,#italic{width: 38px;height: 38px;padding: 0;border: 1px solid #e6e6e6;background-color: rgb(247,247,247)}
@@ -65,11 +65,11 @@
 
         <div id="box" style="text-align: center;position: relative;">
             <span id="mark_text">水印文字</span>
-            <img id="origin_image" src="https://www.sunyuchao.com/files/img/58b8432586f7322b128d90b403d85aae?p=0">
+            <img id="origin_image" style="display: none;" src="">
         </div>
         <div style="text-align: center;margin-top: 20px;">
             <button id="uploadOrigin" class="layui-btn layui-btn-normal layui-btn-lg">上传图片</button>
-            <button id="download" class="layui-btn layui-btn-normal layui-btn-lg">下载水印图</button>
+            <button id="download" disabled="disabled" class="layui-btn layui-btn-normal layui-btn-lg layui-btn-disabled">下载水印图</button>
         </div>
         <div style="margin-top: 20px;">
             <form class="layui-form">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <button type="button" class="layui-btn layui-btn-normal">Logo水印</button>
+                        <button id="logoUpload" type="button" class="layui-btn layui-btn-normal layui-btn-disabled">Logo水印</button>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -346,6 +346,9 @@
             $("#mark_text").css("font-weight","bold");
         });
 
+        $("#logoUpload").click(function () {
+            layer.alert("该功能暂未开放。。。")
+        });
         var dragging = false;
         var iX, iY;
         $("#mark_text").mousedown(function(e) {
@@ -414,6 +417,10 @@
                     return layer.msg('上传失败');
                 }else{
                     $('#origin_image').attr('src', res.data.src); //图片链接（base64）
+                    $('#origin_image').show();
+                    $('#mark_text').show();
+                    $('#download').removeAttr("disabled");
+                    $('#download').removeClass("layui-btn-disabled");
                 }
                 //上传成功
             }
@@ -431,11 +438,15 @@
         });
 
         var degree = 0;
+        $("#slideTest8").click(function () {
+            layer.msg("旋转角度暂时会导致位置偏移，正在修复中");
+        });
         //旋转角度
          slider.render({
             elem: '#slideTest8'
             ,min: 0
             ,max: 360
+            ,disabled:true
             ,setTips: function(value){ //自定义提示文本
                 $("#mark_text").css("transform","rotate("+value+"deg)");
                 degree = value;
@@ -488,7 +499,7 @@
             var centerY= parseInt(top) + Math.round($("#mark_text").height() / 2);//中心点
             window.open("/util/watermark/downloadMarkTextPicture?url="+url+"&text="+text+"&fontFamily="+fontFamily
             +"&fontWeight="+fontWeight+"&fontStyle="+fontStyle+"&color="+color+"&fontSize="+fontSize
-                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity+"&degree="+degree+"&centerX="+centerX+"&centerY="+centerY
+                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity
             );
         });
     });
