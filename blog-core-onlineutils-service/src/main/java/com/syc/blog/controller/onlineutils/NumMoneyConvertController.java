@@ -17,7 +17,7 @@ public class NumMoneyConvertController extends BaseController {
     public String numMoneyConvert(ModelMap map, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
                                   @RequestParam(value = "bindId") Integer bindId){
 
-        byte type = 13;
+        byte type = 15;
         getCurrentCommentsListPage(map,page,bindId,type);
         map.put("bindId",bindId);
         return "onlineutils/nummoneyconvert";
