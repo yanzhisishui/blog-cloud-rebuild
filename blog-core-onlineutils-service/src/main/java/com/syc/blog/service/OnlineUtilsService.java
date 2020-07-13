@@ -13,6 +13,8 @@ public class OnlineUtilsService {
     @Autowired
     OnlineUtilsMapper onlineUtilsMapper;
     public List<OnlineUtils> selectList() {
-        return onlineUtilsMapper.selectList(Wrappers.<OnlineUtils>lambdaQuery().eq(OnlineUtils::getArchive,0));
+        return onlineUtilsMapper.selectList(
+                Wrappers.<OnlineUtils>lambdaQuery().eq(OnlineUtils::getArchive,0)
+        .orderByAsc(OnlineUtils::getSort));
     }
 }
