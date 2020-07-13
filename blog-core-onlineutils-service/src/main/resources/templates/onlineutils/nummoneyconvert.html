@@ -197,7 +197,7 @@
         replyEntity.content = $(frameObj).html().replace(/&nbsp;/ig,'');;//回复内容
         replyEntity.commentedUserId=1;//被回复者默认是我（生产中放到后台）
         replyEntity.level = 1;
-        replyEntity.type = 7;
+        replyEntity.type = 15;
         replyEntity.userId=currentUserId;
         replyEntity.bindId=$("input[name=id]").val();
         if($.trim(replyEntity.content).length == 0){
@@ -252,7 +252,7 @@
         replyEntity.commentedUserId=commentedId;
         replyEntity.content=msg;
         replyEntity.level=2;
-        replyEntity.type=7;
+        replyEntity.type=15;
         replyEntity.bindId=$("input[name=id]").val();
         replyEntity.parentId=parentId;
         var flag=false;
