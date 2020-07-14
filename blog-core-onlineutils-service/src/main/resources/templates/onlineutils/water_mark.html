@@ -445,15 +445,15 @@
         });
 
         var degree = 0;
-        $("#slideTest8").click(function () {
+        /*$("#slideTest8").click(function () {
             layer.msg("旋转角度暂时会导致位置偏移，正在修复中");
-        });
+        });*/
         //旋转角度
          slider.render({
             elem: '#slideTest8'
-            ,min: 0
-            ,max: 360
-            ,disabled:true
+            ,min: -90
+            ,max: 90
+            //,disabled:true
             ,setTips: function(value){ //自定义提示文本
                 $("#mark_text").css("transform","rotate("+value+"deg)");
                 degree = value;
@@ -506,7 +506,7 @@
             var centerY= parseInt(top) + Math.round($("#mark_text").height() / 2);//中心点
             window.open("/util/watermark/downloadMarkTextPicture?url="+url+"&text="+text+"&fontFamily="+fontFamily
             +"&fontWeight="+fontWeight+"&fontStyle="+fontStyle+"&color="+color+"&fontSize="+fontSize
-                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity
+                +"&positionY="+top+"&positionX="+left+"&opacity="+opacity+"&degree="+degree+"&centerX="+centerX+"&centerY="+centerY
             );
         });
     });

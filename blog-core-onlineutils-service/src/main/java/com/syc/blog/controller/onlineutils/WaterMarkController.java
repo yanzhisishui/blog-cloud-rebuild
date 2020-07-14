@@ -18,6 +18,7 @@ import sun.awt.SunHints;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -70,6 +71,8 @@ public class WaterMarkController extends BaseController {
                                         @RequestParam("opacity") Float opacity,
                                         @RequestParam("positionX") Integer positionX,
                                         @RequestParam("positionY") Integer positionY,
+                                        @RequestParam("centerX") Integer centerX,
+                                        @RequestParam("centerY") Integer centerY,
                                         @RequestParam(value = "degree",required = false) Integer degree
 
     ) throws IOException {
@@ -82,12 +85,6 @@ public class WaterMarkController extends BaseController {
         Graphics2D g = buffImg.createGraphics();
 
         g.drawImage(srcImg, 0, 0,buffImg.getWidth(),buffImg.getHeight(), null);
-        // 4、设置水印旋转
-        if (null != degree && degree != 360) {
-            g.rotate(Math.toRadians(degree),
-                    (double) buffImg.getWidth() / 2,
-                    (double) buffImg.getHeight() / 2);
-        }
         // 5、设置水印文字颜色
         String[] colorArr = color.split(",");
         int colorR = Integer.parseInt(colorArr[0].trim());
@@ -103,25 +100,40 @@ public class WaterMarkController extends BaseController {
             mode = Font.ITALIC;
         }
         g.setFont(new Font(fontFamily, mode, fontSize));
+
+        Point point  = null;
+         if (null != degree && degree != 0) {
+             AffineTransform affineTransform = new AffineTransform();
+             affineTransform.rotate(Math.toRadians(degree), 0, 0);
+             Font rotatedFont = g.getFont().deriveFont(affineTransform);
+             g.setFont(rotatedFont);
+             //计算旋转后,左上角的坐标
+              point = calcNewPoint(new Point(positionX, positionY), new Point(centerX, centerY), degree);
+
+         }
+
         // 7、设置水印文字透明度
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, opacity));
         // 8、第一参数->设置的内容，后面两个参数->文字在图片上的坐标位置(x,y)
 
-        System.out.println("g:"+g);
-        System.out.println("font:"+g.getFont());
         FontMetrics metrics = g.getFontMetrics(g.getFont());
-        //计算文字的坐标位置，根据基线、高度来计算
-        int logoX = positionX;
-        int logoH = positionY + metrics.getHeight() - metrics.getLeading() ;
+
+        if(point != null){ //旋转了，point是旋转之后左上角的坐标，但是g.drawString是从左下角开始计算的
+            positionX = point.x;
+            positionY = point.y;
+        }
+        else{ //没有旋转，//计算文字的坐标位置，根据基线、高度来计算
+             positionY = positionY + metrics.getHeight() - metrics.getLeading() ;
+        }
 
         //设置抗锯齿，并且先用阴影画一遍，不然字体会模糊
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);//设置抗锯齿
         g.setPaint(new Color(colorR, colorG, colorB));//阴影颜色
-        g.drawString("", logoX, logoH);//先绘制阴影
+        g.drawString("", positionX, positionY);//先绘制阴影
 
         //画水印
         g.setColor(new Color(colorR,colorG,colorB));
-        g.drawString(text, logoX, logoH);
+        g.drawString(text, positionX, positionY);
         g.dispose();
         ImageIO.write(buffImg, "JPG", response.getOutputStream());
     }
