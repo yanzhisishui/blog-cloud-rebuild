@@ -23,9 +23,9 @@ public class UserService {
         if(result != 0){
             userAuth.setUserId(user.getId());
             userAuthService.save(userAuth);
-            return result;//
+            return user.getId();//
         }
-        return 0;
+        return user.getId();
     }
 
     public int updateUserTencentInfo(Integer userId, String avatarURL50, String nickname) {
