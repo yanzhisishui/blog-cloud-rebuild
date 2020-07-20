@@ -23,4 +23,8 @@ public class UserAuthService {
     public int save(UserAuth userAuth) {
         return userAuthMapper.insert(userAuth);
     }
+
+    public int update(UserAuth userAuth) {
+        return userAuthMapper.updateById(userAuth);
+    }
 }

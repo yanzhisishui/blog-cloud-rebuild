@@ -199,7 +199,8 @@ public class LoginController extends BaseController {
             String openID = null;      //用户身份的标识
             long tokenExpireIn = 0L;    //授权过期时间
             if (!accessToken.equals(""))  {
-                //tokenExpireIn = accessTokenObj.getExpireIn();
+                tokenExpireIn = accessTokenObj.getExpireIn();//accessToken过期时间
+                log.info("accessToken过期时间为：{}",tokenExpireIn);
                 // 利用获取到的accessToken 去获取当前用的openid -------- start
                 OpenID openIDObj =  new OpenID(accessToken);
                 openID = openIDObj.getUserOpenID();         //用户代号
@@ -232,22 +233,23 @@ public class LoginController extends BaseController {
 
                     } else { //老用户
                         log.info("用户信息------"+userAuth.toString());
+                        Integer userId = userAuth.getUserId();
+                        user = userService.selectById(userId);
                         if(userAuth.getCredential().equals(accessToken)){
-                            Integer userId = userAuth.getUserId();
-                            user = userService.selectById(userId);
-                            session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,user);
                             //检查用户信息是否变更
                             log.info("开始检查用户信息是否变更");
                             if(!user.getAvatar().equals(avatarURL50) || !user.getNickname().equals(nickname)){
                                 userService.updateUserTencentInfo(userId, avatarURL50, nickname);
                                 log.info("修改用户变更信息成功"+"头像:"+avatarURL50+"昵称:"+nickname);
                             }
-                            return "redirect:/";//验证通过
                         }else{
-                            //登录失败，校验未通过
-
-                            log.info("登录失败，校验未通过。用户id:{}",userAuth.getUserId());
+                            //登录失败，校验未通过,accessToken变了，
+                            userAuth.setCredential(accessToken);
+                            int row = userAuthService.update(userAuth);
+                            log.info("用户id:{} accessToken过期,已更新",userAuth.getUserId());
                         }
+                        session.setAttribute(Constant.USER_LOGIN_SESSION_KEY,user);
+                        return "redirect:/";//验证通过
                     }
                 }
             }
