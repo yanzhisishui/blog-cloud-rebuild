@@ -195,15 +195,15 @@ public class LoginController extends BaseController {
         session.setAttribute("isThirdLogin",true);//标记第三方登录
         try {
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
-            String accessToken = null;//授权令牌
+            String accessToken = accessTokenObj.getAccessToken();//授权令牌
             String openID = null;      //用户身份的标识
             long tokenExpireIn = 0L;    //授权过期时间
-            if (!accessTokenObj.getAccessToken().equals(""))  {
-                accessToken = accessTokenObj.getAccessToken();
-                tokenExpireIn = accessTokenObj.getExpireIn();
+            if (!accessToken.equals(""))  {
+                //tokenExpireIn = accessTokenObj.getExpireIn();
                 // 利用获取到的accessToken 去获取当前用的openid -------- start
                 OpenID openIDObj =  new OpenID(accessToken);
                 openID = openIDObj.getUserOpenID();         //用户代号
+                log.info("当前用户的openId：{}，accessToken：{}",openID,accessToken);
                 UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);//实例化用户信息对象
                 UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
                 if (userInfoBean.getRet() == 0) {
@@ -246,6 +246,7 @@ public class LoginController extends BaseController {
                         }else{
                             //登录失败，校验未通过
 
+                            log.info("登录失败，校验未通过。用户id:{}",userAuth.getUserId());
                         }
                     }
                 }
