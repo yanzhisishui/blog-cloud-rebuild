@@ -28,7 +28,7 @@
         <foreach collection="list" item="item" index= "index" open="" close="" separator =";">
             update article
             <set>
-                praise = #{item.praise}
+                praise = praise + #{item.praise}
             </set>
             <where>
                 id=#{item.id}
