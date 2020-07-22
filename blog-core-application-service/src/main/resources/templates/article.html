@@ -470,6 +470,13 @@
                 timeago = layui.timeago,
                 $ = layui.jquery;
 
+            /**
+             * 给表格添加样式
+             * */
+            if(!$(".article-text table").hasClass("layui-table")){
+                $(".article-text table").addClass("layui-table")
+            }
+
             timeago.render($(".timeago"));
 
             $("#readMore").click(function () {
