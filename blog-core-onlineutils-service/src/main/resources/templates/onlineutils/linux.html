@@ -98,7 +98,7 @@
             <div th:fragment="messageBox" class="save-message-box">
                 <div class="smb-left">
                     <img th:if="${session.loginUser == null}" class="radius" src="https://www.sunyuchao.com/static/images/default_icon.jpg" width="50" height="50">
-                    <img th:if="${session.loginUser != null}" class="radius" th:src="${session.loginUser.avatar}">
+                    <img th:if="${session.loginUser != null}" class="radius" th:src="${session.loginUser.avatar}" width="50" height="50">
                 </div>
                 <div class="smb-right">
                     <div contenteditable="true" class="layui-textarea" placeholder=""></div>
