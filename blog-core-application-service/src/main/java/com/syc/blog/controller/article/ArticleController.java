@@ -57,6 +57,9 @@ public class ArticleController extends BaseController {
     public String chapter(@PathVariable("id") Integer id, ModelMap map,
                           @RequestParam(value = "page",required = false,defaultValue = "1") Integer page, HttpServletRequest request){
 
+        String ipAddress = StringHelper.getIpAddress(request);
+        log.info("ip:{} 访问文章:{}",ipAddress,id);
+
         Article article = articleRepository.findById(id).orElse(null);
 
         map.put("pre",recursionFindArticle(id,0));
