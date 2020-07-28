@@ -9,6 +9,7 @@ import com.syc.blog.service.comment.UserCommentService;
 import com.syc.blog.service.user.UserService;
 import com.syc.blog.utils.DateHelper;
 import com.syc.blog.utils.ResultHelper;
+import com.syc.blog.utils.StringHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,9 @@ public class UserCommentController extends BaseController {
             return JSON.toJSONString(result);
         }
         comment.setDateInsert(new Date());
+        //下面进行防Xss
+        String content = StringHelper.filterXSS(comment.getContent());
+        comment.setContent(content);
         int row=userCommentService.save(comment);
         if(row != 0){
             UserComment.ChildrenMessageTemplate childrenMessageTemplate =new UserComment.ChildrenMessageTemplate();
@@ -71,6 +75,9 @@ public class UserCommentController extends BaseController {
             return JSON.toJSONString(result);
         }
         comment.setDateInsert(new Date());
+        //下面进行防Xss
+        String content = StringHelper.filterXSS(comment.getContent());
+        comment.setContent(content);
         int row=userCommentService.save(comment);
         if(row != 0){
 

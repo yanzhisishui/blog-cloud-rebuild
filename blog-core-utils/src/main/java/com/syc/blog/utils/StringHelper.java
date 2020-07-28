@@ -187,4 +187,12 @@ public class StringHelper {
         System.out.println(keyMap.containsKey("CREATE"));
     }
 
+    /**
+     * 防止Xss攻击
+     * */
+    public static String filterXSS(String content) {
+        content = content.replace("<","＜").
+                replace(">","＞");
+        return content;
+    }
 }
