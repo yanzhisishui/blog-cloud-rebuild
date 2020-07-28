@@ -191,8 +191,10 @@ public class StringHelper {
      * 防止Xss攻击
      * */
     public static String filterXSS(String content) {
-        content = content.replace("<","＜").
-                replace(">","＞");
+        content = content.replace("<","＜")
+                .replace(">","＞")
+                .replace("&lt;","＜")
+                .replace("&gt;","＞");
         return content;
     }
 }
