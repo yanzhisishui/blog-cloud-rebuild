@@ -194,7 +194,9 @@ public class StringHelper {
         content = content.replace("<","＜")
                 .replace(">","＞")
                 .replace("&lt;","＜")
-                .replace("&gt;","＞");
+                .replace("&gt;","＞")
+                .replace("＜img","<img")
+                .replace(".gif\"＞",".gif\">");
         return content;
     }
 }
