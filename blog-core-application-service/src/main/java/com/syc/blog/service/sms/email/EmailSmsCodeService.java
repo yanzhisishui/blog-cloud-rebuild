@@ -33,6 +33,7 @@ public class EmailSmsCodeService {
                 String s = stringRedisTemplate.opsForValue().get(Constant.SMS_COUNT + email);
                 int count = Integer.parseInt(s);
                 if(count >= 5){ //超过限制,不允许发送邮件
+                    log.info("当前邮箱 : {} 已经超过单日允许邮件最大限度",email);
                     resultHelper= ResultHelper.wrapErrorResult(1,"发送邮件失败，邮箱已经超越单日限制最大次数5");
                     return resultHelper;
                 }else{
