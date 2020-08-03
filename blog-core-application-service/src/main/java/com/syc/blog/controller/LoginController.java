@@ -131,6 +131,7 @@ public class LoginController extends BaseController {
     @ResponseBody
     public String saveRegister(@RequestParam("email") String email,
                                @RequestParam("nickname") String nickname,
+                               @RequestParam("code") String code,
                                @RequestParam("password") String password,HttpServletRequest request){
         ResultHelper result;
         /**
@@ -139,6 +140,16 @@ public class LoginController extends BaseController {
         Boolean flag = stringRedisTemplate.hasKey(Constant.SMS_EMAIL + email);
         if(flag == null || !flag){ //如果redis没有，说明是坏蛋恶意插入数据
             log.info("用户 ip:{},email:{} 恶意破坏数据库",StringHelper.getIpAddress(request),email);
+            result = ResultHelper.wrapErrorResult(1,"魔高一尺，道高一丈！");
+            return JSON.toJSONString(result);
+        }
+        /**
+         * 判断验证码(原来是不判断的，但是这里会有懂代码的恶意破坏)
+         * */
+        String dynamicCode = stringRedisTemplate.opsForValue().get(Constant.SMS_EMAIL + email);
+        boolean success = dynamicCode != null && dynamicCode.equalsIgnoreCase(code);
+        if(!success){
+            log.info("用户 ip:{},email:{} 恶意破坏数据库,code:{}",StringHelper.getIpAddress(request),email,code);
             result = ResultHelper.wrapErrorResult(1,"魔高一尺，道高一丈！");
             return JSON.toJSONString(result);
         }

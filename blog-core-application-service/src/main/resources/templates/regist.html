@@ -140,7 +140,7 @@
                 $.ajax({
                     url:"/login/saveRegister",
                     type:"POST",
-                    data:{"email":email,"password":password,"nickname":nickname},
+                    data:{"email":email,"password":password,"nickname":nickname,"code":$("input[name=valCode]").val()},
                     success:function (e) {
                         if(e.success){
                             $.ajax({
