@@ -25,6 +25,23 @@ public class EmailSmsCodeService {
         String dynamicCode=vCode.createNumCode();//即将发送的验证码
         ResultHelper resultHelper;
         try{
+            /**
+             * 加上邮箱计数，防止坏蛋恶意发邮件
+             * */
+            Boolean flag = stringRedisTemplate.hasKey(Constant.SMS_COUNT + email);
+            if(flag != null && flag){
+                String s = stringRedisTemplate.opsForValue().get(Constant.SMS_COUNT + email);
+                int count = Integer.parseInt(s);
+                if(count > 5){ //超过限制,不允许发送邮件
+                    resultHelper= ResultHelper.wrapErrorResult(1,"发送邮件失败，邮箱已经超越单日限制最大次数5");
+                    return resultHelper;
+                }else{
+                    stringRedisTemplate.opsForValue().set(Constant.SMS_COUNT+email,String.valueOf(count+1));
+                }
+            }else{
+                stringRedisTemplate.opsForValue().set(Constant.SMS_COUNT+email,"1");
+            }
+
             message.setSubject("暮色妖娆丶博客注册验证");
             message.setText("您的暮色妖娆丶博客网站动态码为\t"+dynamicCode+","+
                     "十分钟内有效,"+"如果这不是您本人的操作，请忽略");

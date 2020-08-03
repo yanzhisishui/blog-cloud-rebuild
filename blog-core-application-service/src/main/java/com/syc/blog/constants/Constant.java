@@ -43,6 +43,7 @@ public class Constant {
     public static final String LOGIN_EMAIL = "EMAIL";
     public static final String LOGIN_QQ =  "QQ";
     public static final String SMS_EMAIL = "sms:email:";
+    public static final String SMS_COUNT = "sms:count:";
     public static final String USER_LOGIN_SESSION_KEY = "loginUser";
 
 
