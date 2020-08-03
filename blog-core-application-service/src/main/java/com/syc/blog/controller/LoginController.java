@@ -131,9 +131,18 @@ public class LoginController extends BaseController {
     @ResponseBody
     public String saveRegister(@RequestParam("email") String email,
                                @RequestParam("nickname") String nickname,
-                               @RequestParam("password") String password){
-        UserAuth userAuth = userAuthService.selectByTypeAndIdentifier(Constant.LOGIN_EMAIL, email);
+                               @RequestParam("password") String password,HttpServletRequest request){
         ResultHelper result;
+        /**
+         * 为了防止用户恶意插入数据，先查看redis是否存在，因为redis中有，才代表用户发过邮件，通过正常注册
+         * */
+        Boolean flag = stringRedisTemplate.hasKey(Constant.SMS_EMAIL + email);
+        if(flag == null || !flag){ //如果redis没有，说明是坏蛋恶意插入数据
+            log.info("用户 ip:{},email:{} 恶意破坏数据库",StringHelper.getIpAddress(request),email);
+            result = ResultHelper.wrapErrorResult(1,"魔高一尺，道高一丈！");
+            return JSON.toJSONString(result);
+        }
+        UserAuth userAuth = userAuthService.selectByTypeAndIdentifier(Constant.LOGIN_EMAIL, email);
         if(userAuth != null){
             result= ResultHelper.wrapErrorResult(1,"该邮箱已存在，可直接登录");
             return JSON.toJSONString(result);
