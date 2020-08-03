@@ -144,7 +144,7 @@ public class LoginController extends BaseController {
             return JSON.toJSONString(result);
         }
         /**
-         * 判断验证码(原来是不判断的，但是这里会有懂代码的恶意破坏)
+         * 判断验证码(原来是不判断的，但是这里会有懂代码的恶意破坏，原来的判断写在上一个ajax)
          * */
         String dynamicCode = stringRedisTemplate.opsForValue().get(Constant.SMS_EMAIL + email);
         boolean success = dynamicCode != null && dynamicCode.equalsIgnoreCase(code);
