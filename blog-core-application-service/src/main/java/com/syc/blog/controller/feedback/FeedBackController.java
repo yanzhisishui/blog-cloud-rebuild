@@ -6,8 +6,10 @@ import com.syc.blog.entity.user.User;
 import com.syc.blog.feedback.FeedBack;
 import com.syc.blog.mapper.feedback.FeedBackMapper;
 import com.syc.blog.service.feedback.FeedBackService;
+import com.syc.blog.utils.DateHelper;
 import com.syc.blog.utils.ResultHelper;
 import com.syc.blog.utils.StringHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import java.util.Date;
 
 @Controller
 @RequestMapping("/feedback")
+@Slf4j
 public class FeedBackController extends BaseController {
     @Autowired
     FeedBackService feedBackService;
@@ -44,12 +47,13 @@ public class FeedBackController extends BaseController {
             return JSON.toJSONString(result);
         }
         //判断当前用户当日反馈的次数是不是超过上限
+        feedBack.setUserId(loginUser.getId());
         Integer count = feedBackMapper.selectTodayCountByUserId(feedBack.getUserId());
         if(count >= 5){
+            log.info("用户：{} 今日：{} 反馈次数已经达到五次",feedBack.getUserId(), DateHelper.getDateStr(new Date(),"yyyy-MM-dd"));
             result= ResultHelper.wrapErrorResult(4,"当日反馈次数已达到上限");
             return JSON.toJSONString(result);
         }
-        feedBack.setUserId(loginUser.getId());
         feedBack.setDateInsert(new Date());
         int row=feedBackService.save(feedBack);
         result=row == 0 ? ResultHelper.wrapErrorResult(2,"反馈失败") : ResultHelper.wrapSuccessfulResult(null);
