@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.syc.blog.controller.BaseController;
 import com.syc.blog.entity.user.User;
 import com.syc.blog.feedback.FeedBack;
+import com.syc.blog.mapper.feedback.FeedBackMapper;
 import com.syc.blog.service.feedback.FeedBackService;
 import com.syc.blog.utils.ResultHelper;
 import com.syc.blog.utils.StringHelper;
@@ -20,7 +21,8 @@ import java.util.Date;
 public class FeedBackController extends BaseController {
     @Autowired
     FeedBackService feedBackService;
-
+    @Autowired
+    FeedBackMapper feedBackMapper;
 
     @RequestMapping
     public String feedback(){
@@ -39,6 +41,12 @@ public class FeedBackController extends BaseController {
         boolean illegal = StringHelper.hasIllegal(feedBack.getContent());
         if(illegal){
             result= ResultHelper.wrapErrorResult(3,"请文明发言");
+            return JSON.toJSONString(result);
+        }
+        //判断当前用户当日反馈的次数是不是超过上限
+        Integer count = feedBackMapper.selectTodayCountByUserId(feedBack.getUserId());
+        if(count >= 5){
+            result= ResultHelper.wrapErrorResult(4,"当日反馈次数已达到上限");
             return JSON.toJSONString(result);
         }
         feedBack.setUserId(loginUser.getId());
