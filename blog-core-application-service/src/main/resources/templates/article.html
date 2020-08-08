@@ -244,7 +244,7 @@
                 <h3 class="square">在线工具</h3>
                 <div>
                     <ul class="notice">
-                        <li th:each="util : ${onlineUtilsList}"><a th:text="${util.title}" th:href="${util.url+'?bindId='+util.id}"></a><span class="timeago" th:datetime="${#dates.format(util.dateUpdate, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
+                        <li th:each="util : ${onlineUtilsList}"><a th:href="@{http://onlineutils.sunyuchao.com__${util.url}__(bindId=${util.id})}" th:text="${util.title}"> </a><span class="timeago" th:datetime="${#dates.format(util.dateInsert, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
                     </ul>
                 </div>
 
