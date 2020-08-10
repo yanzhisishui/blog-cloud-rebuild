@@ -265,9 +265,9 @@
                             <i th:if="${field != 'browser'}" class="fa fa-arrow-down"></i>
                             <i th:if="${field == 'browser'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
                         </a>
-                        <a th:class="${field == 'collectionCount' ? 'active' : ''}" field="collectionCount" sort="desc" onclick="" href="javascript:;">收藏数&nbsp;
-                            <i th:if="${field != 'collectionCount'}" class="fa fa-arrow-down"></i>
-                            <i th:if="${field == 'collectionCount'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
+                        <a th:class="${field == 'praise' ? 'active' : ''}" field="praise" sort="desc" onclick="" href="javascript:;">点赞数&nbsp;
+                            <i th:if="${field != 'praise'}" class="fa fa-arrow-down"></i>
+                            <i th:if="${field == 'praise'}" th:class="${sort == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'}" class="fa fa-arrow-down"></i>
                         </a>
                         <a th:class="${field == 'commentCount' ? 'active' : ''}" field="commentCount" sort="desc" onclick="" href="javascript:;">评论数&nbsp;
                             <i th:if="${field != 'commentCount'}" class="fa fa-arrow-down"></i>
@@ -317,7 +317,7 @@
                 <span class="muted"><i class="fa fa-clock-o"></i> <a href="javascript:;" th:text="${#dates.format(article.dateInsert, 'yyyy-MM-dd')}"></a></span>
                 <span class="muted"><i class="fa fa-eye"></i> <a th:text="${article.browser}"></a>浏览</span>
                 <span class="muted"><i class="fa fa-comment-o"></i> <span th:text="${article.commentCount}"></span>评论</span>
-                <span class="muted"><i class="fa fa-heart-o"></i> <span th:text="${article.collectionCount}"></span>喜欢</span>
+                <span class="muted"><i class="layui-icon layui-icon-praise"></i> <span th:text="${article.praise}"></span> 赞</span>
             </p>
         </div>
         <div th:if="${not #lists.isEmpty(articleList)}" class="layui-btn-container">

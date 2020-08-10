@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.syc.blog.constants.Constant;
 import com.syc.blog.constants.GlobalConstant;
+import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.article.Article;
 import com.syc.blog.entity.article.ArticleClassify;
 import com.syc.blog.entity.comment.UserComment;
@@ -28,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -62,6 +64,8 @@ public class IndexController extends BaseController{
     UserCommentService userCommentService;
     @Autowired
     MicroDiaryService microDiaryService;
+    @Autowired
+    RedisTemplate<String,Object> redisTemplate;
 
     @RequestMapping("/")
     public String index(ModelMap map, HttpServletRequest request,@RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
@@ -70,7 +74,13 @@ public class IndexController extends BaseController{
         params.put("page",page);
         List<Article> articleList = new ArrayList<>();
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
-        articles.get().forEach(articleList::add);
+        articles.get().forEach(article -> {
+            Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE_COUNT, article.getId().toString());
+            if(o != null){
+                article.setPraise(article.getPraise()+(Integer) o);
+            }
+            articleList.add(article);
+        });
         map.put("articleList",articleList);
         map.put("field","");
         putIndexInfo(map,request);
@@ -98,7 +108,13 @@ public class IndexController extends BaseController{
         map.put("classifyId",classifyId);         params.put("classifyId",classifyId);params.put("parentId",parentId);
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
         List<Article> articleList = new ArrayList<>();
-        articles.get().forEach(articleList::add);
+        articles.get().forEach(article -> {
+            Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE_COUNT, article.getId().toString());
+            if(o != null){
+                article.setPraise(article.getPraise()+(Integer) o);
+            }
+            articleList.add(article);
+        });
         map.put("articleList",articleList);
         putIndexInfo(map,request);
         buildPagePlugin(page,articles.getTotalPages(),map);
@@ -234,8 +250,13 @@ public class IndexController extends BaseController{
         map.put("field","");
         List<Article> articleList = new ArrayList<>();
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
-        articles.get().forEach(articleList::add);
-        map.put("articleList",articleList);
+        articles.get().forEach(article -> {
+            Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE_COUNT, article.getId().toString());
+            if(o != null){
+                article.setPraise(article.getPraise()+(Integer) o);
+            }
+            articleList.add(article);
+        });        map.put("articleList",articleList);
         putLearningInfo(map);
         buildPagePlugin(page,articles.getTotalPages(),map);
         return "learning";
@@ -258,7 +279,13 @@ public class IndexController extends BaseController{
         map.put("parentId",parentId);         params.put("parentId",parentId);
         List<Article> articleList = new ArrayList<>();
         org.springframework.data.domain.Page<Article> articles = queryArticle(params);
-        articles.get().forEach(articleList::add);
+        articles.get().forEach(article -> {
+            Object o = redisTemplate.opsForHash().get(RedisConstant.ARTICLE_PRAISE_COUNT, article.getId().toString());
+            if(o != null){
+                article.setPraise(article.getPraise()+(Integer) o);
+            }
+            articleList.add(article);
+        });
         map.put("articleList",articleList);
         putLearningInfo(map);
         buildPagePlugin(page,articles.getTotalPages(),map);
