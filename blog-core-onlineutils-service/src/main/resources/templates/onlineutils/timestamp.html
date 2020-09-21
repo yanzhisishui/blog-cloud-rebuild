@@ -57,6 +57,19 @@
         <form class="layui-form" style="margin-top: 30px;">
             <div class="layui-form-item">
                 <div class="layui-inline">
+                    <label class="layui-form-label">现在时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="now" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label"></label>
+                    <label class="layui-form-label">现在时间戳</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="nowTimestamp" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <hr>
+                <div class="layui-inline">
                     <label class="layui-form-label">时间戳</label>
                     <div class="layui-input-inline">
                         <input type="text" name="timestamp1" autocomplete="off" class="layui-input">
@@ -339,6 +352,31 @@
                 },dataType:"text"
             });
         });
+
+
+        $(document).ready(function() {
+            function time() {
+                var date = new Date();
+                var n = date.getFullYear();
+                var y = date.getMonth()+1;
+                var t = date.getDate();
+                var h = date.getHours();
+                var m = date.getMinutes();
+                var s = date.getSeconds();
+                var milliseconds = Date.parse(date)/1000;
+                $("input[name=now]").val(n+"-"+buquan(y)+"-"+buquan(t)+" "+buquan(h)+":"+buquan(m)+":"+buquan(s));
+                $("input[name=nowTimestamp]").val(milliseconds);
+            }
+            time();
+            setInterval(time, 1000);
+        });
+
+        function buquan(n) {
+            if(n < 10){
+                return "0"+n;
+            }
+            return ""+n;
+        }
     });
 </script>
 <script src="/login.js"></script>
