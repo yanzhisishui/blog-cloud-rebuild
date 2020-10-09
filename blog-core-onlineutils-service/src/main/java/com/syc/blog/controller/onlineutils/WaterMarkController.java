@@ -35,7 +35,7 @@ public class WaterMarkController extends BaseController {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     @RequestMapping("")
-    public String timestamp(ModelMap map, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page
+    public String watermark(ModelMap map, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page
             , @RequestParam("bindId") Integer bindId) {
         byte type = 14;
         getCurrentCommentsListPage(map,page,bindId,type);

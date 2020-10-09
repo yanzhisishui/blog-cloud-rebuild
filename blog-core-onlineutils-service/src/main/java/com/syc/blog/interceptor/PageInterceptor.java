@@ -3,10 +3,13 @@ package com.syc.blog.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.syc.blog.constants.RedisConstant;
 import com.syc.blog.entity.user.CardInfo;
+import com.syc.blog.utils.StringHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,11 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 每次渲染页面时放入公共信息
  * */
+@Slf4j
 public class PageInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        String ip = StringHelper.getIpAddress(request);
+        log.info("ip:"+ip+",访问："+((HandlerMethod) handler).getMethod().getName());
         return true;
     }
 

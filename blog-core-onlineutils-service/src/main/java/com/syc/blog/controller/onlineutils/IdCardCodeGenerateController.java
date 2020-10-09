@@ -28,7 +28,7 @@ public class IdCardCodeGenerateController extends BaseController {
     public static final int MOD_NUMBER = 11;
 
     @RequestMapping("")
-    public String imgPress(ModelMap map, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
+    public String idCardCode(ModelMap map, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
                            @RequestParam("bindId") Integer bindId){
         byte type = 11;
         getCurrentCommentsListPage(map,page,bindId,type);
