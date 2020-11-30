@@ -16,20 +16,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 /**
- * @Auther: 周伟明
- * @Date: 2020/3/16 11:12
- * @Description:
+ * MyBatis配置
  */
 @Configuration
 public class MyBastisPlugConfig {
-    /**
-     * @description: 配置分页插件
-     *
-     * @author: gradual
-     * @date: 2019/1/15 10:17
-     * @param: []
-     * @return: com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor
-     */
+
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();
