@@ -623,6 +623,10 @@
             element = layui.element,
             $ = layui.jquery;
 
+        layer.tips('文章筛选在这里！', '#select', {
+            tips: [1, '#3595CC'],
+            time: 4000
+        });
         /*点击筛选*/
         $("#select").click(function () {
             var child = $(this).children()[0];

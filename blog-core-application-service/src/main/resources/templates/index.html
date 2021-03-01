@@ -793,6 +793,11 @@
             layer.alert("抱歉,该功能暂未开放");
         });
 
+        layer.tips('文章筛选在这里！', '#select', {
+            tips: [1, '#3595CC'],
+            time: 4000
+        });
+
         var tips;
         $("#wechat").mouseover(function () {
             tips = layer.tips("<img width='100' height='100' src='https://www.sunyuchao.com/static/images/wechat.jpg'>","#wechat",{ tips: [1, '#3595CC'],time:0});
