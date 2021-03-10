@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>数字金额转换</title>
+    <title>房贷分期还款计算</title>
     <link href="https://www.sunyuchao.com/static/layui/css/layui.css"  rel="stylesheet">
 
     <link href="https://www.sunyuchao.com/static/css/fontawesome4.7.0/css/font-awesome.css"  rel="stylesheet">
@@ -54,7 +54,7 @@
     </h1>
     <input type="hidden" th:value="${bindId}" name="id">
     <div class="left">
-        <h2>房贷计算</h2>
+        <h2>房贷分期还款计算</h2>
         <hr>
         <h3>前言：最近考虑到买房子的事情对于贷款，利率，利息一概不懂......毕竟我和朋友借钱都是没有利息的，大致了解了下房贷的相关计算方法。做了个小工具计算分期还款的金额（虽然我这个穷打工仔没钱买，
             但是也到了见女朋友父母的时间了，加油吧，打工人......）</h3>
@@ -73,7 +73,7 @@
                     <select name="year" lay-filter="year" lay-verify="required"></select>
                 </div>
                 <div class="layui-form-mid layui-word-aux">（年）</div>
-                <div class="layui-form-mid layui-word-aux"><span id="num">360</span> 期</div>
+                <div class="layui-form-mid layui-word-aux">总共 <span id="num">360</span> 期</div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">购房性质</label>
@@ -130,7 +130,7 @@
             </tr>
             </thead>
         </table>
-        <div style="overflow-y: scroll;max-height: 500px;margin-top: -10px;">
+        <div style="overflow-y: scroll;max-height: 400px;margin-top: -10px;">
             <table class="layui-table" lay-skin="line">
 
                 <tbody>
