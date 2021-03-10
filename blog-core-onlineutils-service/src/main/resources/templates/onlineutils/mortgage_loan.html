@@ -50,18 +50,27 @@
 <div th:replace="index :: top"></div>
 <div class="content">
     <h1 class="square">
-        <span class="f-right">曾经沧海难为水，除却巫山不是云 —— 元稹</span>
+        <span class="f-right">君子求诸己，小人求诸人 —— 孔子</span>
     </h1>
     <input type="hidden" th:value="${bindId}" name="id">
     <div class="left">
         <h2>房贷计算</h2>
-
+        <hr>
+        <h3>前言：最近考虑到买房子的事情对于贷款，利率，利息一概不懂......毕竟我和朋友借钱都是没有利息的，大致了解了下房贷的相关计算方法。做了个小工具计算分期还款的金额（虽然我这个穷打工仔没钱买，
+            但是也到了见女朋友父母的时间了，加油吧，打工人......）</h3>
+        <hr>
         <form class="layui-form" style="margin-top: 20px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">贷款总额</label>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <input type="text" name="loanTotal"  placeholder="600000" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">元</div>
+            </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">贷款期限</label>
                 <div class="layui-input-inline" style="width: 100px;">
-                    <select name="year" lay-filter="year" lay-verify="required">
-                    </select>
+                    <select name="year" lay-filter="year" lay-verify="required"></select>
                 </div>
                 <div class="layui-form-mid layui-word-aux">（年）</div>
                 <div class="layui-form-mid layui-word-aux"><span id="num">360</span> 期</div>
@@ -69,20 +78,20 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">购房性质</label>
                 <div class="layui-input-inline">
-                    <input type="radio" name="houseType" value="1" title="一套房" checked>
-                    <input type="radio" name="houseType" value="2" disabled title="二套房">
+                    <input type="radio" name="houseType" lay-filter="houseType" value="1" title="一套房" checked>
+                    <input type="radio" name="houseType" lay-filter="houseType" value="2" disabled title="二套房">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">贷款年利率</label>
                 <div class="layui-input-inline" style="width: 100px;">
-                    <input type="number" name="annualRate"  placeholder="3.25" autocomplete="off" class="layui-input">
+                    <input type="text" name="annualRate"  placeholder="3.25" autocomplete="off" class="layui-input">
                 </div>
-                <div class="layui-form-mid layui-word-aux">（%）</div>
+                <div class="layui-form-mid layui-word-aux">（%） 公积金贷款和非公积金贷款利率不同</div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">还款方式</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 600px;">
                     <input type="radio" name="type" value="1" title="等额本息" checked>
                     <input type="radio" name="type" value="2" title="等额本金">
                 </div>
@@ -95,32 +104,40 @@
             </div>
         </form>
 
-        <table class="layui-table">
+        <div style="margin-top: 50px;">
+           <div style="float: left;">
+               <h3>累计支付利息：<span id="totalInterest"></span></h3>
+           </div>
+           <div style="float: right;">
+               <h3>累计还款总额：<span id="totalAmount"></span></h3>
+           </div>
+            <div class="layui-clear"></div>
+        </div>
+
+        <table class="layui-table" lay-skin="line">
             <colgroup>
-                <col width="100">
-                <col width="100">
+                <col width="200">
+                <col>
+                <col>
                 <col>
             </colgroup>
             <thead>
-                <tr>
-                    <th>月供</th>
-                    <th>本金</th>
-                    <th>利息</th>
-                </tr>
+            <tr>
+                <th>期数</th>
+                <th>月供</th>
+                <th>本金</th>
+                <th>利息</th>
+            </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>20</td>
-                    <td>23</td>
-                    <td>213</td>
-                </tr>
-                <tr>
-                    <td>123</td>
-                    <td>123</td>
-                    <td>123</td>
-                </tr>
-            </tbody>
         </table>
+        <div style="overflow-y: scroll;max-height: 500px;margin-top: -10px;">
+            <table class="layui-table" lay-skin="line">
+
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
         <div class="tab-wrap" style="padding: 10px 20px;">
             <h3 class="tab-wrap-square">留言评论</h3>
 
@@ -360,6 +377,28 @@
             $("#num").html(data.value * 12);
         });
 
+        form.on('submit(go)', function (data) {
+            $("tbody").empty();
+            $.ajax({
+                url:"/util/mortgage/loan/calc",
+                type:"GET",
+                data:data.field,
+                async:false,
+                success:function (e) {
+                    if(e.success){
+                        $("#totalInterest").html(e.data.interestTotal);
+                        $("#totalAmount").html(e.data.totalAmount);
+                        let itemList = e.data.itemList;
+                        for(var i = 0;i<itemList.length;i++){
+                            $("tbody").append("<tr><td>"+itemList[i].index+" 期</td><td>"+itemList[i].monthTotal+"</td><td>"+itemList[i].capital+"</td><td>"+itemList[i].interest+"</td></tr>");
+                        }
+                    }else{
+                        layer.alert(e.message);
+                    }
+                },dataType: "json"
+            });
+            return false;
+        });
 
     });
 </script>
