@@ -11,4 +11,4 @@ aliyun:
     url_prefix: https://sunyuchao-blog-file.oss-cn-hangzhou.aliyuncs.com/
 spring:
   profiles:
-    active: dev
+    active: prd

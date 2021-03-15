@@ -36,7 +36,7 @@ public class Article implements Serializable {
     private Integer praise;//点赞人数
     private String content;//内容(样式、图片、小标题、HTML标签都包含在内)
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Text,analyzer = "ik_max_word")
     private String title;//文章标题
     private String bread;
     @Transient

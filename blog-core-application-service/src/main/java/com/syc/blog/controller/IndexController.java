@@ -172,7 +172,7 @@ public class IndexController extends BaseController{
             if (name.length() > 15) {
                 name = name.substring(0, 10);
             }
-            qb1 = QueryBuilders.wildcardQuery("title", "*" + name + "*");
+            qb1 = QueryBuilders.matchQuery("title",  name);
         }
         QueryBuilder qb2 = null;
         if (!StringHelper.isEmpty(classifyId)) {
