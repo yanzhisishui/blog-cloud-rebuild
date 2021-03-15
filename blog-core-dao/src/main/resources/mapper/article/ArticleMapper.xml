@@ -18,6 +18,11 @@
             article t1
             INNER JOIN article_classify t2 ON t1.classify_id = t2.id
             LEFT JOIN user_comment t3 ON t3.bind_id = t1.id where t1.archive = 0
+
+            <if test="params.title != null and params.title !=''">
+                AND t1.title like CONCAT('%',#{params.title},'%')
+            </if>
+
         GROUP BY
             t1.id
             ORDER BY date_insert DESC

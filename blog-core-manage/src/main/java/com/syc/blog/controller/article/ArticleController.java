@@ -47,9 +47,10 @@ public class ArticleController {
 
     @RequestMapping("/queryListPage")
     @ResponseBody
-    public String queryListPage(@RequestParam("page") Integer page, @RequestParam("limit") Integer pageSize){
+    public String queryListPage(@RequestParam("page") Integer page, @RequestParam("limit") Integer pageSize,@RequestParam (value = "title",required = false) String title){
         IPage<Article> iPage = new Page<>(page,pageSize);
         Map<String,Object> params = new HashMap<>();
+        params.put("title",title);
         IPage<Article> bannerIPage = articleMapper.queryListPage(iPage,params);
         return JsonHelper.objectToJsonForTable(bannerIPage.getRecords(),bannerIPage.getTotal());
     }
