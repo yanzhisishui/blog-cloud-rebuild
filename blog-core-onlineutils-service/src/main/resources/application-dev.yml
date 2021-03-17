@@ -18,7 +18,7 @@ spring:
   #redis相关
   redis:
     timeout: 2000
-    host: 111.229.128.32
+    host: 127.0.0.1
   servlet:
     multipart:
       max-file-size: 10MB

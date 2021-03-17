@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class MortgageInfo {
+public class MortgageResponse {
     private BigDecimal totalAmount;//还款总额
 
     private BigDecimal interestTotal;//利息总额

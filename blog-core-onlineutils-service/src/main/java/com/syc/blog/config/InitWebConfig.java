@@ -19,12 +19,12 @@ public class InitWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         /**
-         * 恶意请求拦截器
+         * 页面请求拦截器
          * */
         registry.addInterceptor(new PageInterceptor())
                 .addPathPatterns("/","/util/idCardCode","/util/imgPress","/util/jsonFormat",
                         "/util/linux","/util/numMoneyConvert","/util/qrCode","/util/quartz",
-                        "/util/regexp","/util/timestamp","/util/sqlToJava","/util/watermark","/util/mortgage/loan");
+                        "/util/regexp","/util/timestamp","/util/sqlToJava","/util/watermark","/util/mortgage/loan","/util/bmi");
     }
 
     @Override

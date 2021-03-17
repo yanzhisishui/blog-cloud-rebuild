@@ -2,7 +2,7 @@ package com.syc.blog.controller.onlineutils;
 
 import com.alibaba.fastjson.JSON;
 import com.syc.blog.controller.BaseController;
-import com.syc.blog.response.MortgageInfo;
+import com.syc.blog.response.MortgageResponse;
 import com.syc.blog.utils.ResultHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -68,12 +68,12 @@ public class MortgageLoanController extends BaseController {
         BigDecimal originLoanTotal = BigDecimal.valueOf(loanTotal.doubleValue());
         BigDecimal capital = loanTotal.divide(new BigDecimal(year), 2, BigDecimal.ROUND_HALF_UP);//本金
 
-        MortgageInfo info = new MortgageInfo();
-        List<MortgageInfo.MortgageItem> list = new ArrayList<>();
+        MortgageResponse info = new MortgageResponse();
+        List<MortgageResponse.MortgageItem> list = new ArrayList<>();
 
         for(int i=1;i<=year;i++){
             BigDecimal interest = loanTotal.multiply(annualRate).divide(new BigDecimal(12),2, BigDecimal.ROUND_HALF_UP);//利息
-            MortgageInfo.MortgageItem item = new MortgageInfo.MortgageItem();
+            MortgageResponse.MortgageItem item = new MortgageResponse.MortgageItem();
             item.setIndex(i);
             item.setCapital(capital);
             item.setInterest(interest);
@@ -97,13 +97,13 @@ public class MortgageLoanController extends BaseController {
         double pow = Math.pow(new BigDecimal("1").add(monthRate).doubleValue(), year);//（1+月利率）²
         BigDecimal step2 = new BigDecimal(String.valueOf(pow)).subtract(new BigDecimal("1"));
         BigDecimal interestAndCapital = loanTotal.multiply(monthRate).multiply(new BigDecimal(String.valueOf(pow))).divide(step2, 2, BigDecimal.ROUND_HALF_UP);//利息
-        MortgageInfo info = new MortgageInfo();
-        List<MortgageInfo.MortgageItem> list = new ArrayList<>();
+        MortgageResponse info = new MortgageResponse();
+        List<MortgageResponse.MortgageItem> list = new ArrayList<>();
 
         BigDecimal interestTotal = BigDecimal.ZERO;
         for(int i= 1;i<=year ;i++){
             BigDecimal interest = loanTotal.multiply(annualRate).divide(new BigDecimal(12),2,BigDecimal.ROUND_HALF_UP);
-            MortgageInfo.MortgageItem item = new MortgageInfo.MortgageItem();
+            MortgageResponse.MortgageItem item = new MortgageResponse.MortgageItem();
             item.setIndex(i);
             item.setInterest(interest);
             item.setCapital(interestAndCapital.subtract(interest));
@@ -115,7 +115,7 @@ public class MortgageLoanController extends BaseController {
         info.setItemList(list);
         info.setTotalAmount(interestAndCapital.multiply(new BigDecimal(year)));
         info.setInterestTotal(interestTotal);
-        ResultHelper<MortgageInfo> result = ResultHelper.wrapSuccessfulResult(info);
+        ResultHelper<MortgageResponse> result = ResultHelper.wrapSuccessfulResult(info);
         return JSON.toJSONString(result);
     }
 
