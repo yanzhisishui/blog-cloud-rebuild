@@ -286,7 +286,7 @@
     <!--搜索-->
     <div th:fragment="search" class="search">
         <form>
-            <input type="text" placeholder="搜索...">
+            <input type="text" placeholder="装饰...">
             <button id="go" type="submit"></button>
         </form>
     </div>
@@ -788,6 +788,8 @@
         if(isMobile != null){
             layer.alert("移动端暂时未做较好的页面适配，建议使用PC端访问");
         }
+
+
 
         $("#email,#weibo").click(function () {
             layer.alert("抱歉,该功能暂未开放");
