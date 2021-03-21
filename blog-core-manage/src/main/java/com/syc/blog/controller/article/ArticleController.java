@@ -17,6 +17,7 @@ import com.syc.blog.repository.ArticleRepository;
 import com.syc.blog.service.ArticleService;
 import com.syc.blog.utils.JsonHelper;
 import com.syc.blog.utils.ResultHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/article")
+@Slf4j
 public class ArticleController {
 
     @Autowired
@@ -180,11 +182,13 @@ public class ArticleController {
         List<Article> list =  articleMapper.selectList(Wrappers.<Article>lambdaQuery().eq(Article::getArchive,0));
         for(Article article : list){
             ArticleClassify articleClassify = articleClassifyMapper.selectById(article.getClassifyId());
+            log.info("当前文章：id:{},title:{}",article.getId(),article.getTitle());
             article.setClassify(articleClassify);
             Integer count = userCommentMapper.selectCount(Wrappers.<UserComment>lambdaQuery().eq(UserComment::getBindId, article.getId()).eq(UserComment::getType, 1));
             article.setCommentCount(count);
             article.setCollectionCount(0);
         }
+        articleRepository.deleteAll();
         articleRepository.saveAll(list);
         return JSON.toJSONString(ResultHelper.wrapSuccessfulResult(null));
     }

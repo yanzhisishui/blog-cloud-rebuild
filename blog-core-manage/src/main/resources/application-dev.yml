@@ -17,7 +17,7 @@ spring:
 
   elasticsearch:
     rest:
-      uris: http://111.229.128.32:9200
+      uris: http://129.204.178.49:9200
 
   thymeleaf:
     cache: false
