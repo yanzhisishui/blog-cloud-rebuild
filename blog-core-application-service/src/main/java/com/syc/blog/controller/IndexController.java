@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Controller
 public class IndexController extends BaseController{
@@ -200,11 +201,18 @@ public class IndexController extends BaseController{
         if (qb3 != null) {
             boolQueryBuilder.must(qb3);
         }
+
+        //如果默认，按顺序排
+        if(StringHelper.isEmpty(field) && StringHelper.isEmpty(sort)){
+            fsb = SortBuilders.fieldSort("dateInsert").order(SortOrder.DESC);
+        }
+
         Pageable pageable = PageRequest.of(page - 1, 6);//分页
         NativeSearchQueryBuilder nsqb = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
         if(fsb != null){
             nsqb = nsqb.withSort(fsb);
         }
+
         SearchQuery query = nsqb.build();
         org.springframework.data.domain.Page<Article> search = articleRepository.search(query);
 
