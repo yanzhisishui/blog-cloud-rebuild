@@ -118,6 +118,7 @@ public class ArticleController {
         article.setId(id);
         article.setArchive((byte)1);
         int row=articleMapper.updateById(article);
+        articleRepository.deleteById(article.getId());
         ResultHelper result= ResultHelper.wrapSuccessfulResult(null);
         return JSON.toJSONString(result);
     }
