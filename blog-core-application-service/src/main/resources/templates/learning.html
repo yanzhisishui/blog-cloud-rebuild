@@ -322,7 +322,7 @@
         </div>
         <div th:if="${not #lists.isEmpty(articleList)}" class="layui-btn-container">
             <a href="javascript:;" th:onclick="'flipPage(this,'+${page-1}+')'" th:class="${page == 1 ? 'layui-btn layui-btn-disabled':'layui-btn'}"> <i class="layui-icon layui-icon-left"></i></a>
-            <a href="javascript:;" th:onclick="'flipPage(this,'+${num}+')' "  th:class="${num == page ? 'layui-btn layui-btn-normal':'layui-btn'}" th:each="num : ${pageNumList}" th:text="${num}"></a>
+            <a href="javascript:;" th:onclick="'flipPage(this,'+${num}+')' "  th:class="${num == page ? 'layui-btn layui-btn-normal pageShow':'layui-btn pageShow'}" th:each="num : ${pageNumList}" th:text="${num}"></a>
             <a href="javascript:;" th:onclick="'flipPage(this,'+${page+1}+')'" th:class="${page == pageTotal ? 'layui-btn layui-btn-disabled':'layui-btn'}"> <i class="layui-icon layui-icon-right"></i></a>
         </div>
         <div th:if="${#lists.isEmpty(articleList)}">
@@ -642,6 +642,49 @@
                 $("#selectCondition").slideUp();
             }
 
+        });
+
+        //文章底部页数过大隐藏部分页数
+        let totalPage = $(".pageShow").length;//总页数
+        $(".pageShow").each(function (){
+            if($(this).hasClass("layui-btn-normal")){
+                let number = parseInt($(this).html());
+                if(number <= 4){
+                    //除了最后一页,大于 3/5 * totalPage 的都隐藏，倒数第二页设置为 ...
+                    $(".pageShow").each(function (index,element){
+                        if(index + 1 > totalPage * 3/5 && index + 1 < totalPage - 1){
+                            $(this).hide();
+                        } else if(index === totalPage - 2){
+                            $(this).html("...");
+                            $(this).attr('onclick',"none");
+                        }
+                    });
+                } else if (number >=5 && number <= totalPage - 4){
+                    $(".pageShow").each(function (index,element){
+                        if(index+1 <= number - 4 && index != 0 && index != 1){
+                            $(this).hide();
+                        }
+                        if(index+1 >= number + 4 && index != totalPage - 1 && index != totalPage - 2){
+                            $(this).hide();
+                        }
+                        if(index == 1 || index == totalPage - 2){
+                            $(this).html("...");
+                            $(this).attr('onclick',"none");
+                        }
+                    });
+                } else if (number > totalPage - 4){
+                    $(".pageShow").each(function (index,element){
+
+                        if(index + 1 < totalPage - 4 && index != 1 && index != 0){
+                            $(this).hide();
+                        }
+                        if(index == 1){
+                            $(this).html("...");
+                            $(this).attr('onclick',"none");
+                        }
+                    });
+                }
+            }
         });
     });
 </script>
