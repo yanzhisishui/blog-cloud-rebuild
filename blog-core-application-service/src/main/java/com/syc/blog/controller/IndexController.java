@@ -322,8 +322,11 @@ public class IndexController extends BaseController{
         List<Article> grxxList = new ArrayList<>();
         Article article1 = articleRepository.findById(2).orElse(null);
         Article article2 = articleRepository.findById(14).orElse(null);
+        Article article3 = articleRepository.findById(80).orElse(null);
+
         grxxList.add(article1);
         grxxList.add(article2);
+        grxxList.add(article3);
         map.put("grxxList",grxxList);
         //人生感悟
         List<Article> rsgwList = new ArrayList<>();
