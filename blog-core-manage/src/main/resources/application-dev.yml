@@ -24,4 +24,4 @@ spring:
     #redis相关
   redis:
     timeout: 2000
-    host: 127.0.0.1
+    host: 129.204.178.49
