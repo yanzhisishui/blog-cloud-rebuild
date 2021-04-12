@@ -87,7 +87,7 @@
             ,saveH:300
             ,mark:2/1    //选取比例
             ,area:'1000px'  //弹窗宽度
-            ,url: "/uploadToZimg"  //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
+            ,url: "/article/uploadToZimg"  //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
             ,done: function(url){ //上传完毕回调
                 $("input[name=imageUrl]").val(url+"?p=0");
                 $("#avatarImage").attr('src',url+"?p=0");

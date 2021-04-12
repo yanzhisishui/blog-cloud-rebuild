@@ -25,7 +25,14 @@ public class FileController {
     @RequestMapping("/uploadToZimg")
     @ResponseBody
     public String uploadToZimg(@RequestParam("file") MultipartFile file){
-        String address = ZimgUploadHelper.uploadImageToZimg(file,applicationConfig.getZimgUploadUrl(),applicationConfig.getZimgAddressUrl());
+        String address = ZimgUploadHelper.uploadImageToZimg(file,applicationConfig.getZimgUploadUrl(),applicationConfig.getZimgAddressUrl(),false);
+        return JsonHelper.jsonForUpload(address);
+    }
+
+    @RequestMapping("/article/uploadToZimg")
+    @ResponseBody
+    public String articleUploadToZimg(@RequestParam("file") MultipartFile file){
+        String address = ZimgUploadHelper.uploadImageToZimg(file,applicationConfig.getZimgUploadUrl(),applicationConfig.getZimgAddressUrl(),true);
         return JsonHelper.jsonForUpload(address);
     }
 

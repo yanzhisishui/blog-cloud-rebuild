@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.syc.blog.model.ZimgResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
  * 上传文件到Zimg
  * */
 public class ZimgUploadHelper {
-    public static String uploadImageToZimg(MultipartFile file,String upload,String address) {
+    public static String uploadImageToZimg(MultipartFile file,String upload,String address,boolean needWarterMark) {
         String fileName = file.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
         StringBuilder respXML = new StringBuilder();
@@ -41,13 +41,42 @@ public class ZimgUploadHelper {
             OutputStream om = uc.getOutputStream();
             // 循环读取图片，发送到zimg服务器
             InputStream in = file.getInputStream();
-            byte[] buf = new byte[8192];
-            while (true) {
-                int len = in.read(buf);
-                if (len <= 0)
-                    break;
-                om.write(buf, 0, len);
+            if(needWarterMark){ //加水印
+                Image srcImg = ImageIO.read(in);
+                BufferedImage buffImg = new BufferedImage(srcImg.getWidth(null), srcImg.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                // 2、得到画笔对象
+                Graphics2D g = buffImg.createGraphics();
+                g.drawImage(srcImg, 0, 0,buffImg.getWidth(),buffImg.getHeight(), null);
+                int mode = Font.BOLD;
+                g.setFont(new Font("楷体", mode, 33));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.7f));
+
+                FontMetrics metrics = g.getFontMetrics(g.getFont());
+                //计算文字的坐标位置，根据基线、高度来计算
+                int logoX =buffImg.getWidth() - 200;
+                int logoH = buffImg.getHeight() - 80 + metrics.getHeight() - metrics.getLeading() ;
+
+                //设置抗锯齿，并且先用阴影画一遍，不然字体会模糊
+                g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);//设置抗锯齿
+                g.setPaint(new Color(0, 0, 0));//阴影颜色
+                g.drawString("", logoX, logoH);//先绘制阴影
+
+                //画水印
+                g.setColor(new Color(0,0,0));
+                g.drawString("暮色妖娆丶", logoX, logoH);
+                g.dispose();
+                ImageIO.write(buffImg, "JPG", om);
             }
+            else{
+                byte[] buf = new byte[8192];
+                while (true) {
+                    int len = in.read(buf);
+                    if (len <= 0)
+                        break;
+                    om.write(buf, 0, len);
+                }
+            }
+
             // 打开输入（返回信息）流
             InputStreamReader im = new InputStreamReader(uc.getInputStream(), StandardCharsets.UTF_8);
             // 循环读取，结束，获取返回信息
@@ -75,7 +104,7 @@ public class ZimgUploadHelper {
      * 加上后缀p=0,提高清晰度，
      * */
     public static String uploadImageToZimgResource(MultipartFile file,String upload,String address){
-        String s = uploadImageToZimg(file, upload, address);
+        String s = uploadImageToZimg(file, upload, address,false);
         return s+"?p=0";
     }
 
