@@ -1,10 +1,16 @@
 package com.syc.blog.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.syc.blog.model.ZimgResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -12,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 
 /**
  * 上传文件到Zimg
@@ -31,7 +38,7 @@ public class ZimgUploadHelper {
             uc.setRequestMethod("POST");
             uc.setRequestProperty("Connection", "Keep-Alive");
             uc.setRequestProperty("Cache-Control", "no-cache");
-            uc.setRequestProperty("Content-Type", suffix);// "jpeg");//
+            uc.setRequestProperty("Content-Type", "jpeg");// "jpeg");//
             uc.setRequestProperty("COOKIE", "william");
             uc.setDoOutput(true);
             uc.setDoInput(true);
@@ -48,13 +55,13 @@ public class ZimgUploadHelper {
                 Graphics2D g = buffImg.createGraphics();
                 g.drawImage(srcImg, 0, 0,buffImg.getWidth(),buffImg.getHeight(), null);
                 int mode = Font.BOLD;
-                g.setFont(new Font("楷体", mode, 33));
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.7f));
+                g.setFont(new Font("楷体", mode, 28));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1));
 
                 FontMetrics metrics = g.getFontMetrics(g.getFont());
                 //计算文字的坐标位置，根据基线、高度来计算
-                int logoX =buffImg.getWidth() - 200;
-                int logoH = buffImg.getHeight() - 80 + metrics.getHeight() - metrics.getLeading() ;
+                int logoX =buffImg.getWidth() - metrics.stringWidth("暮色妖娆丶");
+                int logoH = buffImg.getHeight() - g.getFont().getSize();
 
                 //设置抗锯齿，并且先用阴影画一遍，不然字体会模糊
                 g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);//设置抗锯齿
@@ -64,8 +71,11 @@ public class ZimgUploadHelper {
                 //画水印
                 g.setColor(new Color(0,0,0));
                 g.drawString("暮色妖娆丶", logoX, logoH);
+                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(om);
+                JPEGEncodeParam param=encoder.getDefaultJPEGEncodeParam(buffImg);//imgBuff 添加水印后的图片
+                param.setQuality(1, true);//设置质量
+                encoder.encode(buffImg, param);
                 g.dispose();
-                ImageIO.write(buffImg, "JPG", om);
             }
             else{
                 byte[] buf = new byte[8192];
@@ -76,7 +86,6 @@ public class ZimgUploadHelper {
                     om.write(buf, 0, len);
                 }
             }
-
             // 打开输入（返回信息）流
             InputStreamReader im = new InputStreamReader(uc.getInputStream(), StandardCharsets.UTF_8);
             // 循环读取，结束，获取返回信息
@@ -91,6 +100,7 @@ public class ZimgUploadHelper {
             }
             // 关闭上下行
             im.close();
+            om.close();
             uc.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,7 +114,7 @@ public class ZimgUploadHelper {
      * 加上后缀p=0,提高清晰度，
      * */
     public static String uploadImageToZimgResource(MultipartFile file,String upload,String address){
-        String s = uploadImageToZimg(file, upload, address,false);
+        String s = uploadImageToZimg(file, upload, address,true);
         return s+"?p=0";
     }
 

@@ -1,5 +1,8 @@
 package com.syc.blog.controller.onlineutils;
 
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.syc.blog.config.ApplicationConfig;
 import com.syc.blog.controller.BaseController;
 import com.syc.blog.utils.JsonHelper;
@@ -112,7 +115,7 @@ public class WaterMarkController extends BaseController {
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         //计算文字的坐标位置，根据基线、高度来计算
         int logoX = positionX;
-        int logoH = positionY + metrics.getHeight() - metrics.getLeading() ;
+        int logoH = positionY + g.getFont().getSize();
 
         //设置抗锯齿，并且先用阴影画一遍，不然字体会模糊
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);//设置抗锯齿
@@ -122,8 +125,11 @@ public class WaterMarkController extends BaseController {
         //画水印
         g.setColor(new Color(colorR,colorG,colorB));
         g.drawString(text, logoX, logoH);
+        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(response.getOutputStream());
+        JPEGEncodeParam param=encoder.getDefaultJPEGEncodeParam(buffImg);//imgBuff 添加水印后的图片
+        param.setQuality(1, true);//设置质量
+        encoder.encode(buffImg, param);
         g.dispose();
-        ImageIO.write(buffImg, "JPG", response.getOutputStream());
     }
 
     /**
