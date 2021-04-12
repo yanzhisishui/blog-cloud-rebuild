@@ -24,8 +24,6 @@ import java.nio.charset.StandardCharsets;
  * */
 public class ZimgUploadHelper {
     public static String uploadImageToZimg(MultipartFile file,String upload,String address,boolean needWarterMark) {
-        String fileName = file.getOriginalFilename();
-        String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
         StringBuilder respXML = new StringBuilder();
         try {
             URL url = new URL(upload);
@@ -37,7 +35,7 @@ public class ZimgUploadHelper {
             uc.setRequestMethod("POST");
             uc.setRequestProperty("Connection", "Keep-Alive");
             uc.setRequestProperty("Cache-Control", "no-cache");
-            uc.setRequestProperty("Content-Type", "jpeg");// "jpeg");//
+            uc.setRequestProperty("Content-Type", "png");// "jpeg");//
             uc.setRequestProperty("COOKIE", "william");
             uc.setDoOutput(true);
             uc.setDoInput(true);
@@ -70,11 +68,8 @@ public class ZimgUploadHelper {
                 //画水印
                 g.setColor(new Color(0,0,0));
                 g.drawString("暮色妖娆丶", logoX, logoH);
-                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(om);
-                JPEGEncodeParam param=encoder.getDefaultJPEGEncodeParam(buffImg);//imgBuff 添加水印后的图片
-                param.setQuality(1, true);//设置质量
-                encoder.encode(buffImg, param);
                 g.dispose();
+                ImageIO.write(buffImg,"png",om);
             }
             else{
                 byte[] buf = new byte[8192];
@@ -112,8 +107,8 @@ public class ZimgUploadHelper {
     /**
      * 加上后缀p=0,提高清晰度，
      * */
-    public static String uploadImageToZimgResource(MultipartFile file,String upload,String address){
-        String s = uploadImageToZimg(file, upload, address,true);
+    public static String uploadImageToZimgResource(MultipartFile file,String upload,String address,boolean needWarterMark){
+        String s = uploadImageToZimg(file, upload, address,needWarterMark);
         return s+"?p=0";
     }
 

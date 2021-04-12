@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import sun.awt.SunHints;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -53,7 +51,7 @@ public class WaterMarkController extends BaseController {
     @RequestMapping("/uploadOrigin")
     @ResponseBody
     public String test(@RequestParam("file") MultipartFile file){
-        String s = ZimgUploadHelper.uploadImageToZimgResource(file, applicationConfig.getZimgUploadUrl(), applicationConfig.getZimgAddressUrl());
+        String s = ZimgUploadHelper.uploadImageToZimgResource(file, applicationConfig.getZimgUploadUrl(), applicationConfig.getZimgAddressUrl(),false);
         String md5 = s.replace(applicationConfig.getZimgAddressUrl(),"").replace("?p=0","");
         //把md5保留到redis，为了以后删除，因为这里工具使用的图片并不需要长期存储，占用空间
         stringRedisTemplate.opsForSet().add("zimg:image:delete",md5);
@@ -125,11 +123,8 @@ public class WaterMarkController extends BaseController {
         //画水印
         g.setColor(new Color(colorR,colorG,colorB));
         g.drawString(text, logoX, logoH);
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(response.getOutputStream());
-        JPEGEncodeParam param=encoder.getDefaultJPEGEncodeParam(buffImg);//imgBuff 添加水印后的图片
-        param.setQuality(1, true);//设置质量
-        encoder.encode(buffImg, param);
         g.dispose();
+        ImageIO.write(buffImg,"png",response.getOutputStream());
     }
 
     /**
