@@ -1,9 +1,6 @@
 package com.syc.blog.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.syc.blog.model.ZimgResponse;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,8 +1,5 @@
 package com.syc.blog.controller.onlineutils;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.syc.blog.config.ApplicationConfig;
 import com.syc.blog.controller.BaseController;
 import com.syc.blog.utils.JsonHelper;
