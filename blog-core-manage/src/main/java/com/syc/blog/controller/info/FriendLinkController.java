@@ -55,14 +55,14 @@ public class FriendLinkController {
     }
     @RequestMapping("/add")
     public String add(){
-        return "friendLink/add";
+        return "friendlink/add";
     }
 
     @RequestMapping("/edit")
     public String edit(@RequestParam("id") Integer id, ModelMap map){
         FriendLink friendLink=friendLinkMapper.selectById(id);
         map.put("friendLink",friendLink);
-        return "friendLink/edit";
+        return "friendlink/edit";
     }
 
     @RequestMapping("/delete")
