@@ -24,6 +24,14 @@
                 <input type="text" name="imageUrl" disabled required  lay-verify="required" placeholder="封面图地址" autocomplete="off" class="layui-input">
             </div>
         </div>
+<!--
+        <div class="layui-inline">
+            <label class="layui-form-label">开关</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" checked="checked" lay-filter="needWaterMark" name="switch" lay-text="ON|OFF" lay-skin="switch">
+            </div>
+            <div class="layui-form-mid layui-word-aux">是否开启上传图片加水印</div>
+        </div>-->
     </div>
 
     <div class="layui-form-item">
@@ -44,7 +52,6 @@
     </div>
 
     <div class="layui-form-item category"></div>
-
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -132,6 +139,11 @@
             name : '文章分类',
             key:"key"//<select>标签的name字段名
         });
+
+       /* let needWaterMark = true;
+        form.on('switch(needWaterMark)', function(data){
+            needWaterMark = data.elem.checked; //开关是否开启，true或者false
+        });*/
 
         layedit.set({
             //暴露layupload参数设置接口 --详细查看layupload参数说明

@@ -52,9 +52,8 @@ public class ZimgUploadHelper {
                 g.setFont(new Font("楷体", mode, 28));
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1));
 
-                FontMetrics metrics = g.getFontMetrics(g.getFont());
                 //计算文字的坐标位置，根据基线、高度来计算
-                int logoX =buffImg.getWidth() - metrics.stringWidth("暮色妖娆丶");
+                int logoX =buffImg.getWidth() - 150;
                 int logoH = buffImg.getHeight() - g.getFont().getSize();
 
                 //设置抗锯齿，并且先用阴影画一遍，不然字体会模糊
