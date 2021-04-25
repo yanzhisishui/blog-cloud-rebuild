@@ -87,6 +87,13 @@
             .mycard-bottom p{font-size: 12px;}
         }
 
+        /*图片点击*/
+        .enlargeImg_wrapper {display: none;position: fixed;z-index: 999;top: 0;right: 0;bottom: 0;left: 0;background-repeat: no-repeat;background-attachment: fixed;background-position: center;background-color: rgba(52, 52, 52, 0.8);background-size: 50%;
+        }
+        .enlargeImg{position: absolute;top: 40px;left: 120px;border-radius: 50%;}
+        .enlargeImg:hover {cursor: zoom-in;}
+        .zoomOut:hover {cursor: zoom-in;}
+        .enlargeImg_wrapper:hover {cursor: zoom-out;}
     </style>
 </head>
 <body>
@@ -204,7 +211,7 @@
 
     <div class="content-right">
         <div class="right-card mycard">
-            <img class="myavatar" th:src="${card.avatar}" width="80" height="80">
+            <img class="myavatar zoomOut" th:src="${card.avatar}" width="80" height="80">
             <div class="mycard-fill"></div>
             <div class="mycard-bottom">
                 <h2 th:text="${card.nickname}">暮色妖娆</h2>
@@ -346,6 +353,19 @@
     });
 
     $(function () {
+
+        //图片点击
+
+        $(document).on('click','.enlargeImg,.zoomOut',function(){
+            $(this).after("<div οnclick='closeImg()' class='enlargeImg_wrapper'></div>");
+            var imgSrc = $(this).attr('src');
+            $(".enlargeImg_wrapper").css("background-image", "url(" + imgSrc + ")");
+            $('.enlargeImg_wrapper').fadeIn(200);
+        });
+        $(document).on('click','.enlargeImg_wrapper',function(){
+            $('.enlargeImg_wrapper').fadeOut(600);
+        });
+
         $(document).on("keypress", ".layui-textarea", function (e) {
             if (e.keyCode == 8) {
                 return true;
