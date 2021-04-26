@@ -40,7 +40,7 @@ public class BaseController {
             List<UserComment> childrenList = userCommentService.selectSecondLevelComment(type,bindId,uc.getId());
             uc.setChildrenList(childrenList);
         }
-        Integer pageTotal = (int) commentIPage.getTotal();
+        Integer pageTotal = (int) commentIPage.getPages();
         if(page > pageTotal && pageTotal > 0) { //超过最大页数
             page = pageTotal;
         }
