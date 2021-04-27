@@ -10,4 +10,6 @@ public class RedisConstant {
     public static final String DICT_DEFAULT_ICON = DICT+"default_icon";
     public static final String DICT_LOGO_URL = DICT+"logo_url";
     public static final String DICT_CARD_INFO = DICT+"card_info";
+
+    public static final String DICT_NEED_WATER_MARK = DICT+"need_water_mark";
 }

@@ -1,11 +1,16 @@
 package com.syc.blog.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.syc.blog.config.ApplicationConfig;
+import com.syc.blog.constants.RedisConstant;
+import com.syc.blog.entity.config.BaseConfig;
+import com.syc.blog.mapper.config.BaseConfigMapper;
 import com.syc.blog.utils.JsonHelper;
 import com.syc.blog.utils.StringHelper;
 import com.syc.blog.utils.ZimgUploadHelper;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +27,11 @@ import java.io.*;
 public class FileController {
     @Autowired
     ApplicationConfig applicationConfig;
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    BaseConfigMapper baseConfigMapper;
+
     @RequestMapping("/uploadToZimg")
     @ResponseBody
     public String uploadToZimg(@RequestParam("file") MultipartFile file){
@@ -33,7 +43,14 @@ public class FileController {
     @RequestMapping("/uploadToZimgResource")
     @ResponseBody
     public String uploadToZimgResource(@RequestParam("file") MultipartFile file){
-        String address = ZimgUploadHelper.uploadImageToZimgResource(file,applicationConfig.getZimgUploadUrl(),applicationConfig.getZimgAddressUrl(),true);
+        String s = stringRedisTemplate.opsForValue().get(RedisConstant.DICT_NEED_WATER_MARK);
+        if(s == null){
+            s = baseConfigMapper.selectOne(Wrappers.<BaseConfig>lambdaQuery().eq(BaseConfig::getName,RedisConstant.DICT_NEED_WATER_MARK)).getValue();
+            stringRedisTemplate.opsForValue().set(RedisConstant.DICT_NEED_WATER_MARK,s);
+        }
+        boolean needWaterMark = Boolean.parseBoolean(s);
+
+        String address = ZimgUploadHelper.uploadImageToZimgResource(file,applicationConfig.getZimgUploadUrl(),applicationConfig.getZimgAddressUrl(),needWaterMark);
         return JsonHelper.jsonForUpload(address);
     }
 
