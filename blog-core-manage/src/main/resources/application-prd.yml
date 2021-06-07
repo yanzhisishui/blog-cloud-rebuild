@@ -7,6 +7,10 @@ application:
   video_upload_url: /docker/video   #映射到服务器的地址，供nginx访问
   video_address_url: https://www.sunyuchao.com/files/video/
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   datasource:
     # 配置数据源
     driver-class-name: com.mysql.cj.jdbc.Driver

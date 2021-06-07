@@ -392,9 +392,11 @@
             <ul class="card-contact">
                 <li><a href="tencent://message/?uin=1481232419&Site=&Menu=yes"><i style="color: blueviolet;" class="layui-icon layui-icon-login-qq"></i></a></li>
                 <li id="wechat"><a href="javascript:;"><i style="color: yellowgreen;" class="layui-icon layui-icon-login-wechat"></i></a></li>
-                <li id="weibo"><a href="javascript:;"><i style="color: indianred;" class="layui-icon layui-icon-login-weibo"></i></a></li>
-                <li id="email"><a href="https://www.zhihu.com/column/c_1374035444359852032" target="_blank">
-                    <svg class="icon" style="font-size: 50px;margin-top: 5px;" aria-hidden="true"><use xlink:href="#layui-extend-zhihu"></use></svg>
+                <li id="weibo">
+                    <a href="https://juejin.cn/column/6966041052306210823" target="_blank"><svg class="icon" style="font-size: 50px;margin-top: 5px;" aria-hidden="true"><use xlink:href="#layui-extend-juejin"></use></svg>
+                </li>
+                <li id="email">
+                    <a href="https://www.zhihu.com/column/c_1374035444359852032" target="_blank"><svg class="icon" style="font-size: 50px;margin-top: 5px;" aria-hidden="true"><use xlink:href="#layui-extend-zhihu"></use></svg>
                 </a></li>
             </ul>
         </div>
@@ -789,11 +791,6 @@
             layer.alert("移动端暂时未做较好的页面适配，建议使用PC端访问");
         }
 
-
-
-        $("#weibo").click(function () {
-            layer.alert("抱歉,该功能暂未开放");
-        });
 
         layer.tips('文章筛选在这里！', '#select', {
             tips: [1, '#3595CC'],
