@@ -489,6 +489,13 @@
         <div class="content-right">
 
             <div class="right-card">
+                <h3 class="square">如何获取本站源码</h3>
+                <div style="padding-left: 15px;padding-right: 15px;">
+                    <span style="font-size: 15px;">要获取本站源码请关注微信公众号 <b>“暮色妖娆丶”</b> 或者 <a style="color: blue;font-size: 16px;" href="javascript:;" id = "scan">扫码</a> 关注，回复关键词 <b>“个人博客源码”</b></span>
+                </div>
+            </div>
+
+            <div class="right-card">
                 <h3 class="square">最新公告</h3>
                 <div>
                     <ul class="notice">
@@ -799,8 +806,21 @@
 
         var tips;
         $("#wechat").mouseover(function () {
-            tips = layer.tips("<img width='100' height='100' src='https://www.sunyuchao.com/static/images/wechat.jpg'>","#wechat",{ tips: [1, '#3595CC'],time:0});
+            tips = layer.tips("<img width='160' height='160' src='https://www.sunyuchao.com/static/images/wechat_qrcode.jpg'>","#wechat",{ tips: [1, '#3595CC'],time:0});
         });
+
+        var unPopup = true;
+        var tips2;
+        $("#scan").click(function () {
+            if(unPopup){
+                tips2 = layer.tips("<img width='160' height='160' src='https://www.sunyuchao.com/static/images/wechat_qrcode.jpg'>","#scan",{ tips: [1, '#3595CC'],time:0});
+                unPopup= false;
+            } else {
+                layer.close(tips2);
+                unPopup = true;
+            }
+        });
+
         $("#wechat").mouseout(function () {
             layer.close(tips);
         });
